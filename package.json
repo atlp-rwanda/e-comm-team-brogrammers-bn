@@ -1,0 +1,47 @@
+{
+  "name": "bn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "start": "NODE_ENV=development nodemon --exec babel-node server.js",
+    "sequelize": "babel-node node_modules/.bin/sequelize",
+    "migrate": "npm run sequelize db:migrate",
+    "down": "npm run sequelize db:migrate:undo:all",
+    "seed": "npm run sequelize db:seed:all",
+    "migrate:all": "npm run down && npm run migrate && npm run seed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atlp-rwanda/e-comm-team-brogrammers-bn.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atlp-rwanda/e-comm-team-brogrammers-bn/issues"
+  },
+  "homepage": "https://github.com/atlp-rwanda/e-comm-team-brogrammers-bn#readme",
+  "dependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.0",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jest": "^29.4.3",
+    "pg": "^8.9.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.29.0",
+    "sequelize-cli": "^6.6.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.21.0",
+    "babel-plugin-add-module-exports": "^1.0.4",
+    "babel-plugin-istanbul": "^6.1.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
+  }
+}
