@@ -6,6 +6,12 @@ import allroutes from "./routes/index"
 
 env.config()
 
+// Testing if the db connection works when running from docker container
+// Feel free to comment it, if not using docker yet
+import { connectDB } from "./db";
+connectDB()
+
+
 const app = express()
 
 app.use(express.json())
@@ -14,7 +20,7 @@ app.use(morgan("dev"))
 
 app.use(allroutes)
 app.use((req, res) => {
-  res.status(404).json({message: 'Page not found'})
+  res.status(404).json({ message: 'Page not found' })
 })
 
 const port = process.env.PORT
