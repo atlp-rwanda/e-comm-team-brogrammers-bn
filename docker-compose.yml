@@ -1,0 +1,19 @@
+version: '3'
+services:
+  # The postgres *host* will be "database"(the below image name)
+  database:
+    # postgres image will be pulled from "dockerhub" if it's not yet downloaded
+    image: postgres
+    restart: always
+    environment:
+      # default postgres user *password*
+      POSTGRES_PASSWORD: admin123
+      # default postgres *user*
+      POSTGRES_USER: admin
+      # default postgres *database name*
+      POSTGRES_DB: ecommerce
+  web:
+    # The custom image for our project based on node (From docker file)
+    image: node-backend
+    # Restart when a fatal error occurs
+    restart: always
