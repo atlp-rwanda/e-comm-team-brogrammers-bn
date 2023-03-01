@@ -10,7 +10,9 @@
     "migrate": "npm run sequelize db:migrate",
     "down": "npm run sequelize db:migrate:undo:all",
     "seed": "npm run sequelize db:seed:all",
-    "migrate:all": "npm run down && npm run migrate && npm run seed"
+    "migrate:all": "npm run down && npm run migrate && npm run seed",
+    "build": "babel src -d dist"
+   
   },
   "repository": {
     "type": "git",
