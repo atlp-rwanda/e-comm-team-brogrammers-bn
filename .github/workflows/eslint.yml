@@ -1,0 +1,19 @@
+# This workflow will do a clean installation of node dependencies && run eslint to enforce coding styles from ".eslintrc.json".
+name: Check ESLint on Pull Request or push
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["develop"]
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: installing eslint
+        run: npm i -g eslint
+      - name: Fixing Files
+        run: eslint . --ext .js --fix
