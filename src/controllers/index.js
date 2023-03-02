@@ -1,8 +1,10 @@
-import HomeServices from "../services"
+import HomeServices from '../services';
 
+// eslint-disable-next-line require-jsdoc
 export default class HomeControllers {
+  // eslint-disable-next-line require-jsdoc
   static async welcome(req, res) {
-    let message = await HomeServices.home()
-    res.status(200).json(message)
+    const message = await HomeServices.home();
+    res.status(200).json(message);
   }
 }

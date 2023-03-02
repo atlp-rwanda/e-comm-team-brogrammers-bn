@@ -1,6 +1,5 @@
-
-
-export default{
+/* eslint-disable no-unused-vars */
+export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert(
     'Users',
     [

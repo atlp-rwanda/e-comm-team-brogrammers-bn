@@ -1,8 +1,8 @@
-import express from "express";
-import HomeControllers from "../controllers";
+import express from 'express';
+import HomeControllers from '../controllers';
 
-const routes = express()
+const routes = express();
 
-routes.get('/home', HomeControllers.welcome)
+routes.get('/home', HomeControllers.welcome);
 
-export default routes
+export default routes;
