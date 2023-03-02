@@ -3,6 +3,12 @@ import env from "dotenv"
 import cors from "cors";
 import morgan from "morgan";
 import allroutes from "./routes/index"
+env.config();
+import { Sequelize } from 'sequelize';
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+});
 
 env.config()
 
@@ -21,5 +27,11 @@ const port = process.env.PORT
 app.listen(port, () => {
   console.log('server started,', port)
 })
-
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection to the database has been established successfully.');
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
+  });
 export default app
