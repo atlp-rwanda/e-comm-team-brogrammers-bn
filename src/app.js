@@ -10,7 +10,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
 });
 
-env.config()
+
 
 const app = express()
 
