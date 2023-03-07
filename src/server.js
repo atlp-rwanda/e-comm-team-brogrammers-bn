@@ -1,15 +1,16 @@
-import app from './app'
-import env from "dotenv"
-env.config();
+import env from 'dotenv';
 import { Sequelize } from 'sequelize';
-const port = process.env.PORT || 6000
+import app from './app';
+
+env.config();
+const port = process.env.PORT || 6000;
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
-  });
-app.listen(port,()=>{
-    console.log('server started,', port)
-})
+  dialect: 'postgres',
+});
+app.listen(port, () => {
+  console.log('server started,', port);
+});
 
 sequelize.authenticate()
   .then(() => {
@@ -18,4 +19,4 @@ sequelize.authenticate()
   .catch((error) => {
     console.error('Unable to connect to the database:', error);
   });
-export default app
+export default app;
