@@ -17,9 +17,6 @@ app.use((req, res) => {
   res.status(404).json({message: 'Page not found'})
 })
 
-const port = process.env.PORT
-app.listen(port, () => {
-  console.log('server started,', port)
-})
+
 
 export default app
