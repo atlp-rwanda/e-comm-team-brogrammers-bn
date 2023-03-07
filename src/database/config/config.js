@@ -3,7 +3,7 @@ dotenv.config()
 
 export default{
   development: {
-    url: process.env.DEV_DATABASE_URL,
+    url: process.env.DATABASE_URL,
     dialect: 'postgres',
   }
 }
