@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage && coveralls < coverage/lcov.info ",
+    "test-coveralls":"c8 --src src/ --x coverage/ npm run test",
+    "test": "mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
     "build": "babel src -d dist",
     "start": "NODE_ENV=development nodemon --exec babel-node src/server.js",
     "sequelize": "babel-node node_modules/.bin/sequelize",
@@ -29,6 +30,7 @@
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.21.0",
+    "c8": "^7.13.0",
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
@@ -44,6 +46,7 @@
     "@babel/plugin-transform-runtime": "^7.21.0",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-istanbul": "^6.1.1",
+    "coveralls": "^3.1.1",
     "eslint": "^8.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
@@ -52,7 +55,6 @@
     "sequelize-cli": "^6.6.0",
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.2",
-    "coveralls": "^3.1.1"
+    "swagger-ui-express": "^4.6.2"
   }
 }
