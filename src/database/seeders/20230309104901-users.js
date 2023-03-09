@@ -51,4 +51,4 @@ export default {
   async down(queryInterface) {
     await queryInterface.bulkDelete('users', null, {});
   }
-}
+};

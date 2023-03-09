@@ -1,3 +1,5 @@
+// eslint-disable-next-line import/named
+
 import { users } from '../database/models';
 
 const checkUserExist = async (req, res, next) => {
