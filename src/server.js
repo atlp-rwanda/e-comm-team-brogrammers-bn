@@ -1,13 +1,11 @@
 import env from 'dotenv';
-import { Sequelize } from 'sequelize';
+// eslint-disable-next-line import/named
+import { sequelize } from './database/models/index';
 import app from './app';
 
 env.config();
 const port = process.env.PORT || 6000;
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-});
 app.listen(port, () => {
   console.log('server started,', port);
 });
