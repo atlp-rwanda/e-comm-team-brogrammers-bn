@@ -1,16 +1,27 @@
-import request from 'supertest';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
 import app from '../src/app';
 
+chai.should();
+chai.use(chaiHttp);
 describe('testing the project', () => {
-  test('should return hello message', async () => {
-    const res = await request(app).get('/home');
-    // eslint-disable-next-line no-undef
-    expect(res.statusCode).toBe(200);
+  it('should return hello message', (done) => {
+    chai
+      .request(app)
+      .get('/home')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
   });
 
-  test('GET unsupportedlink/unsupportedsublink', async () => {
-    const res = await request(app).get('/unsupportedlink/unsupportedsublink');
-    // eslint-disable-next-line no-undef
-    expect(res.statusCode).toBe(404);
+  it('GET unsupportedlink/unsupportedsublink', (done) => {
+    chai
+      .request(app)
+      .get('/unsupportedlink/unsupportedsublink')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(404);
+        done();
+      });
   });
 });
