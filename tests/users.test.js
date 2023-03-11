@@ -1,10 +1,13 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
+// eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { isUuid } from 'uuidv4';
 import app from '../src/app';
 
 // eslint-disable-next-line import/named
-import { sequelize } from '../src/database/models/index';
+import db, { sequelize } from '../src/database/models/index';
 
 env.config();
 sequelize.authenticate();
@@ -13,13 +16,16 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('testing signup', () => {
+  before(async () => {
+    await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
+  });
   it('should return 400 code', (done) => {
     chai
       .request(app)
       .post('/users/signup')
       .send({
         username: 'Mai DemiGod',
-        password: '123@Pass'
+        password: '123@Pass',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
@@ -27,17 +33,18 @@ describe('testing signup', () => {
       });
   });
 
-  it('should return 200 code', (done) => {
+  it('should return 201 code', (done) => {
     chai
       .request(app)
       .post('/users/signup')
       .send({
         username: 'Mai DemiGod',
-        email: 'mai@gmail.com',
-        password: '123@Pass'
+        email: 'edwin12@gmail.com',
+        password: '123@Pass',
       })
       .end((error, res) => {
-        chai.expect(res).to.have.status(200);
+        chai.expect(res).to.have.status(201);
+        chai.expect(isUuid(res.body.user.id)).to.equal(true);
         done();
       });
   });
@@ -48,8 +55,8 @@ describe('testing signup', () => {
       .post('/users/signup')
       .send({
         username: 'Mai DemiGod',
-        email: 'mai@gmail.com',
-        password: '123@Pass'
+        email: 'edwin12@gmail.com',
+        password: '123@Pass',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);

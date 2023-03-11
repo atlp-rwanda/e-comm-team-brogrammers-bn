@@ -10,7 +10,7 @@ const joiPassword = joi.extend(joiPasswordExtendCore);
  */
 export default async function SignupValidation(data) {
   const Schema = joi.object({
-    username: joi.string().min(3).required().label('name'),
+    username: joi.string().min(3).required().label('username'),
     email: joi.string().email().required().label('email'),
     password: joiPassword
       .string()

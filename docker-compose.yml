@@ -12,8 +12,13 @@ services:
       POSTGRES_USER: admin
       # default postgres *database name*
       POSTGRES_DB: ecommerce
+    ports:
+      - "4321:5432"
+
   web:
     # The custom image for our project based on node (From docker file)
     image: node-backend
     # Restart when a fatal error occurs
     restart: on-failure:3
+    ports:
+      - "6000:6000"

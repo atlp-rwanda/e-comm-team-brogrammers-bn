@@ -12,5 +12,8 @@ RUN npm install
 # Bundle the app
 COPY . .
 
+
+ENV PORT 6000
+EXPOSE 6000
 # Run start script(command)
 CMD ["npm", "start"]
