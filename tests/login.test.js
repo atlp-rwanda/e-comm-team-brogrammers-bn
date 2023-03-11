@@ -24,9 +24,7 @@ let verifyEmailToken = '';
 
 before('Clear everyting from test db before testing', async () => {
   if (process.env.NODE_ENV === 'test') {
-    await db.users.destroy({
-      truncate: true,
-    });
+    await db.users.destroy({ where: { role: 'buyer' } });
   }
 
   const res = await chai.request(app).post('/users/signup').send(testUserData);

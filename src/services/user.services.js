@@ -35,4 +35,9 @@ export default class User {
     const user = await users.findOne({ where: { email_token: emailToken } });
     return user;
   }
+
+  static async updateUser(fields, id) {
+    // eslint-disable-next-line no-return-await
+    return await User.update({ ...fields }, { where: { id: id } });
+  }
 }

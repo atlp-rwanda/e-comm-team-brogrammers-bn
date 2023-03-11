@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { isUuid } from 'uuidv4';
 import app from '../src/app';
 
