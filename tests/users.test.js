@@ -158,7 +158,7 @@ describe('testing user profile', () => {
       .set({ authorization: `bearer ${token}` })
       .send({
         gender: 'female',
-        email: 'lucy@gmail.com'
+        email: 'lucy@gmail.com',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
@@ -168,16 +168,16 @@ describe('testing user profile', () => {
 });
 
 describe(' testing changePassword', () => {
-  // eslint-disable-next-line prefer-const
-  let user = {
-    email: 'edwin12@gmail.com',
+  const user = {
+    email: 'john@gmail.com',
     password: '123@Pass',
   };
   // eslint-disable-next-line no-shadow
   let token = '';
 
   before((done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .post('/users/login')
       .send({ email: user.email, password: user.password })
       .end((error, res) => {
@@ -187,7 +187,8 @@ describe(' testing changePassword', () => {
   });
 
   it('should return 401 for incorrect old password', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .patch('/users/change-password')
       .set('Authorization', `Bearer ${token}`)
       .send({ oldPassword: 'wrongpassword', newPassword: 'Newp@ssword123' })
@@ -199,21 +200,25 @@ describe(' testing changePassword', () => {
   });
 
   it('should return 400 for invalid new password', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .patch('/users/change-password')
       .set('Authorization', `Bearer ${token}`)
       .send({ oldPassword: user.password, newPassword: 'weakpassword' })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
-        chai.expect(res.body.message).to.equal(
-          'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.'
-        );
+        chai
+          .expect(res.body.message)
+          .to.equal(
+            'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.'
+          );
         done();
       });
   });
 
   it('should change the password successfully', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .patch('/users/change-password')
       .set('Authorization', `Bearer ${token}`)
       .send({ oldPassword: user.password, newPassword: 'Newp@ssword123' })
