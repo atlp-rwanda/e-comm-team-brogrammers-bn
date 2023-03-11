@@ -55,6 +55,17 @@ export default {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        id: uuid(),
+        username: 'Habihirwe',
+        email: 'habiholivier10@gmail.com',
+        password: await bcrypt.hash('123@Pass', saltRounds),
+        gender: 'male',
+        role: 'buyer',
+        verified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ], {});
   },
 
