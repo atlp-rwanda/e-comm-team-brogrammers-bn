@@ -1,6 +1,17 @@
 version: '3'
 services:
-  # The postgres *host* will be "database"(the below image name)
+  web:
+    # The custom image for our project based on node (From docker file)
+    image: node-backend
+    # Restart when a fatal error occurs
+    restart: on-failure:3
+    entrypoint: docker/entrypoint.sh
+    ports:
+      - "6000:6000"
+    depends_on:
+      - database
+
+  # The *host* will be "database"(the below image name)
   database:
     # postgres image will be pulled from "dockerhub" if it's not yet downloaded
     image: postgres
@@ -14,11 +25,5 @@ services:
       POSTGRES_DB: ecommerce
     ports:
       - "4321:5432"
-
-  web:
-    # The custom image for our project based on node (From docker file)
-    image: node-backend
-    # Restart when a fatal error occurs
-    restart: on-failure:3
-    ports:
-      - "6000:6000"
+    volumes:
+      - ./docker/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql

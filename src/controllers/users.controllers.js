@@ -1,11 +1,8 @@
-/* eslint-disable import/no-named-as-default */
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-// eslint-disable-next-line import/no-named-as-default-member
 import User from '../services/user.services';
 import db from '../database/models';
-/* eslint-disable require-jsdoc */
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -74,7 +71,10 @@ export default class Users {
     user.email_token = null;
     user.verified = true;
     await user.save();
-    res.status(200).send({ message: 'Your account has been verified successfully!', verified: true });
+    res.status(200).send({
+      message: 'Your account has been verified successfully!',
+      verified: true,
+    });
   }
 
   /**
@@ -104,13 +104,47 @@ export default class Users {
         return res.status(403).json({ message: 'Email is not verified' });
       }
 
-      const token = jwt.sign({ ...user }, JWT_SECRET);
+      const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
       res.status(200).json({ id: user.id, email: user.email, token });
     } catch (error) {
       res
         .status(500)
         .json({ error: error.message, message: 'Failed to login a user' });
+    }
+  }
+  static async changePassword(req, res) {
+    try {
+      const { email, oldPassword, newPassword } = req.body;
+
+      // check if the email exists in the database
+      const user = await db.users.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // check if the old password matches the one in the database
+      const isPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Incorrect old password' });
+      }
+      
+       // validate the new password
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        message:
+          'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.',
+      });
+    }
+      // hash the new password and update the database
+      const hashedPassword = bcrypt.hashSync(newPassword, 10);
+      user.password = hashedPassword;
+      await user.save();
+
+      res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message, message: 'Failed to change password' });
     }
   }
 }

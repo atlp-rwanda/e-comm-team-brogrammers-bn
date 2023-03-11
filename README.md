@@ -32,3 +32,21 @@ No authentication required
 returns a `User` with `success message`
 
 Required fields: `username`, `email`, `password`
+
+
+## Login:
+- First signup a new user and verify the user
+
+`POST /users/login`
+
+Example of request body:
+```
+{
+  "email": "luca@gmail.com",
+  "password": "Strong.123"
+}
+```
+With correct email and password you get the following:
+- Example Response: `{ id: 1, email: 'luca@gmail.com',  token: 'yourjwttoken' }`
+
+Required fields: `email`, `password`
