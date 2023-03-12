@@ -19,4 +19,20 @@ export default class Users {
       return res.status(500).json(e);
     }
   }
+  /**
+
+update user's password
+@param {Object} req valiable
+@param {Object} res valiable
+@return {Object} res
+*/
+static async updatePassword(req, res) {
+  const { id, currentPassword, newPassword } = req.body;
+  try {
+    const user = await User.updatePassword(id, currentPassword, newPassword);
+    return res.status(200).json({ message: 'password updated successful', data: { user } });
+  } catch (e) {
+    return res.status(500).json(e);
+  }
+ }
 }

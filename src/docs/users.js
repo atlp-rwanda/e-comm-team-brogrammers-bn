@@ -37,3 +37,51 @@
  *         '500':
  *           description: server error
  */
+
+/**
+* @swagger
+* /users/update-password:
+*   put:
+*     summary: Update user's password
+*     tags:
+*       - Users
+*     parameters:
+*       - in: body
+*         name: Update Password
+*         description: Object containing user's current password and new password
+*         required: true
+*         schema:
+*           type: object
+*           properties:
+*             id:
+*               type: integer
+*               description: User's ID
+*               example: 6
+*             currentPassword:
+*               type: string
+*               description: User's current password
+*               example: Password@123
+*             newPassword:
+*               type: string
+*               description: User's new password
+*               example: newPassword@123
+*     responses:
+*       200:
+*         description: Password updated successfully
+*         schema:
+*           type: object
+*           properties:
+*             message:
+*               type: string
+*               example: Password updated successfully
+*             data:
+*               type: object
+*               $ref: '#/definitions/User'
+*       400:
+*         description: Invalid request body
+*       500:
+*         description: Internal server error
+*       default:
+*         description: Unexpected error
+*/
+
