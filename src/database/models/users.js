@@ -43,10 +43,18 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'buyer'
     },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    email_token: {
+      type: DataTypes.STRING,
+      defaultValue: false
+    },
     gender: {
       type: DataTypes.STRING,
       defaultValue: 'none'
-    }
+    },
   }, {
     sequelize,
     modelName: 'users',
