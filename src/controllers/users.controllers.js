@@ -11,7 +11,7 @@ import { verifyEmailTemplate } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
 // eslint-disable-next-line operator-linebreak
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const { JWT_SECRET } = process.env;
 
 dotenv.config();
 /**
