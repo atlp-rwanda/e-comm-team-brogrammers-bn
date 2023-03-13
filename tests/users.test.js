@@ -45,13 +45,10 @@ describe('testing signup', () => {
         password: '123@Pass',
       })
       .end((error, res) => {
-<<<<<<< HEAD
         chai.expect(res).to.have.status(200);
         userId = res.body.id;
-=======
         chai.expect(res).to.have.status(201);
         chai.expect(isUuid(res.body.user.id)).to.equal(true);
->>>>>>> develop
         done();
       });
   });

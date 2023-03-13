@@ -123,9 +123,6 @@
 *             message:
 *               type: string
 *               example: Password updated successfully
-*             data:
-*               type: object
-*               $ref: '#/definitions/User'
 *       400:
 *         description: Invalid request body
 *       500:
