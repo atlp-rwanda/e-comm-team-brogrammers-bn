@@ -7,7 +7,7 @@ import signupVatidate from '../middlewares/signupValidate';
 const routes = express.Router();
 
 routes.post('/signup', signupVatidate, checkUserExist, Users.signup);
-routes.patch('/update-password', Users.updatePassword);
+routes.patch('/change-password', Users.changePassword);
 routes.get('/verify-email/:token', Users.verifyEmail);
 
 routes.post('/login', loginValidate, Users.login);

@@ -89,9 +89,9 @@
 
 /**
 * @swagger
-* /users/update-password:
-*   put:
-*     summary: Update user's password
+* /users/change-password:
+*   patch:
+*     summary: change user's password
 *     tags:
 *       - Users
 *     parameters:
@@ -102,10 +102,10 @@
 *         schema:
 *           type: object
 *           properties:
-*             id:
-*               type: integer
-*               description: User's ID
-*               example: 6
+*             email:
+*               type: string
+*               description: User email
+*               example: kunben@gmail.com
 *             currentPassword:
 *               type: string
 *               description: User's current password
@@ -116,13 +116,13 @@
 *               example: newPassword@123
 *     responses:
 *       200:
-*         description: Password updated successfully
+*         description: Password changed successfully
 *         schema:
 *           type: object
 *           properties:
 *             message:
 *               type: string
-*               example: Password updated successfully
+*               example: Password changed successfully
 *       400:
 *         description: Invalid request body
 *       500:

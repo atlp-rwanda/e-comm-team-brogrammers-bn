@@ -72,7 +72,7 @@ describe('testing updating password', () => {
   it('should return 200 code and success message', (done) => {
     chai
       .request(app)
-      .patch('/users/update-password')
+      .patch('/users/change-password')
       .send({
         id: userId,
         currentPassword: '123@Pass',
@@ -88,7 +88,7 @@ describe('testing updating password', () => {
   it('should return 400 code and error message', (done) => {
     chai
       .request(app)
-      .patch('/users/update-password')
+      .patch('/users/change-password')
       .send({
         id: userId,
         currentPassword: 'wrongpassword',
@@ -105,7 +105,7 @@ describe('testing updating password', () => {
   it('should return 400 code and error message', (done) => {
     chai
       .request(app)
-      .patch('/users/update-password')
+      .patch('/users/change-password')
       .send({
         id: userId,
         currentPassword: '123@Pass',

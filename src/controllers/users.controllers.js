@@ -115,20 +115,31 @@ export default class Users {
         .json({ error: error.message, message: 'Failed to login a user' });
     }
   }
-  /**
 
-update user's password
-@param {Object} req valiable
-@param {Object} res valiable
-@return {Object} res
-*/
-static async updatePassword(req, res) {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    const user = await User.updatePassword( currentPassword, newPassword);
-    return res.status(200).json({ message: 'password updated successful', data: { user } });
-  } catch (e) {
-    return res.status(500).json(e);
+  static async changePassword(req, res) {
+    try {
+      const { email, oldPassword, newPassword } = req.body;
+
+      // check if the email exists in the database
+      const user = await db.users.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // check if the old password matches the one in the database
+      const isPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Incorrect old password' });
+      }
+
+      // hash the new password and update the database
+      const hashedPassword = bcrypt.hashSync(newPassword, 10);
+      user.password = hashedPassword;
+      await user.save();
+
+      res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message, message: 'Failed to change password' });
+    }
   }
- }
 }
