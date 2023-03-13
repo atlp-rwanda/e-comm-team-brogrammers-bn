@@ -1,11 +1,8 @@
-/* eslint-disable import/no-named-as-default */
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-// eslint-disable-next-line import/no-named-as-default-member
 import User from '../services/user.services';
 import db from '../database/models';
-/* eslint-disable require-jsdoc */
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -30,6 +27,7 @@ export default class Users {
   static async signup(req, res) {
     try {
       const { data } = await User.register(req.body);
+      const signupToken = jwt.sign({ email: data.email }, process.env.JWT_SECRET);
       const userToken = Jwt.generateToken({ data }, '1h');
       if (userToken) {
         data.email_token = userToken;
@@ -46,6 +44,7 @@ export default class Users {
       return res.status(201).json({
         message: 'Check your email to verify your account',
         user: data,
+        signupToken,
       });
     } catch (e) {
       return res.status(500).json({
@@ -74,7 +73,10 @@ export default class Users {
     user.email_token = null;
     user.verified = true;
     await user.save();
-    res.status(200).send({ message: 'Your account has been verified successfully!', verified: true });
+    res.status(200).send({
+      message: 'Your account has been verified successfully!',
+      verified: true,
+    });
   }
 
   /**
@@ -104,7 +106,7 @@ export default class Users {
         return res.status(403).json({ message: 'Email is not verified' });
       }
 
-      const token = jwt.sign({ ...user }, JWT_SECRET);
+      const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
       res.status(200).json({ id: user.id, email: user.email, token });
     } catch (error) {
