@@ -14,8 +14,6 @@ sequelize.authenticate();
 chai.should();
 chai.use(chaiHttp);
 
-let userId;
-
 describe('testing signup', () => {
   before(async () => {
     await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
@@ -44,8 +42,6 @@ describe('testing signup', () => {
         password: '123@Pass',
       })
       .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        userId = res.body.id;
         chai.expect(res).to.have.status(201);
         chai.expect(isUuid(res.body.user.id)).to.equal(true);
         done();
@@ -68,19 +64,19 @@ describe('testing signup', () => {
   });
 });
 
-describe('testing updating password', () => {
+describe('testing changing password', () => {
   it('should return 200 code and success message', (done) => {
     chai
       .request(app)
       .patch('/users/change-password')
       .send({
-        id: userId,
-        currentPassword: '123@Pass',
+        email: 'john@gmail.com',
+        oldPassword: '123@Pass',
         newPassword: 'NewPassword@123'
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(200);
-        chai.expect(res.body.message).to.equal('Password updated successfully');
+        chai.expect(res.body.message).to.equal('Password changed successfully');
         done();
       });
   });
@@ -90,13 +86,13 @@ describe('testing updating password', () => {
       .request(app)
       .patch('/users/change-password')
       .send({
-        id: userId,
-        currentPassword: 'wrongpassword',
+        email: 'john@gmail.com',
+        oldPassword: 'wrongpassword',
         newPassword: 'NewPassword@123'
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
-        chai.expect(res.body.message).to.equal('Current password is incorrect');
+        chai.expect(res.body.message).to.equal('old password is incorrect');
         done();
       });
   });
@@ -107,8 +103,8 @@ describe('testing updating password', () => {
       .request(app)
       .patch('/users/change-password')
       .send({
-        id: userId,
-        currentPassword: '123@Pass',
+        email: 'john@gmail.com',
+        oldPassword: '123@Pass',
         newPassword: 'newpassword'
       })
       .end((error, res) => {
