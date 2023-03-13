@@ -27,6 +27,7 @@ export default class Users {
   static async signup(req, res) {
     try {
       const { data } = await User.register(req.body);
+      const signupToken = jwt.sign({ email: data.email }, process.env.JWT_SECRET);
       const userToken = Jwt.generateToken({ data }, '1h');
       if (userToken) {
         data.email_token = userToken;
@@ -43,6 +44,7 @@ export default class Users {
       return res.status(201).json({
         message: 'Check your email to verify your account',
         user: data,
+        signupToken,
       });
     } catch (e) {
       return res.status(500).json({
