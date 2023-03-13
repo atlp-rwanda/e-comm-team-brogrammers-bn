@@ -38,6 +38,7 @@ jobs:
       - run: npm run migrate:all
       
       - run: npm test
+      - run: npm test-coveralls
 
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
