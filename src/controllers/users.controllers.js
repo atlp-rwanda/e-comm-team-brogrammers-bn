@@ -27,9 +27,9 @@ update user's password
 @return {Object} res
 */
 static async updatePassword(req, res) {
-  const { id, currentPassword, newPassword } = req.body;
   try {
-    const user = await User.updatePassword(id, currentPassword, newPassword);
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.updatePassword( currentPassword, newPassword);
     return res.status(200).json({ message: 'password updated successful', data: { user } });
   } catch (e) {
     return res.status(500).json(e);
