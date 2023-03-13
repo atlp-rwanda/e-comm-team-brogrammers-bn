@@ -6,6 +6,7 @@
   "scripts": {
     "test-coveralls": "c8 --src src/ --x coverage/ npm run test",
     "test": "mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
+    "test:db": "NODE_ENV=test npm run down && npm run migrate:all && mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
     "build": "babel src -d dist",
     "start": "NODE_ENV=development nodemon --exec babel-node src/server.js",
     "sequelize": "babel-node node_modules/.bin/sequelize",
@@ -30,6 +31,7 @@
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.21.0",
+    "@sendgrid/mail": "^7.7.0",
     "bcrypt": "^5.1.0",
     "c8": "^7.13.0",
     "chai": "^4.3.7",
@@ -39,11 +41,14 @@
     "express": "^4.18.2",
     "joi": "^17.8.3",
     "joi-password": "^4.0.0",
+    "jsonwebtoken": "^9.0.0",
     "mocha": "^10.2.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",
     "pg": "^8.10.0",
-    "sequelize": "^6.29.0"
+    "sequelize": "^6.29.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.21.0",
@@ -53,7 +58,6 @@
     "eslint": "^8.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "morgan": "^1.10.0",
     "nodemon": "*",
     "sequelize-cli": "^6.6.0",
     "supertest": "^6.3.3",

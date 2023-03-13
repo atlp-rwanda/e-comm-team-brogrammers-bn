@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable object-shorthand */
+/* eslint-disable require-jsdoc */
 import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/named
 import { users } from '../database/models';
@@ -17,14 +20,17 @@ export default class User {
     data.password = await bcrypt.hash(data.password, saltRounds);
 
     const {
-      username, email, password, gender
+      // eslint-disable-next-line camelcase
+      username, email, password, gender, email_verified
     } = data;
     const user = await users.create({
-      username, email, password, gender
+      // eslint-disable-next-line camelcase
+      username, email, password, gender, email_verified
     });
 
     return { data: user };
   }
+<<<<<<< HEAD
   /**
 
 function to update user password
@@ -59,4 +65,11 @@ static isPasswordValid(password) {
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
   return passwordRegex.test(password);
 }
+=======
+
+  static async findByEmailToken(emailToken) {
+    const user = await users.findOne({ where: { email_token: emailToken } });
+    return user;
+  }
+>>>>>>> develop
 }
