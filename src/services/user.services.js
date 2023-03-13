@@ -30,7 +30,6 @@ export default class User {
 
     return { data: user };
   }
-<<<<<<< HEAD
   /**
 
 function to update user password
@@ -65,11 +64,9 @@ static isPasswordValid(password) {
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
   return passwordRegex.test(password);
 }
-=======
 
   static async findByEmailToken(emailToken) {
     const user = await users.findOne({ where: { email_token: emailToken } });
     return user;
   }
->>>>>>> develop
 }
