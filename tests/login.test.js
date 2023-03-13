@@ -26,6 +26,9 @@ before('Clear everyting from test db before testing', async () => {
   if (process.env.NODE_ENV === 'test') {
     await db.users.destroy({ where: { role: 'buyer' } });
   }
+  await db.users.destroy({
+    truncate: true,
+  });
 
   const res = await chai.request(app).post('/users/signup').send(testUserData);
   expect(res).to.have.status(201);
