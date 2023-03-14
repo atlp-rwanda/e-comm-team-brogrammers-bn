@@ -97,3 +97,19 @@ With correct token you get the following:
 ```
 
 `change the token because some data in it was changed too`
+
+### Change password:
+
+`PATCH /users/change-password`
+
+Example of request body:
+
+```
+{
+    "email":"ange@gmail.com",
+    "oldPassword":"123@Password",
+    "newPassword":"123@Pass"
+}
+```
+with correct email,oldPassword and newPassword. the newPassword much meet the criteria of valid password
+
