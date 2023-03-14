@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test-coveralls": "c8 --src src/ --x coverage/ npm run test",
+    "test-coveralls": "c8 --src src/ --x coverage/ npm run test && nyc report --reporter=text-lcov > coverage.lcov",
     "test": "mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls && cat coverage.lcov | ./node_modules/coveralls/bin/coveralls.js",
     "test:db": "NODE_ENV=test npm run down && npm run migrate:all && mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
     "build": "babel src -d dist",
     "start": "NODE_ENV=development nodemon --exec babel-node src/server.js",

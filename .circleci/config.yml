@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   node: circleci/node@4.7
-
+  coveralls: coveralls/coveralls@1.0.4
 # Define jobs
 jobs:
   build:
@@ -36,8 +36,10 @@ jobs:
 
       # Run the tests
       - run: npm run migrate:all
-      
-      - run: npm test
+
+      - run: npm run coverage
+
+      - coveralls/upload
 
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -46,3 +48,6 @@ workflows:
     jobs:
       - build
       - test
+notify:
+  webhooks:
+    - url: https://coveralls.io/webhook?repo_token=${COVERALLS_REPO_TOKEN}
