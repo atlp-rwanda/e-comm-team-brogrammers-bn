@@ -13,6 +13,9 @@ jobs:
           command: npm install
           name: Install Packages
       - run:
+          command: npm run test
+          name: Run tests
+      - run:
           command: npm run coverage
           name: Run coverage
       # - run: # run code coverage report
