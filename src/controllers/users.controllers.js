@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
@@ -7,7 +8,7 @@ import db from '../database/models';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
-import { verifyEmailTemplate } from '../helpers/mailTemplate';
+import { verifyEmailTemplate, mfaEmailTemplate } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
 // eslint-disable-next-line operator-linebreak
@@ -28,7 +29,10 @@ export default class Users {
   static async signup(req, res) {
     try {
       const { data } = await User.register(req.body);
-      const signupToken = jwt.sign({ email: data.email }, process.env.JWT_SECRET);
+      const signupToken = jwt.sign(
+        { email: data.email },
+        process.env.JWT_SECRET
+      );
       const userToken = Jwt.generateToken({ data }, '1h');
       if (userToken) {
         data.email_token = userToken;
@@ -107,9 +111,24 @@ export default class Users {
         return res.status(403).json({ message: 'Email is not verified' });
       }
 
-      const token = jwt.sign({ email: user.email }, JWT_SECRET);
+      if (user.mfa_enabled === false) {
+        const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        return res.status(200).json({ email: req.body.email, token });
+      }
 
-      res.status(200).json({ id: user.id, email: user.email, token });
+      // eslint-disable-next-line camelcase
+      const mfa_code = await User.startMfaProcess(req.body.email);
+      const mfaEmailContent = mfaEmailTemplate(mfa_code);
+      sendEmail(
+        emailConfig({
+          email: req.body.email,
+          subject: 'Brogrammers authentication code',
+          content: mfaEmailContent,
+        })
+      );
+      return res
+        .status(200)
+        .json({ message: 'Please check your email for authentication code' });
     } catch (error) {
       res
         .status(500)
@@ -126,18 +145,15 @@ export default class Users {
    */
   static async getProfile(req, res) {
     try {
-      const {
-        email, username, role, gender
-      } = req.user;
-      res
-        .status(200)
-        .json({
-          email, username, role, gender
-        });
+      const { email, username, role, gender } = req.user;
+      res.status(200).json({
+        email,
+        username,
+        role,
+        gender,
+      });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: error.message, message: 'server error' });
+      res.status(500).json({ error: error.message, message: 'server error' });
     }
   }
 
@@ -152,19 +168,74 @@ export default class Users {
     try {
       const { error, value } = await User.editProfile(req.body, req.user);
       if (error) return res.status(400).json(error);
-      const {
-        email, username, role, gender
-      } = value;
+      const { email, username, role, gender } = value;
       const token = Jwt.generateToken({ email });
-      res
-        .status(200)
-        .json({
-          email, username, role, gender, token
-        });
+      res.status(200).json({
+        email,
+        username,
+        role,
+        gender,
+        token,
+      });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: error.message, message: 'server error' });
+      res.status(500).json({ error: error.message, message: 'server error' });
+    }
+  }
+
+  static async enableMfa(req, res) {
+    try {
+      await db.users.update(
+        { mfa_enabled: true },
+        { where: { email: req.user.email } }
+      );
+
+      return res.status(200).json({
+        message: 'Multi-factor authentication is enabled',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to enable Multi-factor authentication',
+      });
+    }
+  }
+
+  static async disableMfa(req, res) {
+    try {
+      await db.users.update(
+        { mfa_enabled: false },
+        { where: { email: req.user.email } }
+      );
+
+      return res.status(200).json({
+        message: 'Multi-factor authentication is disabled',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to disable Multi-factor authentication',
+      });
+    }
+  }
+
+  static async verifyMfaCode(req, res) {
+    try {
+      const [isValid, message] = await User.isMfaValid(
+        req.body.email,
+        req.body.mfa_code
+      );
+
+      if (isValid) {
+        const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        return res.status(200).json({ email: req.body.email, token });
+      }
+
+      return res.status(403).json({ message });
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to verify authentication code',
+      });
     }
   }
 }
