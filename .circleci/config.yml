@@ -1,49 +1,28 @@
 version: 2.1
-
 orbs:
-  coveralls: coveralls/coveralls@1.0.6
-  node: circleci/node@4.7
-
-# Define jobs
+  node: circleci/node@5.0.2
+  coveralls: coveralls/coveralls@1.0.4
 jobs:
-  test:
-    # Set up the job environment
-    docker:
-      - image: circleci/node:16.10
-
-    # Define the steps to run in this job
+  test: # Name of job
+    executor: node/default # use the default executor defined within the orb
     steps:
-      # Checkout the code from the GitHub repository
       - checkout
-
-      # Install dependencies
-      - run: npm install
-
-      # Run the build command
-      # - run: npm run build
-
-    # Set up the job environment
-    #docker:
-      #- image: circleci/node:16.10
-
-    # Define the steps to run in this job
-    #steps:
-      # Checkout the code from the GitHub repository
-      #- checkout
-
-      # Install dependencies
-      #- run: npm install
-
-      # Run the tests
-      - run: npm test
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm install
+          name: Install Packages
+      - run:
+          command: npm run coverage
+          name: Run coverage
+      # - run: # run code coverage report
+      #     name: code-coverage
+      #     command: npm run coverage
       - coveralls/upload
-      #- run: npm run coverage
-
-
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  test_app:
     jobs:
-      #- build
       - test
+notify:
+  webhooks:
+    - url: https://coveralls.io/webhook?repo_token=${COVERALLS_REPO_TOKEN}

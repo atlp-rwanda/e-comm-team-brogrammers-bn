@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html mocha tests/*.test.js --timeout 10000 -c --require @babel/register --exit",
-    "coverage": "nyc --reporter=lcov --reporter=text mocha tests/*.test.js --timeout 10000 --require @babel/register && nyc report --reporter=text-lcov > coverage.lcov && cat coverage.lcov | coveralls ",
+    "coverage": "nyc --reporter=lcov --reporter=text mocha tests/*.test.js --timeout 10000 --require @babel/register && nyc report --reporter=text-lcov > coverage.lcov && cat coverage.lcov | ./node_modules/.bin/coveralls",
     "test:db": "NODE_ENV=test npm run down && npm run migrate:all && mocha --recursive --exit --timeout 500000  --require @babel/register tests/**/*.js",
     "build": "babel src -d dist",
     "start": "NODE_ENV=development nodemon --exec babel-node src/server.js",
