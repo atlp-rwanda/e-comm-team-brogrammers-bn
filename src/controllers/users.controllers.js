@@ -3,7 +3,11 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../services/user.services';
+// eslint-disable-next-line import/no-duplicates
 import db from '../database/models';
+
+// eslint-disable-next-line import/named, import/no-duplicates
+import { users } from '../database/models';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -28,7 +32,10 @@ export default class Users {
   static async signup(req, res) {
     try {
       const { data } = await User.register(req.body);
-      const signupToken = jwt.sign({ email: data.email }, process.env.JWT_SECRET);
+      const signupToken = jwt.sign(
+        { email: data.email },
+        process.env.JWT_SECRET
+      );
       const userToken = Jwt.generateToken({ data }, '1h');
       if (userToken) {
         data.email_token = userToken;
@@ -165,6 +172,29 @@ export default class Users {
       res
         .status(500)
         .json({ error: error.message, message: 'server error' });
+    }
+  }
+
+  static async CreateAdmin(req, res) {
+    try {
+      const newAdminemail = req.params.email;
+      const Nwuser = await users.findOne({ where: { email: newAdminemail } });
+      if (!Nwuser) {
+        return res
+          .status(404)
+          .json({
+            statusCode: 404,
+            message: 'you are trying to make admin user that does not exist',
+          });
+      }
+      Nwuser.role = 'admin';
+      await Nwuser.save();
+      res.status(200).json({
+        user: Nwuser,
+        message: `user ${Nwuser.username} sucessfully made admin`,
+      });
+    } catch (error) {
+      res.status(500).json({ 'Error:': error });
     }
   }
 }

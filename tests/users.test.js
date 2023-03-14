@@ -13,7 +13,7 @@ sequelize.authenticate();
 
 chai.should();
 chai.use(chaiHttp);
-
+const { expect } = chai;
 describe('testing signup', () => {
   before(async () => {
     await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
@@ -68,7 +68,7 @@ describe('testing user profile', () => {
   // eslint-disable-next-line prefer-const
   let user = {
     email: 'john@gmail.com',
-    password: '123@Pass'
+    password: '123@Pass',
   };
   let token = '';
 
@@ -151,4 +151,41 @@ describe('testing user profile', () => {
         done();
       });
   });
+});
+
+const email = 'ange@gmail.com';
+describe('testing creation of admin', () => {
+  it('should return change the role of user to admin', async () => {
+    const res = await chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+    const { token } = res.body;
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property('token');
+
+    const verifyRes = await chai
+      .request(app)
+      .patch(`/users/Create-admin/${email}`)
+      .set('Authorization', `Bearer ${token}`);
+    chai.expect(verifyRes).to.have.status(200);
+  });
+});
+
+const Invalidemail = 'ange1@gmail.com';
+
+it('should return 404 if a user is not found', async () => {
+  const res = await chai
+    .request(app)
+    .post('/users/login')
+    .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+  const { token } = res.body;
+  expect(res).to.have.status(200);
+  expect(res.body).to.have.property('token');
+
+  const verifyRes = await chai
+    .request(app)
+    .patch(`/users/Create-admin/${Invalidemail}`)
+    .set('Authorization', `Bearer ${token}`);
+  chai.expect(verifyRes).to.have.status(404);
 });
