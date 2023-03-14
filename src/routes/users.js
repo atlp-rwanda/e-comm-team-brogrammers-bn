@@ -16,4 +16,7 @@ routes.post('/login', loginValidate, Users.login);
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
 
+routes.patch('/change-password', Users.changePassword);
+
+
 export default routes;
