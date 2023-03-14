@@ -226,4 +226,39 @@ export default class Users {
       res.status(500).json({ 'Error:': error });
     }
   }
+  
+  static async changePassword(req, res) {
+    try {
+      const { email, oldPassword, newPassword } = req.body;
+
+      // check if the email exists in the database
+      const user = await db.users.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // check if the old password matches the one in the database
+      const isPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Incorrect old password' });
+      }
+      
+       // validate the new password
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        message:
+          'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.',
+      });
+    }
+      // hash the new password and update the database
+      const hashedPassword = bcrypt.hashSync(newPassword, 10);
+      user.password = hashedPassword;
+      await user.save();
+
+      res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message, message: 'Failed to change password' });
+    }
+  }
 }

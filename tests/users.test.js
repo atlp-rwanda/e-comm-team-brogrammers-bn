@@ -68,10 +68,9 @@ describe('testing user profile', () => {
   // eslint-disable-next-line prefer-const
   let user = {
     email: 'john@gmail.com',
-    password: '123@Pass',
+    password: '123@Pass'
   };
   let token = '';
-  let emailToken;
 
   it('should return a JWT token when given valid credentials', (done) => {
     chai
@@ -152,28 +151,59 @@ describe('testing user profile', () => {
         done();
       });
   });
-  it('should return 200 code for changing the email', (done) => {
-    // eslint-disable-next-line no-unused-vars
-    chai
-      .request(app)
-      .patch('/users/profile')
-      .set({ authorization: `bearer ${token}` })
-      .send({
-        email: 'newemail@gmail.com'
-      })
+});
+
+describe(' testing changePassword', () => {
+  let user = {
+    email: 'john@gmail.com',
+    password: '123@Pass'
+  };
+  let token = '';
+
+  before((done) => {
+    chai.request(app)
+      .post('/users/login')
+      .send({ email: user.email, password: user.password })
       .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        chai.expect(res.body).to.have.property('email_token');
-        emailToken = res.body.email_token;
+        token = res.body.token;
         done();
       });
   });
-  it('should return 200 code velifiying new email', (done) => {
-    chai
-      .request(app)
-      .get(`/users/verify-email/${emailToken}`)
+
+  it('should return 401 for incorrect old password', (done) => {
+    chai.request(app)
+      .patch('/users/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ oldPassword: 'wrongpassword', newPassword: 'Newp@ssword123' })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        chai.expect(res.body.message).to.equal('Incorrect old password');
+        done();
+      });
+  });
+
+  it('should return 400 for invalid new password', (done) => {
+    chai.request(app)
+      .patch('/users/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ oldPassword: user.password, newPassword: 'weakpassword' })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(400);
+        chai.expect(res.body.message).to.equal(
+          'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.'
+        );
+        done();
+      });
+  });
+
+  it('should change the password successfully', (done) => {
+    chai.request(app)
+      .patch('/users/change-password')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ oldPassword: user.password, newPassword: 'Newp@ssword123' })
       .end((error, res) => {
         chai.expect(res).to.have.status(200);
+        chai.expect(res.body.message).to.equal('Password changed successfully');
         done();
       });
   });

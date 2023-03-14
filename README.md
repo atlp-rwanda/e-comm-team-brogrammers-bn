@@ -98,6 +98,7 @@ With correct token you get the following:
 
 `change the token because some data in it was changed too`
 
+<<<<<<< HEAD
 ### Making user an admin
 - please if you are admin be sure to be logged in
 - get the token and put it in bearer
@@ -123,3 +124,20 @@ With correct token you get the following:
   "message": "user Ange She sucessfully made admin"
 }
 ```
+=======
+### Change password:
+
+`PATCH /users/change-password`
+
+Example of request body:
+
+```
+{
+    "email":"ange@gmail.com",
+    "oldPassword":"123@Password",
+    "newPassword":"123@Pass"
+}
+```
+with correct email,oldPassword and newPassword. the newPassword much meet the criteria of valid password
+
+>>>>>>> 98d0e69 (ft(user can change password): the user will be able to change tha password)
