@@ -389,3 +389,65 @@ With the correct token of admin and correct id of user  you get the following:
 }
 ```
 
+this will change product availability to true if it was false or false if it was true
+
+
+## Adding product to wishlist
+`post /wishlist/:id/`
+
+- first get the id of product you want to add to wishlist
+- if no product create one
+- login and put token in bearer auth
+- product id must be available
+- you can not wish for product twice
+- note: `token is required`
+ you will get this response
+ 
+ ```
+
+{
+  "data": {
+    "id": "642df59a-d79d-431a-92b2-2e6e90fd1901",
+    "userId": "2f91fac7-6a38-4162-af8b-84d67861e6f4",
+    "productId": "2c664f24-a604-4ed1-96c3-f96b1972c101",
+    "updatedAt": "2023-03-21T10:14:10.157Z",
+    "createdAt": "2023-03-21T10:14:10.157Z"
+  },
+  "message": "product added to your wishlist successfully"
+}
+```
+
+## Getting all  products in your  wishlist
+`post /wishlist/`
+
+- login and put token in bearer auth
+- product id must be available
+- note: `token is required`
+
+you will get this response 
+
+```
+{
+  "message": "Ange She here is product in your wishlist",
+  "data": [
+    {
+      "id": "2c664f24-a604-4ed1-96c3-f96b1972c101",
+      "images": [
+        "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679392751/qerw59puucgm5djziuxf.png",
+        "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679392754/vhplcicfm7ovvff7hltc.png"
+      ],
+      "name": "shoes",
+      "description": "new shoes on the market",
+      "quantity": 20,
+      "sellerId": "c8c929a9-88f9-447a-9b8e-d49fb8c62eb8",
+      "exp_date": "2030-03-19T22:00:00.000Z",
+      "available": true,
+      "price": 90,
+      "category": 1,
+      "createdAt": "2023-03-21T09:59:14.601Z",
+      "updatedAt": "2023-03-21T09:59:16.956Z"
+    }
+  ]
+}
+
+```
