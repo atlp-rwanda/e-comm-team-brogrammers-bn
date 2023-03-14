@@ -157,16 +157,45 @@ export default class Users {
    */
   static async editProfile(req, res) {
     try {
-      const { error, value } = await User.editProfile(req.body, req.user);
+      const other = {};
+      const {
+        role: userRole,
+        email_token: userEmailToken,
+        password, id, verified, // unchangeble fields in here
+        ...fields // changeble fields
+      } = req.body;
+
+      const { email: otherEmail } = fields;
+      if (otherEmail && otherEmail !== null && otherEmail !== req.user.email) {
+        const exist = await db.users.findOne({ where: { email: otherEmail } });
+        if (exist && exist !== null) return res.status(400).json({ error: 'email exists' });
+
+        const userToken = Jwt.generateToken({ data: req.user }, '1h');
+        const token = Jwt.generateToken({ email: otherEmail });
+        if (userToken) {
+          fields.email_token = userToken;
+          other.token = token;
+          fields.verified = false;
+        }
+        const verificationEmail = verifyEmailTemplate(userToken);
+        sendEmail(
+          emailConfig({
+            email: otherEmail,
+            subject: 'Brogrammers email verification',
+            content: verificationEmail,
+          })
+        );
+      }
+
+      const { error, value } = await User.editProfile(fields, req.user);
       if (error) return res.status(400).json(error);
       const {
         email, username, role, gender
       } = value;
-      const token = Jwt.generateToken({ email });
       res
         .status(200)
         .json({
-          email, username, role, gender, token
+          ...other, ...fields, email, username, role, gender
         });
     } catch (error) {
       res

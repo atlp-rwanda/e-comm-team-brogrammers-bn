@@ -14,7 +14,6 @@ routes.post('/signup', signupVatidate, checkUserExist, Users.signup);
 routes.get('/verify-email/:token', Users.verifyEmail);
 routes.patch('/create-admin/:email', isAuthenticated, checkRole(['admin']), Users.CreateAdmin);
 routes.post('/login', loginValidate, Users.login);
-
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
 

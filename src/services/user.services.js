@@ -42,18 +42,13 @@ export default class User {
   }
 
   static async editProfile(data, user) {
-    const { email } = data;
-    if (email && email !== null && email !== user.email) {
-      const exist = await users.findOne({ where: { email } });
-      if (exist && exist !== null) return { error: 'email exists' };
-    }
-    const {
-      role, password, id, verified, // unchangeble fields in here
-      ...fields // changeble fields
-    } = data;
+    // const {
+    //   role, password, id, // unchangeble fields in here
+    //   ...fields // changeble fields
+    // } = data;
 
-    await this.updateUser(fields, user.id);
-    const newUsers = { ...user.dataValues, ...fields };
+    await this.updateUser(data, user.id);
+    const newUsers = { ...user.dataValues, ...data };
     return { value: newUsers };
   }
 }
