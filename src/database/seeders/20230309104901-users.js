@@ -13,8 +13,8 @@ export default {
     await queryInterface.bulkInsert('users', [
       {
         id: uuid(),
-        username: 'Jean Luca',
-        email: 'luca@gmail.com',
+        username: 'Patience Ineza',
+        email: 'inezapatience2@gmail.com',
         password: await bcrypt.hash('123@Pass', saltRounds),
         gender: 'none',
         role: 'admin',

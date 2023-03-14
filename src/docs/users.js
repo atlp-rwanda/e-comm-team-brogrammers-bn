@@ -167,4 +167,54 @@
  *               properties:
  *                 message:
  *                   type: string
+ *
+ * @swagger
+ * /users/Create-admin/{email}:
+ *   patch:
+ *     summary: Make an existing user an admin.
+ *     tags:
+ *         - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         description: The email of the user to make an admin.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: User was successfully made an admin.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *       '404':
+ *         description: The user with the specified email was not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   description: An error message.
+ *       '500':
+ *         description: Internal server error occurred.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Error:
+ *                   type: string
+ *                   description: The error message.
  */
