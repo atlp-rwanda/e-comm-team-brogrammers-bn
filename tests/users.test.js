@@ -14,6 +14,11 @@ sequelize.authenticate();
 chai.should();
 chai.use(chaiHttp);
 const { expect } = chai;
+
+let token = '';
+// eslint-disable-next-line no-unused-vars
+let emailToken;
+
 describe('testing signup', () => {
   before(async () => {
     await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
@@ -70,7 +75,6 @@ describe('testing user profile', () => {
     email: 'john@gmail.com',
     password: '123@Pass'
   };
-  let token = '';
 
   it('should return a JWT token when given valid credentials', (done) => {
     chai
@@ -130,7 +134,7 @@ describe('testing user profile', () => {
       .patch('/users/profile')
       .set({ authorization: `bearer ${token}` })
       .send({
-        gender: 'female'
+        gender: 'female',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(200);
@@ -144,7 +148,7 @@ describe('testing user profile', () => {
       .set({ authorization: `bearer ${token}` })
       .send({
         gender: 'female',
-        email: 'edwin12@gmail.com'
+        email: 'edwin12@gmail.com',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
@@ -154,10 +158,12 @@ describe('testing user profile', () => {
 });
 
 describe(' testing changePassword', () => {
+  // eslint-disable-next-line prefer-const
   let user = {
     email: 'john@gmail.com',
     password: '123@Pass'
   };
+  // eslint-disable-next-line no-shadow
   let token = '';
 
   before((done) => {
@@ -216,14 +222,14 @@ describe('testing creation of admin', () => {
       .request(app)
       .post('/users/login')
       .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
-    const { token } = res.body;
+    const { token: authToken } = res.body;
     expect(res).to.have.status(200);
     expect(res.body).to.have.property('token');
 
     const verifyRes = await chai
       .request(app)
       .patch(`/users/Create-admin/${email}`)
-      .set('Authorization', `Bearer ${token}`);
+      .set('Authorization', `Bearer ${authToken}`);
     chai.expect(verifyRes).to.have.status(200);
   });
 });
@@ -235,13 +241,13 @@ it('should return 404 if a user is not found', async () => {
     .request(app)
     .post('/users/login')
     .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
-  const { token } = res.body;
+  const { token: authToken } = res.body;
   expect(res).to.have.status(200);
   expect(res.body).to.have.property('token');
 
   const verifyRes = await chai
     .request(app)
     .patch(`/users/Create-admin/${Invalidemail}`)
-    .set('Authorization', `Bearer ${token}`);
+    .set('Authorization', `Bearer ${authToken}`);
   chai.expect(verifyRes).to.have.status(404);
 });

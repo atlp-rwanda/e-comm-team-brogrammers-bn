@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
@@ -11,7 +12,7 @@ import { users } from '../database/models';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
-import { verifyEmailTemplate } from '../helpers/mailTemplate';
+import { verifyEmailTemplate, mfaEmailTemplate } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
 // eslint-disable-next-line operator-linebreak
@@ -114,9 +115,24 @@ export default class Users {
         return res.status(403).json({ message: 'Email is not verified' });
       }
 
-      const token = jwt.sign({ email: user.email }, JWT_SECRET);
+      if (user.mfa_enabled === false) {
+        const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        return res.status(200).json({ email: req.body.email, token });
+      }
 
-      res.status(200).json({ id: user.id, email: user.email, token });
+      // eslint-disable-next-line camelcase
+      const mfa_code = await User.startMfaProcess(req.body.email);
+      const mfaEmailContent = mfaEmailTemplate(mfa_code);
+      sendEmail(
+        emailConfig({
+          email: req.body.email,
+          subject: 'Brogrammers authentication code',
+          content: mfaEmailContent,
+        })
+      );
+      return res
+        .status(200)
+        .json({ message: 'Please check your email for authentication code' });
     } catch (error) {
       res
         .status(500)
@@ -133,18 +149,15 @@ export default class Users {
    */
   static async getProfile(req, res) {
     try {
-      const {
-        email, username, role, gender
-      } = req.user;
-      res
-        .status(200)
-        .json({
-          email, username, role, gender
-        });
+      const { email, username, role, gender } = req.user;
+      res.status(200).json({
+        email,
+        username,
+        role,
+        gender,
+      });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: error.message, message: 'server error' });
+      res.status(500).json({ error: error.message, message: 'server error' });
     }
   }
 
@@ -157,50 +170,78 @@ export default class Users {
    */
   static async editProfile(req, res) {
     try {
-      const other = {};
-      const {
-        role: userRole,
-        email_token: userEmailToken,
-        password, id, verified, // unchangeble fields in here
-        ...fields // changeble fields
-      } = req.body;
+      const { error, value } = await User.editProfile(req.body, req.user);
+      if (error) return res.status(400).json(error);
+      const { email, username, role, gender } = value;
+      const token = Jwt.generateToken({ email });
+      await db.users.update({ email_token: token }, { where: { email } });
+      res.status(200).json({
+        email,
+        username,
+        role,
+        gender,
+        token,
+        email_token: token,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message, message: 'server error' });
+    }
+  }
 
-      const { email: otherEmail } = fields;
-      if (otherEmail && otherEmail !== null && otherEmail !== req.user.email) {
-        const exist = await db.users.findOne({ where: { email: otherEmail } });
-        if (exist && exist !== null) return res.status(400).json({ error: 'email exists' });
+  static async enableMfa(req, res) {
+    try {
+      await db.users.update(
+        { mfa_enabled: true },
+        { where: { email: req.user.email } }
+      );
 
-        const userToken = Jwt.generateToken({ data: req.user }, '1h');
-        const token = Jwt.generateToken({ email: otherEmail });
-        if (userToken) {
-          fields.email_token = userToken;
-          other.token = token;
-          fields.verified = false;
-        }
-        const verificationEmail = verifyEmailTemplate(userToken);
-        sendEmail(
-          emailConfig({
-            email: otherEmail,
-            subject: 'Brogrammers email verification',
-            content: verificationEmail,
-          })
-        );
+      return res.status(200).json({
+        message: 'Multi-factor authentication is enabled',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to enable Multi-factor authentication',
+      });
+    }
+  }
+
+  static async disableMfa(req, res) {
+    try {
+      await db.users.update(
+        { mfa_enabled: false },
+        { where: { email: req.user.email } }
+      );
+
+      return res.status(200).json({
+        message: 'Multi-factor authentication is disabled',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to disable Multi-factor authentication',
+      });
+    }
+  }
+
+  static async verifyMfaCode(req, res) {
+    try {
+      const [isValid, message] = await User.isMfaValid(
+        req.body.email,
+        req.body.mfa_code
+      );
+
+      if (isValid) {
+        const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        return res.status(200).json({ email: req.body.email, token });
       }
 
-      const { error, value } = await User.editProfile(fields, req.user);
-      if (error) return res.status(400).json(error);
-      const {
-        email, username, role, gender
-      } = value;
-      res
-        .status(200)
-        .json({
-          ...other, ...fields, email, username, role, gender
-        });
+      return res.status(403).json({ message });
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: error.message, message: 'server error' });
+      return res.status(500).json({
+        error: error.message,
+        message: 'Failed to verify authentication code',
+      });
     }
   }
 
@@ -209,12 +250,10 @@ export default class Users {
       const newAdminemail = req.params.email;
       const Nwuser = await users.findOne({ where: { email: newAdminemail } });
       if (!Nwuser) {
-        return res
-          .status(404)
-          .json({
-            statusCode: 404,
-            message: 'you are trying to make admin user that does not exist',
-          });
+        return res.status(404).json({
+          statusCode: 404,
+          message: 'you are trying to make admin user that does not exist',
+        });
       }
       Nwuser.role = 'admin';
       await Nwuser.save();

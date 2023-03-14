@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
 /* eslint-disable require-jsdoc */
@@ -19,16 +21,40 @@ export default class User {
   static async register(data) {
     data.password = await bcrypt.hash(data.password, saltRounds);
 
-    const {
-      // eslint-disable-next-line camelcase
-      username, email, password, gender, email_verified
-    } = data;
+    const { username, email, password, gender, email_verified } = data;
     const user = await users.create({
-      // eslint-disable-next-line camelcase
-      username, email, password, gender, email_verified
+      username,
+      email,
+      password,
+      gender,
+      email_verified,
     });
 
     return { data: user };
+  }
+
+  static async startMfaProcess(email) {
+    const user = await users.findOne({ where: { email } });
+    user.mfa_code = Math.floor(Math.random() * 100000 + 10000);
+    const timeout = (process.env.MFA_MINS || 3) * 60 * 1000;
+    user.mfa_timeout = new Date(Date.now() + timeout);
+    await user.save();
+    return user.mfa_code;
+  }
+
+  static async isMfaValid(email, mfa_code) {
+    const user = await users.findOne({ where: { email } });
+    if (user.mfa_code !== mfa_code) {
+      return [false, 'Invalid authentication code'];
+    }
+    if (user.mfa_timeout < new Date()) {
+      return [false, 'Authentication code expired'];
+    }
+
+    // Force mfa code to expire after usage
+    user.mfa_timeout = new Date(Date.now() - 10 * 60 * 1000);
+    await user.save();
+    return [true];
   }
 
   static async findByEmailToken(emailToken) {
@@ -42,10 +68,18 @@ export default class User {
   }
 
   static async editProfile(data, user) {
-    // const {
-    //   role, password, id, // unchangeble fields in here
-    //   ...fields // changeble fields
-    // } = data;
+    const { email } = data;
+    if (email && email !== null && email !== user.email) {
+      const exist = await users.findOne({ where: { email } });
+      if (exist && exist !== null) return { error: 'email exists' };
+    }
+    const {
+      role,
+      password,
+      id,
+      verified, // unchangeble fields in here
+      ...fields // changeble fields
+    } = data;
 
     await this.updateUser(data, user.id);
     const newUsers = { ...user.dataValues, ...data };
