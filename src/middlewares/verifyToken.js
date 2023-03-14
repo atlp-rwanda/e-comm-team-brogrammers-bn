@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 // eslint-disable-next-line import/named
@@ -17,7 +18,6 @@ function isAuthenticated(req, res, next) {
     if (!authorization) {
       return res.status(401).json({ statusCode: 401, message: 'Please Login' });
     }
-    console.log(authorization.split(' ')[1]);
     const token = authorization.split(' ')[1];
 
     if (token) {
@@ -28,8 +28,7 @@ function isAuthenticated(req, res, next) {
         }
         {
           const { email } = decodedToken;
-          console.log(decodedToken);
-          const user = await users.findOne({ email });
+          const user = await users.findOne({ where: { email } });
           if (!user) {
             return res.status(401).json('You are not Authorized');
           }

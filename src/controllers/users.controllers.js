@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import User from '../services/user.services';
@@ -113,6 +114,57 @@ export default class Users {
       res
         .status(500)
         .json({ error: error.message, message: 'Failed to login a user' });
+    }
+  }
+
+  /**
+   * Login a user.
+   * getting user information
+   * @param {Object} req
+   * @param {Object} res
+   * @return {Object} res
+   */
+  static async getProfile(req, res) {
+    try {
+      const {
+        email, username, role, gender
+      } = req.user;
+      res
+        .status(200)
+        .json({
+          email, username, role, gender
+        });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: error.message, message: 'server error' });
+    }
+  }
+
+  /**
+   * Login a user.
+   * getting user information
+   * @param {Object} req
+   * @param {Object} res
+   * @return {Object} res
+   */
+  static async editProfile(req, res) {
+    try {
+      const { error, value } = await User.editProfile(req.body, req.user);
+      if (error) return res.status(400).json(error);
+      const {
+        email, username, role, gender
+      } = value;
+      const token = Jwt.generateToken({ email });
+      res
+        .status(200)
+        .json({
+          email, username, role, gender, token
+        });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: error.message, message: 'server error' });
     }
   }
 }

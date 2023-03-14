@@ -63,3 +63,92 @@ describe('testing signup', () => {
       });
   });
 });
+
+describe('testing user profile', () => {
+  // eslint-disable-next-line prefer-const
+  let user = {
+    email: 'john@gmail.com',
+    password: '123@Pass'
+  };
+  let token = '';
+
+  it('should return a JWT token when given valid credentials', (done) => {
+    chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: user.email, password: user.password })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        token = res.body.token;
+        chai.expect(res.body).to.have.property('token');
+        done();
+      });
+  });
+  it('should return 200 code and the user profile', (done) => {
+    chai
+      .request(app)
+      .get('/users/profile')
+      .set({ authorization: `bearer ${token}` })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        chai.expect(res.body).to.have.property('email', user.email);
+        done();
+      });
+  });
+  it('should return 401 code for no authorization', (done) => {
+    chai
+      .request(app)
+      .get('/users/profile')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+  it('should return 401 code for wrong token', (done) => {
+    chai
+      .request(app)
+      .get('/users/profile')
+      .set({ authorization: `bearer ${token}n` })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+  it('should return 401 code for no token', (done) => {
+    chai
+      .request(app)
+      .get('/users/profile')
+      .set({ authorization: 'bearer ' })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+  it('should return 200 code for changing profile', (done) => {
+    chai
+      .request(app)
+      .patch('/users/profile')
+      .set({ authorization: `bearer ${token}` })
+      .send({
+        gender: 'female'
+      })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
+  it('should return 400 code for changing profile to existed email', (done) => {
+    chai
+      .request(app)
+      .patch('/users/profile')
+      .set({ authorization: `bearer ${token}` })
+      .send({
+        gender: 'female',
+        email: 'edwin12@gmail.com'
+      })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(400);
+        done();
+      });
+  });
+});

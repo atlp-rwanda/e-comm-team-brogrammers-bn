@@ -50,3 +50,50 @@ With correct email and password you get the following:
 - Example Response: `{ id: 1, email: 'luca@gmail.com',  token: 'yourjwttoken' }`
 
 Required fields: `email`, `password`
+
+## profile:
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- note: `token is required`
+
+### get profile
+
+`GET /users/profile`
+
+With correct token you get the following:
+- Example Response: 
+```
+{ 
+  username: 'luca'
+  email: 'luca@gmail.com',  
+  gender: 'none',
+  role: 'buyer'
+}
+```
+
+### change profile
+
+`GET /users/profile`
+
+Example of request body:
+```
+{
+  "username: "new luca",
+  "email": "newluca@gmail.com",
+  "gender": "none"
+}
+```
+With correct token you get the following:
+- Example Response: 
+```
+{ 
+  "token": "<string>"
+  "username: "new luca",
+  "email": "newluca@gmail.com",
+  "gender": "none",
+  "role": "buyer"
+}
+```
+
+`change the token because some data in it was changed too`
