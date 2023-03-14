@@ -155,7 +155,8 @@ With correct token you get the following:
   "message": "user Ange She sucessfully made admin"
 }
 ```
-## Change password:
+
+### Change password:
 
 `PATCH /users/change-password`
 
@@ -361,4 +362,30 @@ if you are a seller you will get this response:
 - product must be in your collection
 - note: `token is required`
 
-this will change product availability to true if it was false or false if it was true
+   `PATCH /users/change-password`
+### Setting role/permission to the given user
+- First yoou logged in as Admin to be allowed to set role
+- get the token and put it in bearer
+- then click Authorize
+
+`patch /users/:id/role`
+- where id is the id of user you want to give a given role
+
+Example response body:
+```
+{
+  "role": "<role you want to give user>"
+}
+```
+With the correct token of admin and correct id of user  you get the following:
+- Example Response: 
+```
+{ 
+  "token": "<string>"
+  "username: "string",
+  "email": "string",
+  "gender": "string",
+  "role": "updated role"
+}
+```
+
