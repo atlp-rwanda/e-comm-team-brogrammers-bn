@@ -38,6 +38,22 @@ export default class User {
 
   static async updateUser(fields, id) {
     // eslint-disable-next-line no-return-await
-    return await User.update({ ...fields }, { where: { id: id } });
+    return await users.update({ ...fields }, { where: { id: id } });
+  }
+
+  static async editProfile(data, user) {
+    const { email } = data;
+    if (email && email !== null && email !== user.email) {
+      const exist = await users.findOne({ where: { email } });
+      if (exist && exist !== null) return { error: 'email exists' };
+    }
+    const {
+      role, password, id, verified, // unchangeble fields in here
+      ...fields // changeble fields
+    } = data;
+
+    await this.updateUser(fields, user.id);
+    const newUsers = { ...user.dataValues, ...fields };
+    return { value: newUsers };
   }
 }
