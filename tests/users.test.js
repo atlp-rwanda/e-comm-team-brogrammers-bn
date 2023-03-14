@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
@@ -6,7 +7,9 @@ import { isUuid } from 'uuidv4';
 import app from '../src/app';
 
 // eslint-disable-next-line import/named
-import db, { sequelize } from '../src/database/models/index';
+import { sequelize } from '../src/database/models/index';
+
+let email_token;
 
 env.config();
 sequelize.authenticate();
@@ -15,9 +18,9 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('testing signup', () => {
-  before(async () => {
-    await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
-  });
+  // before(async () => {
+  //   await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
+  // });
   it('should return 400 code', (done) => {
     chai
       .request(app)
@@ -38,14 +41,21 @@ describe('testing signup', () => {
       .post('/users/signup')
       .send({
         username: 'Mai DemiGod',
-        email: 'edwin12@gmail.com',
+        email: 'edwin12345678@gmail.com',
         password: '123@Pass',
       })
       .end((error, res) => {
+        email_token = res.body.user.email_token;
         chai.expect(res).to.have.status(201);
         chai.expect(isUuid(res.body.user.id)).to.equal(true);
         done();
       });
+  });
+  it('should  verify an email', async () => {
+    const res = await chai
+      .request(app)
+      .get(`/users/verify-email/${email_token}`);
+    chai.expect(res).to.have.status(200);
   });
 
   it('should return 400 code', (done) => {
@@ -67,8 +77,8 @@ describe('testing signup', () => {
 describe('testing user profile', () => {
   // eslint-disable-next-line prefer-const
   let user = {
-    email: 'john@gmail.com',
-    password: '123@Pass'
+    email: 'edwin12345678@gmail.com',
+    password: '123@Pass',
   };
   let token = '';
 
@@ -137,7 +147,7 @@ describe('testing user profile', () => {
         done();
       });
   });
-  it('should return 400 code for changing profile to existed email', (done) => {
+  it('should return 4010code for changing profile to existed email', (done) => {
     chai
       .request(app)
       .patch('/users/profile')
