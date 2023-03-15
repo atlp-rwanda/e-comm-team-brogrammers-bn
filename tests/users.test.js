@@ -71,6 +71,7 @@ describe('testing user profile', () => {
     password: '123@Pass',
   };
   let token = '';
+  let emailToken;
 
   it('should return a JWT token when given valid credentials', (done) => {
     chai
@@ -148,6 +149,31 @@ describe('testing user profile', () => {
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
+        done();
+      });
+  });
+  it('should return 200 code for changing the email', (done) => {
+    // eslint-disable-next-line no-unused-vars
+    chai
+      .request(app)
+      .patch('/users/profile')
+      .set({ authorization: `bearer ${token}` })
+      .send({
+        email: 'newemail@gmail.com'
+      })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        chai.expect(res.body).to.have.property('email_token');
+        emailToken = res.body.email_token;
+        done();
+      });
+  });
+  it('should return 200 code velifiying new email', (done) => {
+    chai
+      .request(app)
+      .get(`/users/verify-email/${emailToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
         done();
       });
   });
