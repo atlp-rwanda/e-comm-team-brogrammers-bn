@@ -130,8 +130,7 @@ With correct token you get the following:
 
 `change the token because some data in it was changed too`
 
-<<<<<<< HEAD
-### Making user an admin
+## Making user an admin
 - please if you are admin be sure to be logged in
 - get the token and put it in bearer
 
@@ -156,8 +155,7 @@ With correct token you get the following:
   "message": "user Ange She sucessfully made admin"
 }
 ```
-=======
-### Change password:
+## Change password:
 
 `PATCH /users/change-password`
 
@@ -172,4 +170,99 @@ Example of request body:
 ```
 with correct email,oldPassword and newPassword. the newPassword much meet the criteria of valid password
 
->>>>>>> 98d0e69 (ft(user can change password): the user will be able to change tha password)
+## PRODUCTS
+
+## Post product
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- note: `token is required`
+
+Example of request body:
+
+```
+{
+  "name": "shoes",
+  "description": "new shoes on the market",
+  "price": "100",
+  "quantity": "30",
+  "category": "1",
+  "expdate": "03-20-2030"
+  "images": <file>,
+  "images": <file>,
+  "images": <file>,
+}
+```
+
+if you are a seller you will get this response:
+```
+{
+  "message": "product edited",
+  "product": {
+    "id": "531f60c8-d7e4-4c7e-9316-9d226237b356",
+    "images": [
+      "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901154/ddhyu8kryfuucpzcis9v.jpg",
+      "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901159/iclk1ovdiihr6jgzozuy.png"
+    ],
+    "name": "nike new",
+    "description": "hey you can buy new shoes",
+    "quantity": 100,
+    "sellerId": "963b5889-a9e6-4b5b-815d-ffc7f5a6975f",
+    "exp_date": "2030-03-01T22:00:00.000Z",
+    "available": false,
+    "price": 250,
+    "category": 2,
+    "createdAt": "2023-03-15T17:20:57.685Z",
+    "updatedAt": "2023-03-15T17:28:08.077Z"
+  }
+}
+```
+Required fields: `name`, `price`, `quantity`, `images`
+
+## Update product
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- product must be in your collection
+- note: `token is required`
+
+Example of request body:
+
+```
+{
+  "name": "shoes",
+  "description": "new shoes on the market",
+  "price": "100",
+  "quantity": "30",
+  "category": "1",
+  "expdate": "03-20-2030"
+  "images": <file>,
+  "images": <file>,
+  "images": <file>,
+}
+```
+
+if you are a seller you will get this response:
+```
+{
+  "message": "product edited",
+  "product": {
+    "id": "531f60c8-d7e4-4c7e-9316-9d226237b356",
+    "images": [
+      "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901154/ddhyu8kryfuucpzcis9v.jpg",
+      "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901159/iclk1ovdiihr6jgzozuy.png"
+    ],
+    "name": "nike new",
+    "description": "hey you can buy new shoes",
+    "quantity": 100,
+    "sellerId": "963b5889-a9e6-4b5b-815d-ffc7f5a6975f",
+    "exp_date": "2030-03-01T22:00:00.000Z",
+    "available": false,
+    "price": 250,
+    "category": 2,
+    "createdAt": "2023-03-15T17:20:57.685Z",
+    "updatedAt": "2023-03-15T17:28:08.077Z"
+  }
+}
+```
+Required fields: no `field required`

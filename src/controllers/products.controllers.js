@@ -1,0 +1,36 @@
+import Product from '../services/product.services';
+
+/**
+ * the product controller class
+ */
+export default class Products {
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async postProduct(req, res) {
+    try {
+      const { error, value } = await Product.addProduct(req.body, req.files, req.user);
+      if (error) return res.status(400).json({ message: 'bad request', error });
+      return res.status(200).json({ message: 'product created', product: value });
+    } catch (error) {
+      return res.status(500).json({ message: 'server error', error });
+    }
+  }
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async editProduct(req, res) {
+    try {
+      const { error, value } = await Product.editProduct(req.body, req.files, req.product);
+      if (error) return res.status(400).json({ message: 'bad request', error });
+      return res.status(200).json({ message: 'product edited', product: value });
+    } catch (error) {
+      return res.status(500).json({ message: 'server error', error });
+    }
+  }
+}
