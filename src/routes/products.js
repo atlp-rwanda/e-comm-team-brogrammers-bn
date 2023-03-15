@@ -26,5 +26,15 @@ routes.patch(
   editProductVatidate,
   Products.editProduct
 );
+routes.get(
+  '/',
+  Products.getProduct
+);
+routes.get(
+  '/collection',
+  isAuthenticated,
+  checkRole(['seller']),
+  Products.sellergetProduct
+);
 
 export default routes;
