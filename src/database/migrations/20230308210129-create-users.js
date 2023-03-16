@@ -28,6 +28,18 @@ export default {
         defaultValue: 'none',
         type: Sequelize.STRING
       },
+      verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      email_token: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      isEmailVerified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

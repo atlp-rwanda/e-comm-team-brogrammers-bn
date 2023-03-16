@@ -35,6 +35,17 @@ export default {
       },
       {
         id: uuid(),
+        username: 'Jean Doe',
+        email: 'jean@gmail.com',
+        password: await bcrypt.hash('123@Pass', saltRounds),
+        gender: 'female',
+        role: 'seller',
+        verified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: uuid(),
         username: 'Lucy Aisha',
         email: 'lucy@gmail.com',
         password: await bcrypt.hash('123@Pass', saltRounds),
