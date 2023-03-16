@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
@@ -23,6 +24,8 @@ describe('testing signup', () => {
   before(async () => {
     await db.users.destroy({ where: { email: 'edwin12@gmail.com' } });
   });
+  // eslint-disable-next-line no-unused-vars
+  let email_token;
   it('should return 400 code', (done) => {
     chai
       .request(app)
@@ -47,6 +50,7 @@ describe('testing signup', () => {
         password: '123@Pass',
       })
       .end((error, res) => {
+        email_token = res.body.user.email_token;
         chai.expect(res).to.have.status(201);
         chai.expect(isUuid(res.body.user.id)).to.equal(true);
         done();
@@ -67,13 +71,19 @@ describe('testing signup', () => {
         done();
       });
   });
+  it('should  verify an email', async () => {
+    const res = await chai
+      .request(app)
+      .get(`/users/verify-email/${email_token}`);
+    chai.expect(res).to.have.status(200);
+  });
 });
 
 describe('testing user profile', () => {
   // eslint-disable-next-line prefer-const
   let user = {
-    email: 'john@gmail.com',
-    password: '123@Pass'
+    email: 'edwin12@gmail.com',
+    password: '123@Pass',
   };
 
   it('should return a JWT token when given valid credentials', (done) => {
@@ -148,7 +158,7 @@ describe('testing user profile', () => {
       .set({ authorization: `bearer ${token}` })
       .send({
         gender: 'female',
-        email: 'edwin12@gmail.com',
+        email: 'lucy@gmail.com'
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
@@ -160,8 +170,8 @@ describe('testing user profile', () => {
 describe(' testing changePassword', () => {
   // eslint-disable-next-line prefer-const
   let user = {
-    email: 'john@gmail.com',
-    password: '123@Pass'
+    email: 'edwin12@gmail.com',
+    password: '123@Pass',
   };
   // eslint-disable-next-line no-shadow
   let token = '';
@@ -209,7 +219,7 @@ describe(' testing changePassword', () => {
       .send({ oldPassword: user.password, newPassword: 'Newp@ssword123' })
       .end((error, res) => {
         chai.expect(res).to.have.status(200);
-        chai.expect(res.body.message).to.equal('Password changed successfully');
+        chai.expect(res.body.message).to.equal('Password updated successfully');
         done();
       });
   });

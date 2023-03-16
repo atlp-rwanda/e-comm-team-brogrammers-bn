@@ -68,6 +68,16 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
+      mustUpdatePassword: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
+      lastTimePasswordUpdated: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
+      },
+      resetPasswordToken: DataTypes.STRING,
+      resetPasswordExpires: DataTypes.DATE,
     },
     {
       sequelize,

@@ -47,6 +47,20 @@ export default {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      mustUpdatePassword: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      lastTimePasswordUpdated: {
+        type: Sequelize.DATE,
+        defaultValue: Date.now()
+      },
+      resetPasswordToken: {
+        type: Sequelize.STRING
+      },
+      resetPasswordExpires: {
+        type: Sequelize.DATE
       }
     });
   },
