@@ -19,45 +19,60 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  users.init({
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+  users.init(
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: 'buyer',
+      },
+      verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      email_token: {
+        type: DataTypes.STRING,
+        defaultValue: false,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        defaultValue: 'none',
+      },
+      mfa_enabled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      mfa_code: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      mfa_timeout: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
     },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    role: {
-      type: DataTypes.STRING,
-      defaultValue: 'buyer'
-    },
-    verified: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    email_token: {
-      type: DataTypes.STRING,
-      defaultValue: false
-    },
-    gender: {
-      type: DataTypes.STRING,
-      defaultValue: 'none'
-    },
-  }, {
-    sequelize,
-    modelName: 'users',
-  });
+    {
+      sequelize,
+      modelName: 'users',
+    }
+  );
   return users;
 };

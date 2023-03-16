@@ -4,6 +4,7 @@ import Users from '../controllers/users.controllers';
 import checkUserExist from '../middlewares/checkUserExist';
 import loginValidate from '../middlewares/loginValidate';
 import profileVatidate from '../middlewares/profileValidate';
+import mfaValidate from '../middlewares/mfaValidate';
 import signupVatidate from '../middlewares/signupValidate';
 import checkRole from '../middlewares/Checkrole';
 import isAuthenticated from '../middlewares/verifyToken';
@@ -15,6 +16,9 @@ routes.get('/verify-email/:token', Users.verifyEmail);
 routes.patch('/change-password',isAuthenticated, Users.changePassword);
 
 routes.patch('/create-admin/:email', isAuthenticated, checkRole(['admin']), Users.CreateAdmin);
+routes.post('/verify-mfa', mfaValidate, Users.verifyMfaCode);
+routes.post('/enable-mfa', isAuthenticated, Users.enableMfa);
+routes.post('/disable-mfa', isAuthenticated, Users.disableMfa);
 routes.post('/login', loginValidate, Users.login);
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
