@@ -19,7 +19,7 @@ export default class Product {
 
     let {
       // eslint-disable-next-line prefer-const
-      name, description, quantity, price, expdate, category
+      name, description, quantity, price, expdate, category,
     } = data;
     if (!expdate || expdate === null) expdate = '01-01-2100';
 
@@ -35,7 +35,7 @@ export default class Product {
       exp_date: new Date(expdate),
       sellerId: user.id,
       category,
-      images
+      images,
     });
 
     return { value };
@@ -69,5 +69,24 @@ export default class Product {
     }
     await product.save();
     return { value: product };
+  }
+
+  /**
+   * @returns {products} allproducts
+   */
+  static async getProduct() {
+    const allproducts = await products.findAll();
+    return allproducts;
+  }
+
+  /**
+   * @param {Object} user
+   * @returns {products} allproducts
+   */
+  static async sellergetProduct(user) {
+    const allproducts = await products.findAll({
+      where: { sellerId: user.id },
+    });
+    return allproducts;
   }
 }

@@ -173,4 +173,57 @@
  *                    type: object
  *                    description: created product
  *
+ *
+ *
+ * /products:
+ *   get:
+ *     summary: get all products
+ *     tags:
+ *         - Products
+ *     responses:
+ *       '200':
+ *         description: Product retrieved Successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 product:
+ *                   type: object
+ *       '500':
+ *         description: Server error!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 product:
+ *                   type: object
+ * /product:
+ *   get:
+ *     summary: get all products by a seller
+ *     tags:
+ *         - Products
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: You have Successfully retrieved products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 product:
+ *                   type: object
+ *       '401':
+ *         description: User not logged In
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */

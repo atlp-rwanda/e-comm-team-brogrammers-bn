@@ -146,4 +146,35 @@ describe('testing the products', () => {
         done();
       });
   });
+
+  it('should return 200 code', (done) => {
+    chai
+      .request(app)
+      .get('/products/')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it('should return 401 code', (done) => {
+    chai
+      .request(app)
+      .get('/products/collection')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it('should return 200 ', (done) => {
+    chai
+      .request(app)
+      .get('/products/collection')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
 });
