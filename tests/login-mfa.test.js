@@ -89,7 +89,6 @@ describe('POST /users/enable-mfa', () => {
       .post('/users/enable-mfa')
       .set('Authorization', `Bearer ${authToken}`)
       .send();
-    console.log(res.body);
     expect(res).to.have.status(200);
     expect(res.body).to.have.property('message');
     expect(res.body.message).to.equal('Multi-factor authentication is enabled');

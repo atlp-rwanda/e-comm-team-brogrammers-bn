@@ -6,10 +6,12 @@ import morgan from 'morgan';
 import swaggerUI from 'swagger-ui-express';
 import allroutes from './routes/index';
 import swagger from './configs/swagger';
+import checkPasswordExpirationCronJob from './middlewares/passwordExpiration';
 
 env.config();
 
 const app = express();
+checkPasswordExpirationCronJob.start();
 
 app.use(express.json());
 app.use(cors());

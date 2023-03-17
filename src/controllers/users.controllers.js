@@ -6,6 +6,9 @@ import dotenv from 'dotenv';
 import User from '../services/user.services';
 // eslint-disable-next-line import/no-duplicates
 import db from '../database/models';
+// eslint-disable-next-line import/order, import/no-extraneous-dependencies
+import moment from 'moment';
+import eventEmitter from '../helpers/eventEmitter';
 
 // eslint-disable-next-line import/named, import/no-duplicates
 import { users } from '../database/models';
@@ -17,7 +20,6 @@ import { sendEmail } from '../helpers/mail';
 
 // eslint-disable-next-line operator-linebreak
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
-
 dotenv.config();
 /**
  * user model class
@@ -271,7 +273,10 @@ export default class Users {
       const { oldPassword, newPassword } = req.body;
 
       // check if the old password matches the one in the database
-      const isPasswordValid = bcrypt.compareSync(oldPassword, req.user.password);
+      const isPasswordValid = bcrypt.compareSync(
+        oldPassword,
+        req.user.password
+      );
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Incorrect old password' });
       }
@@ -288,11 +293,16 @@ export default class Users {
       // hash the new password and update the database
       const hashedPassword = bcrypt.hashSync(newPassword, 10);
       req.user.password = hashedPassword;
+      req.user.lastTimePasswordUpdated = moment();
+      req.user.mustUpdatePassword = false;
       await req.user.save();
-
-      res.status(200).json({ message: 'Password changed successfully' });
+      // Emit event to notify password update
+      eventEmitter.emit('passwordUpdated', req.user);
+      res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
-      res.status(500).json({ error: error.message, message: 'Failed to change password' });
+      res
+        .status(500)
+        .json({ error: error.message, message: 'Failed to change password' });
     }
   }
 }

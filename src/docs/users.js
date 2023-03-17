@@ -94,28 +94,27 @@
  *       403:
  *         description: MFA code is invalid or expired.
  *
- * /users/login:
+* /users/login:
  *   post:
  *     summary: Login a user and return a JWT token.
  *     tags:
  *       - Users
- *     parameters:
- *       - name: email
- *         in: body
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             email:
- *               type: string
- *       - name: password
- *         in: body
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             password:
- *               type: string
+ *     requestBody:
+ *         description: new user information
+ *         content:
+ *           application/json:
+ *              schema:
+ *                 type: object
+ *                 required:
+ *                    - email
+ *                    - password
+ *                 properties:
+ *                    email:
+ *                      type: string
+ *                      example: test3@email.com
+ *                    password:
+ *                      type: string
+ *                      example: Benn@123
  *     responses:
  *       200:
  *         description: Successfully authenticated. JWT token is returned or message to check inbox for MFA code.
@@ -162,6 +161,7 @@
  *               properties:
  *                 message:
  *                   type: string
+ *
  *
  * /users/profile:
  *   get:
@@ -303,6 +303,8 @@
 *     summary: change user's password
 *     tags:
 *       - Users
+*     security:
+*       - bearerAuth: []
 *     parameters:
 *       - in: body
 *         name: Update Password
@@ -311,10 +313,6 @@
 *         schema:
 *           type: object
 *           properties:
-*             email:
-*               type: string
-*               description: User email
-*               example: ange@gmail.com.com
 *             oldPassword:
 *               type: string
 *               description: User's current password

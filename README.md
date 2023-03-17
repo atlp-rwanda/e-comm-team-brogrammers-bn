@@ -266,3 +266,14 @@ if you are a seller you will get this response:
 }
 ```
 Required fields: no `field required`
+
+## Notify users to change password
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- Ater an amount of time we specified the cron job starts to run and send an email to remind a user to change their password
+- After login the user will be redirected to the change password page to change their password
+- We will be using an existing endpoint
+
+
+   `PATCH /users/change-password`

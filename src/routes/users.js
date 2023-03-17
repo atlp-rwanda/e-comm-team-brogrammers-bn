@@ -13,7 +13,7 @@ const routes = express.Router();
 
 routes.post('/signup', signupVatidate, checkUserExist, Users.signup);
 routes.get('/verify-email/:token', Users.verifyEmail);
-routes.patch('/change-password',isAuthenticated, Users.changePassword);
+routes.patch('/change-password', isAuthenticated, Users.changePassword);
 
 routes.patch('/create-admin/:email', isAuthenticated, checkRole(['admin']), Users.CreateAdmin);
 routes.post('/verify-mfa', mfaValidate, Users.verifyMfaCode);
