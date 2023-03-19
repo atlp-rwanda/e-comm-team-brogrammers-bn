@@ -54,9 +54,9 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
-  static async getProduct(req, res) {
+  static async getProducts(req, res) {
     try {
-      const products = await Product.getProduct();
+      const products = await Product.getProducts();
       return res.status(200).json({ products });
     } catch (err) {
       return res
@@ -87,10 +87,45 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
+  static async getProduct(req, res) {
+    try {
+      if (req.product) return res.status(200).json(req.product);
+
+      const product = await Product.getProduct(req.params.id);
+      if (!product || product === null) return res.status(404).json({ message: 'product not found' });
+      return res.status(200).json(product);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: err.message, message: 'server product' });
+    }
+  }
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
   static async sellergetProduct(req, res) {
     try {
       const products = await Product.sellergetProduct(req.user);
       return res.status(200).json({ products });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async toggleAvailable(req, res) {
+    try {
+      const product = await Product.changeAvailable(req.product);
+      return res.status(201).json({ message: 'availablility changed', product });
     } catch (err) {
       return res
         .status(500)

@@ -98,7 +98,7 @@ export default class User {
     });
 
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: process.env.APP_EMAIL,
       to: email,
       subject,
       html: content,

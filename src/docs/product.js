@@ -86,6 +86,55 @@
  *                    type: object
  *                    description: created product
  * /products/{id}:
+ *    get:
+ *       tags:
+ *         - Products
+ *       summary: get one product
+ *       description: the seller or a user can get one product is they are available
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       responses:
+ *        '200':
+ *          description: get product successfully
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  value:
+ *                    type: object
+ *                    description: created product
+ *        '400':
+ *          description: bad request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: id is not supposed to be null
+ *        '500':
+ *          description: server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  error:
+ *                    type: object
+ *                    description: created product
  *    patch:
  *       tags:
  *         - Products
@@ -172,9 +221,6 @@
  *                  error:
  *                    type: object
  *                    description: created product
- *
- *
- *
  * /products:
  *   get:
  *     summary: get all products
@@ -244,6 +290,27 @@
  *       responses:
  *        '200':
  *          description: product successfully deleted
+ *        '400':
+ *          description: product doesn't exist
+ * /products/{id}/available:
+ *    patch:
+ *       tags:
+ *         - Products
+ *       summary: seller change availability
+ *       description: the seller can change product availablity
+ *       security:
+ *        - {}
+ *        - bearerAuth: []
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       responses:
+ *        '200':
+ *          description: product availability changed
  *          content:
  *            application/json:
  *              schema:
@@ -254,9 +321,17 @@
  *                    description: A success message.
  *                  value:
  *                    type: object
- *                    description: deleted product
+ *                    description: created product
  *        '400':
- *          description: product doesn't exist
+ *          description: bad request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: id is not supposed to be null
  *        '401':
  *          description: not authorized
  *        '500':
