@@ -25,7 +25,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/docs/*.js'],
+  apis: ['./src/docs/*.js', './src/docs/*.yml'],
 };
 
 const swagger = swaggerJSDoc(options);

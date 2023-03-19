@@ -2,7 +2,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export function emailConfig({ email, subject, content } = {}) {
   return {
-    from: process.env.SEND_EMAIL,
+    from: process.env.MAIL,
     to: `${email}`,
     subject: `${subject}`,
     html: `${content}`,

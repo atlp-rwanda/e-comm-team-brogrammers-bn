@@ -18,6 +18,16 @@ export const changePasswordTemplate = (user, passwordExpirationTime) => {
       <h1 style="color: #004d99; text-align: center;">Welcome to Brogrammers e-commerce dear!</h1>
       <p style="color: #000; font-size: 16px;">Dear ${user.username},\n\nYour password will expire in less than ${passwordExpirationTime} minutes.. Please use the following link to change your password:</p>
       <a href="${process.env.FRONTEND_URL}/users/change-password" style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Change Password</a>
+</div>`;
+};
+
+export const passwordResetEmailTemplate = (resetToken) => {
+  return `
+    <div style="background-color: #f2f2f2; padding: 20px;">
+      <h1 style="color: #004d99; text-align: center;">Brogrammers e-commerce!</h1>
+      <p style="color: #000; font-size: 16px;">Please click below to reset you password</p>
+      <form action="${process.env.PASSWORD_RESET_URL}/${resetToken}" method="POST">
+      <button href="" style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Reset Your Password</button>
       <p style="color: #000; font-size: 14px;">Thank you for choosing Brogrammers e-commerce.</p>
     </div>
     `;

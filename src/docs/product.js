@@ -44,7 +44,7 @@
  *                        type: string
  *                        format: binary
  *       responses:
- *        '200':
+ *        '201':
  *          description: product successfully created
  *          content:
  *            application/json:

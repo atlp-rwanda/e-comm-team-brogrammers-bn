@@ -15,11 +15,17 @@ import { users } from '../database/models';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
-import { verifyEmailTemplate, mfaEmailTemplate } from '../helpers/mailTemplate';
+import {
+  verifyEmailTemplate,
+  mfaEmailTemplate,
+  passwordResetEmailTemplate,
+} from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
 // eslint-disable-next-line operator-linebreak
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const saltRounds = Number(process.env.SALTROUNDS) || 10;
+
 dotenv.config();
 /**
  * user model class
@@ -125,13 +131,11 @@ export default class Users {
       // eslint-disable-next-line camelcase
       const mfa_code = await User.startMfaProcess(req.body.email);
       const mfaEmailContent = mfaEmailTemplate(mfa_code);
-      sendEmail(
-        emailConfig({
-          email: req.body.email,
-          subject: 'Brogrammers authentication code',
-          content: mfaEmailContent,
-        })
-      );
+      User.sendMailWithNodemailer({
+        email: req.body.email,
+        subject: 'Brogrammers authentication code',
+        content: mfaEmailContent,
+      });
       return res
         .status(200)
         .json({ message: 'Please check your email for authentication code' });
@@ -268,6 +272,76 @@ export default class Users {
     }
   }
 
+  static async sendResetPasswordCode(req, res) {
+    try {
+      const { email, newPassword } = req.body;
+
+      const user = await db.users.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // eslint-disable-next-line camelcase
+      const resetToken = jwt.sign(
+        { email, newPassword },
+        process.env.RESET_PASSWORD_SECRET,
+        { expiresIn: '1h' }
+      );
+      const resetPasswordContent = passwordResetEmailTemplate(resetToken);
+      sendEmail(
+        emailConfig({
+          email,
+          subject: 'Brogrammers reset password',
+          content: resetPasswordContent,
+        })
+      );
+
+      res.status(200).json({ message: 'Check your email for reset link' });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to send reset link' });
+    }
+  }
+
+  static async verifyResetPasswordCode(req, res) {
+    try {
+      const { resetToken } = req.params;
+
+      if (resetToken) {
+        jwt.verify(
+          resetToken,
+          process.env.RESET_PASSWORD_SECRET,
+          async (err, decodedToken) => {
+            if (err) {
+              return res
+                .status(403)
+                .json({ message: 'Invalid password reset token' });
+            }
+
+            const { email, newPassword } = decodedToken;
+            const user = await users.findOne({ where: { email } });
+            if (!user) {
+              return res.status(404).json('User not found');
+            }
+
+            user.verified = true;
+            user.password = bcrypt.hashSync(newPassword, saltRounds);
+            user.save();
+            return res
+              .status(200)
+              .json({ message: 'Password reset successful' });
+          }
+        );
+      }
+    } catch (error) {
+      res.status(500).json({
+        message:
+          error.message
+          || error.toString()
+          || 'Failed to verify password reset link',
+      });
+    }
+  }
+
   static async changePassword(req, res) {
     try {
       const { oldPassword, newPassword } = req.body;
@@ -282,7 +356,9 @@ export default class Users {
       }
 
       // validate the new password
-      const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+      // eslint-disable-next-line operator-linebreak
+      const passwordRegex =
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
       if (!passwordRegex.test(newPassword)) {
         return res.status(400).json({
           message:
@@ -291,7 +367,7 @@ export default class Users {
       }
 
       // hash the new password and update the database
-      const hashedPassword = bcrypt.hashSync(newPassword, 10);
+      const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
       req.user.password = hashedPassword;
       req.user.lastTimePasswordUpdated = moment();
       req.user.mustUpdatePassword = false;

@@ -1,0 +1,56 @@
+/users/enable-mfa:
+  post:
+    tags:
+      - MFA
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Enable MFA for the currently logged in user.
+    responses:
+      200:
+        description: MFA enabled successfully.
+      403:
+        description: User not logged in.
+
+/users/disable-mfa:
+  post:
+    tags:
+      - MFA
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Disable MFA for the currently logged in user.
+    responses:
+      200:
+        description: MFA disabled successfully.
+      403:
+        description: User not logged in.
+
+/users/verify-mfa:
+  post:
+    tags:
+      - MFA
+    summary: Verify the validity of the user's MFA code.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              mfa_code:
+                type: number
+                example: 0000
+              email:
+                type: string
+                example: me@gmail.com
+    responses:
+      200:
+        description: MFA code is valid. JWT token is returned.
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+      403:
+        description: MFA code is invalid or expired.

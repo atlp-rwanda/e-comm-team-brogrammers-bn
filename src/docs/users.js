@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 /**
  * @swagger
+ *
  * /users/signup:
  *    post:
  *       tags:
@@ -31,7 +32,7 @@
  *                    gender:
  *                      type: string
  *       responses:
- *         '200':
+ *         '201':
  *           description: successful operation
  *         '400':
  *           description: Bad request
@@ -39,62 +40,7 @@
  *           description: server error
  *
  *
- * tags:
- *   name: MFA
- *   description: Endpoints for enabling, disabling, and verifying MFA for users.
- *
- * securityDefinitions:
- *   JWT:
- *     type: apiKey
- *     name: Authorization
- *     in: header
- *
- * /users/enable-mfa:
- *   post:
- *     security:
- *       - JWT: []
- *     summary: Enable MFA for the currently logged in user.
- *     tags: [MFA]
- *     responses:
- *       200:
- *         description: MFA enabled successfully.
- *       403:
- *         description: User not logged in.
- *
- * /users/disable-mfa:
- *   post:
- *     security:
- *       - JWT: []
- *     summary: Disable MFA for the currently logged in user.
- *     tags: [MFA]
- *     responses:
- *       200:
- *         description: MFA disabled successfully.
- *       403:
- *         description: User not logged in.
- *
- * /users/verify-mfa:
- *   post:
- *     summary: Verify the validity of the user's MFA code.
- *     tags: [MFA]
- *     parameters:
- *       - name: mfa_code
- *         in: body
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: MFA code is valid. JWT token is returned.
- *         schema:
- *           type: object
- *           properties:
- *             token:
- *               type: string
- *       403:
- *         description: MFA code is invalid or expired.
- *
-* /users/login:
+ * /users/login:
  *   post:
  *     summary: Login a user and return a JWT token.
  *     tags:
@@ -103,18 +49,18 @@
  *         description: new user information
  *         content:
  *           application/json:
- *              schema:
- *                 type: object
- *                 required:
+ *                schema:
+ *                  type: object
+ *                  required:
  *                    - email
  *                    - password
- *                 properties:
+ *                  properties:
  *                    email:
  *                      type: string
- *                      example: test3@email.com
+ *                      example: me@gmail.com
  *                    password:
  *                      type: string
- *                      example: Benn@123
+ *                      example: 123@Pass
  *     responses:
  *       200:
  *         description: Successfully authenticated. JWT token is returned or message to check inbox for MFA code.
@@ -131,7 +77,7 @@
  *         description: User email is not verified
  *
  *       '200':
- *         description: Successfully logged in the user
+ *         description: Successfully logged in the user or sent mfa code
  *         content:
  *           application/json:
  *             schema:
@@ -140,8 +86,6 @@
  *                 token:
  *                   type: string
  *                 email:
- *                   type: string
- *                 id:
  *                   type: string
  *       '401':
  *         description: Invalid email or password
@@ -245,13 +189,13 @@
  *                 message:
  *                   type: string
  *
- * @swagger
- * /users/Create-admin/{email}:
+ * /users/create-admin/{email}:
  *   patch:
  *     summary: Make an existing user an admin.
  *     tags:
  *         - Users
  *     security:
+ *       - {}
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
@@ -294,6 +238,46 @@
  *                 Error:
  *                   type: string
  *                   description: The error message.
+ * /users/change-password:
+ *   patch:
+ *     summary: change user's password
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: body
+ *         name: Update Password
+ *         description: Object containing user's current password and new password
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               description: User email
+ *               example: ange@gmail.com.com
+ *             oldPassword:
+ *               type: string
+ *               description: User's current password
+ *               example: Password@123
+ *             newPassword:
+ *               type: string
+ *               description: User's new password
+ *               example: newPassword@123
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Password changed successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ *       default:
+ *         description: Unexpected error
  */
 
 /**
