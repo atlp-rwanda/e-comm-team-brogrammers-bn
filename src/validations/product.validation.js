@@ -16,7 +16,7 @@ export default async function productValidation(data) {
     description: joi.string().min(5).max(2000).label('description'),
     quantity: joi.number().min(0).required().label('quantity'),
     sellerId: joi.string().uuid().required().label('sellerId'),
-    expdate: joi.string().label('expiration data'),
+    expdate: joi.date().min('now').label('expiration data'),
     price: joi.number().min(0).required().label('price'),
     category: joi.number().min(0).label('category')
   });

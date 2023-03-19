@@ -90,7 +90,7 @@ describe('testing the products', () => {
       .attach('images', path.join(__dirname, images[0]))
       .attach('images', path.join(__dirname, images[1]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(200);
+        chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
         done();

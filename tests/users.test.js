@@ -243,7 +243,7 @@ describe('testing creation of admin', () => {
 
     const verifyRes = await chai
       .request(app)
-      .patch(`/users/Create-admin/${email}`)
+      .patch(`/users/create-admin/${email}`)
       .set('Authorization', `Bearer ${authToken}`);
     chai.expect(verifyRes).to.have.status(200);
   });
@@ -262,7 +262,7 @@ it('should return 404 if a user is not found', async () => {
 
   const verifyRes = await chai
     .request(app)
-    .patch(`/users/Create-admin/${Invalidemail}`)
+    .patch(`/users/create-admin/${Invalidemail}`)
     .set('Authorization', `Bearer ${authToken}`);
   chai.expect(verifyRes).to.have.status(404);
 });
