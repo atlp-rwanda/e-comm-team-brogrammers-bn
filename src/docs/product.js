@@ -199,7 +199,7 @@
  *               properties:
  *                 product:
  *                   type: object
- * /product:
+ * /products/collection:
  *   get:
  *     summary: get all products by a seller
  *     tags:
@@ -226,4 +226,50 @@
  *               properties:
  *                 message:
  *                   type: string
+ * /products/delete/{id}:
+ *    delete:
+ *       tags:
+ *         - Products
+ *       summary: delete a product by ID
+ *       description: the seller can delete a product by ID from his/her collection
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       security:
+ *        - bearerAuth: []
+ *       responses:
+ *        '200':
+ *          description: product successfully deleted
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  value:
+ *                    type: object
+ *                    description: deleted product
+ *        '400':
+ *          description: product doesn't exist
+ *        '401':
+ *          description: not authorized
+ *        '500':
+ *          description: server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  error:
+ *                    type: object
+ *                    description: error message
  */

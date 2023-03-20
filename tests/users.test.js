@@ -221,7 +221,7 @@ describe(' testing changePassword', () => {
       .request(app)
       .patch('/users/change-password')
       .set('Authorization', `Bearer ${token}`)
-      .send({ oldPassword: user.password, newPassword: 'Newp@ssword123' })
+      .send({ oldPassword: user.password, newPassword: '123@Pass' })
       .end((error, res) => {
         chai.expect(res).to.have.status(200);
         chai.expect(res.body.message).to.equal('Password updated successfully');

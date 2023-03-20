@@ -22,12 +22,13 @@ describe('testing the products', () => {
   ];
   let sellerToken;
   let product;
+  let productId;
 
   before(async () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'jean@gmail.com', password: '123@Pass' });
+      .send({ email: 'john@gmail.com', password: '123@Pass' });
     sellerToken = res.body.token;
   });
 
@@ -72,7 +73,6 @@ describe('testing the products', () => {
         done();
       });
   });
-
   it('should return 200 code for product created', (done) => {
     chai
       .request(app)
@@ -93,6 +93,7 @@ describe('testing the products', () => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
+        productId = res.body.product.id;
         done();
       });
   });
@@ -111,6 +112,7 @@ describe('testing the products', () => {
         chai.expect(res).to.have.status(200);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
+        productId = res.body.product.id;
         done();
       });
   });
@@ -171,6 +173,16 @@ describe('testing the products', () => {
     chai
       .request(app)
       .get('/products/collection')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
+  it('should return 200 code for product deleted', (done) => {
+    chai
+      .request(app)
+      .delete(`/products/delete/${productId}`)
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((error, res) => {
         chai.expect(res).to.have.status(200);

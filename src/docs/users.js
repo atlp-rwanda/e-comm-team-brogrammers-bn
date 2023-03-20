@@ -189,6 +189,7 @@
  *                 message:
  *                   type: string
  *
+ * @swagger
  * /users/create-admin/{email}:
  *   patch:
  *     summary: Make an existing user an admin.

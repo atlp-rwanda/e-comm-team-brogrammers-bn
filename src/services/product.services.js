@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named
 import { products } from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
@@ -88,5 +89,15 @@ export default class Product {
       where: { sellerId: user.id },
     });
     return allproducts;
+  }
+
+  static async getProductName(productId, userId) {
+    const product = await products.findOne({
+      where: { id: productId, sellerId: userId },
+    });
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    return product;
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import Product from '../services/product.services';
 
@@ -60,6 +62,23 @@ export default class Products {
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  static async deleteProduct(req, res) {
+    try {
+      const product = req.product;
+      await product.destroy();
+      return res.status(200).json({
+        status: 200,
+        message: 'Product deleted successfully',
+        item: product,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message,
+      });
     }
   }
 

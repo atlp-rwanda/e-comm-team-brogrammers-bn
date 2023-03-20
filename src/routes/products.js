@@ -36,5 +36,11 @@ routes.get(
   checkRole(['seller']),
   Products.sellergetProduct
 );
-
+routes.delete(
+  '/delete/:id',
+  isAuthenticated,
+  checkRole(['seller']),
+  isOwner,
+  Products.deleteProduct
+);
 export default routes;
