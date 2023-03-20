@@ -19,7 +19,7 @@ export default class Products {
       );
       if (error) return res.status(400).json({ message: 'bad request', error });
       return res
-        .status(200)
+        .status(201)
         .json({ message: 'product created', product: value });
     } catch (error) {
       return res.status(500).json({ message: 'server error', error });

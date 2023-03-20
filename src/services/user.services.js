@@ -4,10 +4,12 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable require-jsdoc */
 import bcrypt from 'bcrypt';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
 import { users } from '../database/models';
 
-const saltRounds = Number(process.env.SALTROUNDS);
+const saltRounds = Number(process.env.SALTROUNDS) || 10;
 
 /**
  * class for all user services
@@ -84,5 +86,27 @@ export default class User {
     await this.updateUser(data, user.id);
     const newUsers = { ...user.dataValues, ...data };
     return { value: newUsers };
+  }
+
+  static async sendMailWithNodemailer({ email, subject, content }) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.APP_EMAIL,
+        pass: process.env.APP_EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject,
+      html: content,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) return console.error('ERROR SENDING MAIL: ', err);
+      console.log('MAIL SENT: ', info.response);
+    });
   }
 }
