@@ -267,6 +267,49 @@ if you are a seller you will get this response:
 ```
 Required fields: no `field required`
 
+## Delete Product
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- product must be in your collection
+- note: `token is required`
+
+Example of request body:
+
+```
+{
+  "id": "id of the product to delete",
+}
+```
+
+if you are a seller of that product you will get this response:
+```
+{
+  "status": 200,
+  "message": "Product deleted successfully",
+  "item": {
+    "id": "04906672-7a61-434e-b3c5-07ab35d0c40d",
+    "images": [
+      "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679312631/dutnxv74ydhrw6nqmdkl.jpg",
+      "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679312635/eemjvmu3hh2jhidr0qom.jpg"
+    ],
+    "name": "shoe",
+    "description": "new nike shoes",
+    "quantity": 20,
+    "sellerId": "5613282a-6212-4a73-b513-580577cd939d",
+    "exp_date": "2023-11-21T22:00:00.000Z",
+    "available": true,
+    "price": 200,
+    "category": 2,
+    "createdAt": "2023-03-20T11:43:54.758Z",
+    "updatedAt": "2023-03-20T11:43:54.758Z"
+  }
+}
+```
+Required fields: ` id for the product to delete`
+
+
+
 ## Notify users to change password
 - First signup a new user and verify the user
 - then login to get the token

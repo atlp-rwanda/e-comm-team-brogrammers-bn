@@ -1,9 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-extraneous-dependencies
-import sgMail from '@sendgrid/mail';
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+import User from '../services/user.services';
 
 export const sendEmail = (mailConfigurations) => {
   const msg = {
@@ -12,6 +10,12 @@ export const sendEmail = (mailConfigurations) => {
     subject: mailConfigurations.subject,
     html: mailConfigurations.html,
   };
-  sgMail.send(msg);
+  if (process.env.NODE_ENV !== 'test') {
+    User.sendMailWithNodemailer({
+      email: msg.to,
+      subject: msg.subject,
+      content: msg.html,
+    });
+  }
   return true;
 };

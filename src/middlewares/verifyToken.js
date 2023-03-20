@@ -28,7 +28,7 @@ function isAuthenticated(req, res, next) {
         }
         {
           const { email } = decodedToken;
-          const user = await users.findOne({ where: { email } });
+          const user = await users.findOne({ where: { email: email || '' } });
           if (!user) {
             return res.status(401).json('You are not Authorized');
           }
