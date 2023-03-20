@@ -89,4 +89,20 @@ export default class Product {
     });
     return allproducts;
   }
+
+  static async getProductById(id) {
+    const product = await products.findByPk(id);
+    return product;
+  }
+
+  static async getProductByIdAndSeller(id, sellerId) {
+    const product = await products.findOne({
+      where: {
+        id,
+        sellerId,
+      },
+    });
+    return product;
+  }
+
 }

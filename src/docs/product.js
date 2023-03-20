@@ -226,4 +226,95 @@
  *               properties:
  *                 message:
  *                   type: string
+ * 
+ * /products/buyer/{id}:
+ *    get:
+ *      tags:
+ *         - Products
+ *      summary: buyer get any product by id
+ *      description: the buyer can get any product by id from any seller collection
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *      security:
+ *        - {}
+ *        - bearerAuth: []
+ *      responses:
+ *       '200':
+ *         description: You have Successfully retrieved products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 product:
+ *                   type: object
+ *       '404':
+ *         description: Product not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '401':
+ *         description: User not logged In
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *
+ *
+ * /products/seller/{id}:
+ *    get:
+ *      tags:
+ *         - Products
+ *      summary: seller get any product by id from his collection
+ *      description: the seller can get any product by id from his collection only
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *      security:
+ *        - {}
+ *        - bearerAuth: []
+ *      responses:
+ *       '200':
+ *         description: You have Successfully retrieved products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 product:
+ *                   type: object
+ *       '404':
+ *         description: Product not found in your collection
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '401':
+ *         description: User not logged In
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */

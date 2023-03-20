@@ -78,4 +78,44 @@ export default class Products {
         .json({ error: err.message, message: 'Failed to retrieve products' });
     }
   }
+
+  static async getProductById(req, res) {
+    const id = req.params.id;
+    const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  
+    if (!validUUID.test(id)) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    try {
+      const product = await Product.getProductById(id);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+      return res.status(200).json({ product });
+    } catch (err) {
+      return res.status(500).json({ error: err.message, message: 'Failed to retrieve product' });
+    }
+  }
+
+  static async getProductByIdAndSeller(req, res) {
+    const id = req.params.id;
+    const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+  
+    if (!validUUID.test(id)) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+  
+    try {
+      const product = await Product.getProductByIdAndSeller(id, req.user.id);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found in your collection' });
+      }
+      return res.status(200).json({ product });
+    } catch (err) {
+      if (err.name === 'CastError' || err.name === 'NotFoundError') {
+        return res.status(400).json({ message: 'Invalid product ID' });
+      }
+      return res.status(500).json({ error: err.message, message: 'Failed to retrieve product' });
+    }
+  }
 }

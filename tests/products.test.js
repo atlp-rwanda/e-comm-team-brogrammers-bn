@@ -13,6 +13,7 @@ sequelize.authenticate();
 
 chai.should();
 chai.use(chaiHttp);
+const { expect } = chai;
 
 describe('testing the products', () => {
   const images = [
@@ -178,3 +179,81 @@ describe('testing the products', () => {
       });
   });
 });
+
+describe('GET /buyer/:id', () => {
+  let token;
+
+  before((done) => {
+    chai.request(app)
+      .post('/users/login')
+      .send({
+        email: 'habiholivier10@gmail.com',
+        password: '123@Pass',
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('should return a 404 error for invalid product ID', (done) => {
+    chai.request(app)
+      .get('/products/buyer/99898')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('Product not found');
+        done();
+      });
+  });
+
+  it('should return the product if it is found ', (done) => {
+    chai.request(app)
+      .get('/products/buyer/8af32522-7fe8-4316-b6ec-4b0d2f2d5549')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('product');
+        done();
+      });
+  });
+})
+
+describe('GET /seller/:id', () => {
+  let token;
+
+  before((done) => {
+    chai.request(app)
+      .post('/users/login')
+      .send({
+        email: 'jean@gmail.com',
+        password: '123@Pass',
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('should return a 404 error for invalid product ID', (done) => {
+    chai.request(app)
+      .get('/products/seller/99898')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('Product not found');
+        done();
+      });
+  });
+
+  it('should return the product if found in seller collection', (done) => {
+    chai.request(app)
+      .get('/products/seller/8af32522-7fe8-4316-b6ec-4b0d2f2d5549')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('product');
+        done();
+      });
+  });
+})

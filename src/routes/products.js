@@ -37,4 +37,7 @@ routes.get(
   Products.sellergetProduct
 );
 
+routes.get('/buyer/:id', isAuthenticated,checkRole(['buyer']),Products.getProductById);
+routes.get('/seller/:id',isAuthenticated,checkRole(['seller']),Products.getProductByIdAndSeller);
+
 export default routes;
