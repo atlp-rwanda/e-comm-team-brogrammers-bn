@@ -92,6 +92,8 @@ describe('testing user profile', () => {
       .post('/users/login')
       .send({ email: user.email, password: user.password })
       .end((error, res) => {
+        console.log(user.email);
+        console.log(res.body);
         chai.expect(res).to.have.status(200);
         token = res.body.token;
         chai.expect(res.body).to.have.property('token');
@@ -161,6 +163,7 @@ describe('testing user profile', () => {
         email: 'lucy@gmail.com',
       })
       .end((error, res) => {
+        console.log(res.body);
         chai.expect(res).to.have.status(400);
         done();
       });
