@@ -33,6 +33,20 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
+  static async getProductReviews(req, res) {
+    const product = await Product.getProduct(req.params.id);
+    if (!product || product === null) {
+      return res.status(404).json({ message: 'product not found' });
+    }
+    const productReviews = await Product.getProductReviews(req.params.id);
+    return res.status(200).json(productReviews);
+  }
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
   static async editProduct(req, res) {
     try {
       const { error, value } = await Product.editProduct(
@@ -92,7 +106,9 @@ export default class Products {
       if (req.product) return res.status(200).json(req.product);
 
       const product = await Product.getProduct(req.params.id);
-      if (!product || product === null) return res.status(404).json({ message: 'product not found' });
+      if (!product || product === null) {
+        return res.status(404).json({ message: 'product not found' });
+      }
       return res.status(200).json(product);
     } catch (err) {
       return res
@@ -125,7 +141,9 @@ export default class Products {
   static async toggleAvailable(req, res) {
     try {
       const product = await Product.changeAvailable(req.product);
-      return res.status(201).json({ message: 'availablility changed', product });
+      return res
+        .status(201)
+        .json({ message: 'availablility changed', product });
     } catch (err) {
       return res
         .status(500)

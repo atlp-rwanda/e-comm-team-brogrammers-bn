@@ -7,6 +7,8 @@ import app from '../src/app';
 // eslint-disable-next-line import/named
 import { sequelize } from '../src/database/models/index';
 
+const { expect } = chai;
+
 env.config();
 sequelize.authenticate();
 
@@ -22,12 +24,11 @@ describe('testing the products', () => {
   let sellerToken;
   let product;
   let productId;
-
   before(async () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'john@gmail.com', password: '123@Pass' });
+      .send({ email: 'jean@gmail.com', password: '123@Pass' });
     sellerToken = res.body.token;
   });
 
@@ -72,6 +73,7 @@ describe('testing the products', () => {
         done();
       });
   });
+
   it('should return 201 code for product created', (done) => {
     chai
       .request(app)
@@ -92,7 +94,7 @@ describe('testing the products', () => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
-        productId = res.body.product.id;
+        productId = product.id;
         done();
       });
   });
@@ -111,7 +113,6 @@ describe('testing the products', () => {
         chai.expect(res).to.have.status(200);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
-        productId = res.body.product.id;
         done();
       });
   });
@@ -143,6 +144,7 @@ describe('testing the products', () => {
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
+        product = res.body.product;
         done();
       });
   });
@@ -178,82 +180,51 @@ describe('testing the products', () => {
       });
   });
 
-  it('should return 200 for product', (done) => {
+  it('should add a product to the wishlist', (done) => {
     chai
       .request(app)
-      .get(`/products/${product.id}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        chai.expect(res.body).to.have.property('id', `${product.id}`);
-        done();
-      });
-  });
-
-  it('should return 401 for not authenticated', (done) => {
-    chai
-      .request(app)
-      .patch(`/products/${product.id}/available`)
-      .set('Authorization', 'Bearer ')
-      .end((error, res) => {
-        chai.expect(res).to.have.status(401);
-        done();
-      });
-  });
-
-  it('should return 201 for changing product availability', (done) => {
-    chai
-      .request(app)
-      .patch(`/products/${product.id}/available`)
+      .post(`/wishlist/${productId}`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(201);
-        chai.expect(res.body).to.have.property('product');
-        chai.expect(res.body.product).to.have.property('available', !product.available);
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        expect(res.body.message).to.equal('product added to your wishlist successfully');
         done();
       });
   });
-
-  it('should return 400 for product not available', (done) => {
+  it('should add return 400 if product already in user wishlist ', (done) => {
     chai
       .request(app)
-      .get(`/products/${product.id}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(400);
-        done();
-      });
-  });
-
-  it('should return 201 for changing product availability', (done) => {
-    chai
-      .request(app)
-      .patch(`/products/${product.id}/available`)
+      .post(`/wishlist/${productId}`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(201);
-        chai.expect(res.body).to.have.property('product');
-        chai.expect(res.body.product).to.have.property('available', product.available);
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(400);
+        // eslint-disable-next-line no-unused-expressions
+        expect(res.body.message).to.equal('product already in wishlist');
         done();
       });
   });
-
-  it('should return 401 code for wrong token', (done) => {
+  const id = '79114227-13e3-4c53-abea-a2969c67d582';
+  it('should add return 400 if product id is not found', (done) => {
     chai
       .request(app)
-      .delete(`/products/delete/${productId}`)
-      .set('Authorization', `Bearer ${sellerToken}nnhdjansjan`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(401);
-        done();
-      });
-  });
-
-  it('should return 200 code for product deleted', (done) => {
-    chai
-      .request(app)
-      .delete(`/products/delete/${productId}`)
+      .post(`/wishlist/${id}`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(200);
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(400);
+        // eslint-disable-next-line no-unused-expressions
+        expect(res.body.message).to.equal('product does not exist');
+        done();
+      });
+  });
+  it('should return users wishlist', (done) => {
+    chai
+      .request(app)
+      .get('/wishlist/')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
         done();
       });
   });

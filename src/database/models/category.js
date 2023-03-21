@@ -15,18 +15,26 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  category.init({
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
+  category.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING(2000),
+        allowNull: false,
+      },
     },
-    description: {
-      type: DataTypes.STRING(2000),
-      allowNull: false
+    {
+      sequelize,
+      modelName: 'category',
     }
-  }, {
-    sequelize,
-    modelName: 'category',
-  });
+  );
   return category;
 };
