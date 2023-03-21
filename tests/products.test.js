@@ -144,7 +144,6 @@ describe('testing the products', () => {
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
-        product = res.body.product;
         done();
       });
   });
@@ -179,6 +178,76 @@ describe('testing the products', () => {
         done();
       });
   });
+
+  it('should return 200 for product', (done) => {
+    chai
+      .request(app)
+      .get(`/products/${product.id}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        chai.expect(res.body).to.have.property('id', `${product.id}`);
+        done();
+      });
+  });
+
+  it('should return 401 for not authenticated', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', 'Bearer ')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it('should return 201 for changing product availability', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(201);
+        chai.expect(res.body).to.have.property('product');
+        chai.expect(res.body.product).to.have.property('available', !product.available);
+        done();
+      });
+  });
+
+  it('should return 400 for product not available', (done) => {
+    chai
+      .request(app)
+      .get(`/products/${product.id}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(400);
+        done();
+      });
+  });
+
+  it('should return 201 for changing product availability', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(201);
+        chai.expect(res.body).to.have.property('product');
+        chai.expect(res.body.product).to.have.property('available', product.available);
+        done();
+      });
+  });
+
+  it('should return 401 code for wrong token', (done) => {
+    chai
+      .request(app)
+      .delete(`/products/delete/${productId}`)
+      .set('Authorization', `Bearer ${sellerToken}nnhdjansjan`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+
   it('should return 200 code for product deleted', (done) => {
     chai
       .request(app)
