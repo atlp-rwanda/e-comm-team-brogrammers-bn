@@ -92,6 +92,8 @@ describe('testing user profile', () => {
       .post('/users/login')
       .send({ email: user.email, password: user.password })
       .end((error, res) => {
+        console.log(user.email);
+        console.log(res.body);
         chai.expect(res).to.have.status(200);
         token = res.body.token;
         chai.expect(res.body).to.have.property('token');
@@ -161,6 +163,7 @@ describe('testing user profile', () => {
         email: 'lucy@gmail.com',
       })
       .end((error, res) => {
+        console.log(res.body);
         chai.expect(res).to.have.status(400);
         done();
       });
@@ -237,14 +240,15 @@ describe('testing creation of admin', () => {
       .request(app)
       .post('/users/login')
       .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
-    const { token: authToken } = res.body;
+    // eslint-disable-next-line no-shadow
+    const { token } = res.body;
     expect(res).to.have.status(200);
     expect(res.body).to.have.property('token');
 
     const verifyRes = await chai
       .request(app)
-      .patch(`/users/create-admin/${email}`)
-      .set('Authorization', `Bearer ${authToken}`);
+      .patch(`/users/Create-admin/${email}`)
+      .set('Authorization', `Bearer ${token}`);
     chai.expect(verifyRes).to.have.status(200);
   });
 });
@@ -256,13 +260,57 @@ it('should return 404 if a user is not found', async () => {
     .request(app)
     .post('/users/login')
     .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
-  const { token: authToken } = res.body;
+  // eslint-disable-next-line no-shadow
+  const { token } = res.body;
   expect(res).to.have.status(200);
   expect(res.body).to.have.property('token');
 
   const verifyRes = await chai
     .request(app)
-    .patch(`/users/create-admin/${Invalidemail}`)
-    .set('Authorization', `Bearer ${authToken}`);
+    .patch(`/users/Create-admin/${Invalidemail}`)
+    .set('Authorization', `Bearer ${token}`);
   chai.expect(verifyRes).to.have.status(404);
+});
+
+const Email = 'ange@gmail.com';
+describe('testing setting role/permission to a given user', () => {
+  it('should return change the role of user to a seted role', async () => {
+    const res = await chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass', });
+    // eslint-disable-next-line no-shadow
+    const { token } = res.body;
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property('token');
+
+    const verifyRes = await chai
+      .request(app)
+      .patch(`/users/role/${Email}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        role: 'seller',
+      });
+    chai.expect(verifyRes).to.have.status(200);
+  });
+});
+
+const invalidEmail = 'an@gmail.com';
+
+it('should return 401 if a user is not found', async () => {
+  const res = await chai
+    .request(app)
+    .post('/users/login')
+    .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+  expect(res).to.have.status(200);
+  expect(res.body).to.have.property('token');
+
+  const verifyRes = await chai
+    .request(app)
+    .patch(`/users/role/${invalidEmail}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      role: 'seller',
+    });
+  chai.expect(verifyRes).to.have.status(401);
 });

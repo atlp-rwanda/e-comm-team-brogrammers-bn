@@ -155,7 +155,8 @@ With correct token you get the following:
   "message": "user Ange She sucessfully made admin"
 }
 ```
-## Change password:
+
+### Change password:
 
 `PATCH /users/change-password`
 
@@ -361,4 +362,92 @@ if you are a seller you will get this response:
 - product must be in your collection
 - note: `token is required`
 
+   `PATCH /users/change-password`
+### Setting role/permission to the given user
+- First yoou logged in as Admin to be allowed to set role
+- get the token and put it in bearer
+- then click Authorize
+
+`patch /users/:id/role`
+- where id is the id of user you want to give a given role
+
+Example response body:
+```
+{
+  "role": "<role you want to give user>"
+}
+```
+With the correct token of admin and correct id of user  you get the following:
+- Example Response: 
+```
+{ 
+  "token": "<string>"
+  "username: "string",
+  "email": "string",
+  "gender": "string",
+  "role": "updated role"
+}
+```
+
 this will change product availability to true if it was false or false if it was true
+
+
+## Adding product to wishlist
+`post /wishlist/:id/`
+
+- first get the id of product you want to add to wishlist
+- if no product create one
+- login and put token in bearer auth
+- product id must be available
+- you can not wish for product twice
+- note: `token is required`
+ you will get this response
+ 
+ ```
+
+{
+  "data": {
+    "id": "642df59a-d79d-431a-92b2-2e6e90fd1901",
+    "userId": "2f91fac7-6a38-4162-af8b-84d67861e6f4",
+    "productId": "2c664f24-a604-4ed1-96c3-f96b1972c101",
+    "updatedAt": "2023-03-21T10:14:10.157Z",
+    "createdAt": "2023-03-21T10:14:10.157Z"
+  },
+  "message": "product added to your wishlist successfully"
+}
+```
+
+## Getting all  products in your  wishlist
+`post /wishlist/`
+
+- login and put token in bearer auth
+- product id must be available
+- note: `token is required`
+
+you will get this response 
+
+```
+{
+  "message": "Ange She here is product in your wishlist",
+  "data": [
+    {
+      "id": "2c664f24-a604-4ed1-96c3-f96b1972c101",
+      "images": [
+        "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679392751/qerw59puucgm5djziuxf.png",
+        "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679392754/vhplcicfm7ovvff7hltc.png"
+      ],
+      "name": "shoes",
+      "description": "new shoes on the market",
+      "quantity": 20,
+      "sellerId": "c8c929a9-88f9-447a-9b8e-d49fb8c62eb8",
+      "exp_date": "2030-03-19T22:00:00.000Z",
+      "available": true,
+      "price": 90,
+      "category": 1,
+      "createdAt": "2023-03-21T09:59:14.601Z",
+      "updatedAt": "2023-03-21T09:59:16.956Z"
+    }
+  ]
+}
+
+```

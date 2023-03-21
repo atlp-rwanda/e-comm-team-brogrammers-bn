@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+// eslint-disable-next-line import/no-named-as-default
 import User from '../services/user.services';
 // eslint-disable-next-line import/no-duplicates
 import db from '../database/models';
@@ -94,6 +95,23 @@ export default class Users {
       message: 'Your account has been verified successfully!',
       verified: true,
     });
+  }
+
+  static async setRole(req, res) {
+    try {
+      const { role } = req.body;
+      const { email } = req.params;
+      await User.setRole(role, email);
+      return res.status(200).json({
+        status: 200,
+        message: 'Role assigned to the user successfully',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        message: error.message,
+      });
+    }
   }
 
   /**

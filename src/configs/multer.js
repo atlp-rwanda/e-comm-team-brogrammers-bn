@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import multer from 'multer';
 import path from 'path';
 
