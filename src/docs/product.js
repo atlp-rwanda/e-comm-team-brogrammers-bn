@@ -44,7 +44,7 @@
  *                        type: string
  *                        format: binary
  *       responses:
- *        '200':
+ *        '201':
  *          description: product successfully created
  *          content:
  *            application/json:
@@ -86,6 +86,55 @@
  *                    type: object
  *                    description: created product
  * /products/{id}:
+ *    get:
+ *       tags:
+ *         - Products
+ *       summary: get one product
+ *       description: the seller or a user can get one product is they are available
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       responses:
+ *        '200':
+ *          description: get product successfully
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  value:
+ *                    type: object
+ *                    description: created product
+ *        '400':
+ *          description: bad request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: id is not supposed to be null
+ *        '500':
+ *          description: server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  error:
+ *                    type: object
+ *                    description: created product
  *    patch:
  *       tags:
  *         - Products
@@ -172,9 +221,6 @@
  *                  error:
  *                    type: object
  *                    description: created product
- *
- *
- *
  * /products:
  *   get:
  *     summary: get all products
@@ -199,7 +245,7 @@
  *               properties:
  *                 product:
  *                   type: object
- * /product:
+ * /products/collection:
  *   get:
  *     summary: get all products by a seller
  *     tags:
@@ -317,4 +363,80 @@
  *               properties:
  *                 message:
  *                   type: string
+ * 
+ * /products/delete/{id}:
+ *    delete:
+ *       tags:
+ *         - Products
+ *       summary: delete a product by ID
+ *       description: the seller can delete a product by ID from his/her collection
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       security:
+ *        - bearerAuth: []
+ *       responses:
+ *        '200':
+ *          description: product successfully deleted
+ *        '400':
+ *          description: product doesn't exist
+ * /products/{id}/available:
+ *    patch:
+ *       tags:
+ *         - Products
+ *       summary: seller change availability
+ *       description: the seller can change product availablity
+ *       security:
+ *        - {}
+ *        - bearerAuth: []
+ *       parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: id of the product
+ *          schema:
+ *            type: string
+ *       responses:
+ *        '200':
+ *          description: product availability changed
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  value:
+ *                    type: object
+ *                    description: created product
+ *        '400':
+ *          description: bad request
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: id is not supposed to be null
+ *        '401':
+ *          description: not authorized
+ *        '500':
+ *          description: server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  error:
+ *                    type: object
+ *                    description: error message
  */

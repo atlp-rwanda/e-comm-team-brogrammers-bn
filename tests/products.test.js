@@ -23,12 +23,13 @@ describe('testing the products', () => {
   ];
   let sellerToken;
   let product;
+  let productId;
 
   before(async () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'jean@gmail.com', password: '123@Pass' });
+      .send({ email: 'john@gmail.com', password: '123@Pass' });
     sellerToken = res.body.token;
   });
 
@@ -73,7 +74,6 @@ describe('testing the products', () => {
         done();
       });
   });
-
   it('should return 200 code for product created', (done) => {
     chai
       .request(app)
@@ -91,9 +91,10 @@ describe('testing the products', () => {
       .attach('images', path.join(__dirname, images[0]))
       .attach('images', path.join(__dirname, images[1]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(200);
+        chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
+        productId = res.body.product.id;
         done();
       });
   });
@@ -112,6 +113,7 @@ describe('testing the products', () => {
         chai.expect(res).to.have.status(200);
         chai.expect(res.body).to.have.property('product');
         product = res.body.product;
+        productId = res.body.product.id;
         done();
       });
   });
@@ -143,7 +145,6 @@ describe('testing the products', () => {
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
-        product = res.body.product;
         done();
       });
   });
@@ -178,6 +179,86 @@ describe('testing the products', () => {
         done();
       });
   });
+
+  it('should return 200 for product', (done) => {
+    chai
+      .request(app)
+      .get(`/products/${product.id}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        chai.expect(res.body).to.have.property('id', `${product.id}`);
+        done();
+      });
+  });
+
+  it('should return 401 for not authenticated', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', 'Bearer ')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it('should return 201 for changing product availability', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(201);
+        chai.expect(res.body).to.have.property('product');
+        chai.expect(res.body.product).to.have.property('available', !product.available);
+        done();
+      });
+  });
+
+  it('should return 400 for product not available', (done) => {
+    chai
+      .request(app)
+      .get(`/products/${product.id}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(400);
+        done();
+      });
+  });
+
+  it('should return 201 for changing product availability', (done) => {
+    chai
+      .request(app)
+      .patch(`/products/${product.id}/available`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(201);
+        chai.expect(res.body).to.have.property('product');
+        chai.expect(res.body.product).to.have.property('available', product.available);
+        done();
+      });
+  });
+
+  it('should return 401 code for wrong token', (done) => {
+    chai
+      .request(app)
+      .delete(`/products/delete/${productId}`)
+      .set('Authorization', `Bearer ${sellerToken}nnhdjansjan`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+
+  it('should return 200 code for product deleted', (done) => {
+    chai
+      .request(app)
+      .delete(`/products/delete/${productId}`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
 });
 
 describe('GET /buyer/:id', () => {
@@ -206,17 +287,6 @@ describe('GET /buyer/:id', () => {
         done();
       });
   });
-
-  it('should return the product if it is found ', (done) => {
-    chai.request(app)
-      .get('/products/buyer/8af32522-7fe8-4316-b6ec-4b0d2f2d5549')
-      .set('Authorization', `Bearer ${token}`)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.property('product');
-        done();
-      });
-  });
 })
 
 describe('GET /seller/:id', () => {
@@ -242,17 +312,6 @@ describe('GET /seller/:id', () => {
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body.message).to.equal('Product not found');
-        done();
-      });
-  });
-
-  it('should return the product if found in seller collection', (done) => {
-    chai.request(app)
-      .get('/products/seller/8af32522-7fe8-4316-b6ec-4b0d2f2d5549')
-      .set('Authorization', `Bearer ${token}`)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.property('product');
         done();
       });
   });

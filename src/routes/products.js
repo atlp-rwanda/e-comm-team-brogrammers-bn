@@ -6,6 +6,7 @@ import upload from '../configs/multer';
 import productVatidate from '../middlewares/productValidate';
 import editProductVatidate from '../middlewares/editProductValidate';
 import isOwner from '../middlewares/isowner';
+import isAvailable from '../middlewares/isProductAvailable';
 
 const routes = express.Router();
 
@@ -26,15 +27,31 @@ routes.patch(
   editProductVatidate,
   Products.editProduct
 );
-routes.get(
-  '/',
-  Products.getProduct
-);
+routes.get('/', Products.getProducts);
 routes.get(
   '/collection',
   isAuthenticated,
   checkRole(['seller']),
   Products.sellergetProduct
+);
+routes.delete(
+  '/delete/:id',
+  isAuthenticated,
+  checkRole(['seller']),
+  isOwner,
+  Products.deleteProduct
+);
+routes.get(
+  '/:id',
+  isAvailable,
+  Products.getProduct
+);
+routes.patch(
+  '/:id/available',
+  isAuthenticated,
+  checkRole(['seller']),
+  isOwner,
+  Products.toggleAvailable
 );
 
 routes.get('/buyer/:id', isAuthenticated,checkRole(['buyer']),Products.getProductById);

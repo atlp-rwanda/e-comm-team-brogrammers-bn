@@ -1,0 +1,4 @@
+{
+  "ignore": ["*.test.js"],
+  "ext": ".js, .mjs, .coffee, .litcoffee, .json, .yaml, .yml"
+}

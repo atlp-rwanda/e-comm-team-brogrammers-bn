@@ -170,9 +170,23 @@ Example of request body:
 ```
 with correct email,oldPassword and newPassword. the newPassword much meet the criteria of valid password
 
+## Notify users to change password
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- Ater an amount of time we specified the cron job starts to run and send an email to remind a user to change their password
+- After login the user will be redirected to the change password page to change their password
+- We will be using an existing endpoint
+
+
+   `PATCH /users/change-password`
+
 ## PRODUCTS
 
 ## Post product
+
+`POST /products/`
+
 - First signup a new user and verify the user
 - then login to get the token
 - add your token in header
@@ -220,6 +234,9 @@ if you are a seller you will get this response:
 Required fields: `name`, `price`, `quantity`, `images`
 
 ## Update product
+
+`PATCH /products/:id`
+
 - First signup a new user and verify the user
 - then login to get the token
 - add your token in header
@@ -267,13 +284,81 @@ if you are a seller you will get this response:
 ```
 Required fields: no `field required`
 
-## Notify users to change password
+## Delete Product
 - First signup a new user and verify the user
 - then login to get the token
 - add your token in header
-- Ater an amount of time we specified the cron job starts to run and send an email to remind a user to change their password
-- After login the user will be redirected to the change password page to change their password
-- We will be using an existing endpoint
+- product must be in your collection
+- note: `token is required`
+
+Example of request body:
+
+```
+{
+  "id": "id of the product to delete",
+}
+```
+
+if you are a seller of that product you will get this response:
+```
+{
+  "status": 200,
+  "message": "Product deleted successfully",
+  "item": {
+    "id": "04906672-7a61-434e-b3c5-07ab35d0c40d",
+    "images": [
+      "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679312631/dutnxv74ydhrw6nqmdkl.jpg",
+      "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679312635/eemjvmu3hh2jhidr0qom.jpg"
+    ],
+    "name": "shoe",
+    "description": "new nike shoes",
+    "quantity": 20,
+    "sellerId": "5613282a-6212-4a73-b513-580577cd939d",
+    "exp_date": "2023-11-21T22:00:00.000Z",
+    "available": true,
+    "price": 200,
+    "category": 2,
+    "createdAt": "2023-03-20T11:43:54.758Z",
+    "updatedAt": "2023-03-20T11:43:54.758Z"
+  }
+}
+```
+Required fields: ` id for the product to delete`
 
 
-   `PATCH /users/change-password`
+
+## Get single product
+`GET /products/:id`
+
+anyOne can view the product if it is available
+if you are a seller you will get this response:
+```
+{
+  "id": "531f60c8-d7e4-4c7e-9316-9d226237b356",
+  "images": [
+    "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901154/ddhyu8kryfuucpzcis9v.jpg",
+    "http://res.cloudinary.com/dpfueuupz/image/upload/v1678901159/iclk1ovdiihr6jgzozuy.png"
+  ],
+  "name": "nike new",
+  "description": "hey you can buy new shoes",
+  "quantity": 100,
+  "sellerId": "963b5889-a9e6-4b5b-815d-ffc7f5a6975f",
+  "exp_date": "2030-03-01T22:00:00.000Z",
+  "available": true,
+  "price": 250,
+  "category": 2,
+  "createdAt": "2023-03-15T17:20:57.685Z",
+  "updatedAt": "2023-03-15T17:28:08.077Z"
+}
+```
+
+## change product availability
+`PATCH /products/:id/available/`
+
+- First signup a new user and verify the user
+- then login to get the token
+- add your token in header
+- product must be in your collection
+- note: `token is required`
+
+this will change product availability to true if it was false or false if it was true

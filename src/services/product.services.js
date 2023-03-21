@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named
 import { products } from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
@@ -74,9 +75,18 @@ export default class Product {
   /**
    * @returns {products} allproducts
    */
-  static async getProduct() {
-    const allproducts = await products.findAll();
+  static async getProducts() {
+    const allproducts = await products.findAll({ where: { available: true } });
     return allproducts;
+  }
+
+  /**
+   * @param {String} id
+   * @returns {products} allproducts
+   */
+  static async getProduct(id) {
+    const product = await products.findOne({ where: { id } });
+    return product;
   }
 
   /**
@@ -105,4 +115,23 @@ export default class Product {
     return product;
   }
 
+  static async getProductName(productId, userId) {
+    const product = await products.findOne({
+      where: { id: productId, sellerId: userId },
+    });
+    if (!product) {
+      throw new Error('Product not found');
+    }
+    return product;
+  }
+
+  /**
+   * @param {Object} product
+   * @returns {products} allproducts
+   */
+  static async changeAvailable(product) {
+    product.available = !product.available;
+    product.save();
+    return product;
+  }
 }

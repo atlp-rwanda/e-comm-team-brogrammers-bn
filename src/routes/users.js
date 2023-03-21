@@ -8,14 +8,30 @@ import mfaValidate from '../middlewares/mfaValidate';
 import signupVatidate from '../middlewares/signupValidate';
 import checkRole from '../middlewares/Checkrole';
 import isAuthenticated from '../middlewares/verifyToken';
+import { resetPassword } from '../validations/fields.validation';
+import requestValidator from '../middlewares/requestValidator';
 
 const routes = express.Router();
 
 routes.post('/signup', signupVatidate, checkUserExist, Users.signup);
 routes.get('/verify-email/:token', Users.verifyEmail);
+routes.post(
+  '/reset-password',
+  requestValidator(resetPassword),
+  Users.sendResetPasswordCode
+);
+routes.post(
+  '/verify-reset-password/:resetToken',
+  Users.verifyResetPasswordCode
+);
 routes.patch('/change-password', isAuthenticated, Users.changePassword);
 
-routes.patch('/create-admin/:email', isAuthenticated, checkRole(['admin']), Users.CreateAdmin);
+routes.patch(
+  '/create-admin/:email',
+  isAuthenticated,
+  checkRole(['admin']),
+  Users.CreateAdmin
+);
 routes.post('/verify-mfa', mfaValidate, Users.verifyMfaCode);
 routes.post('/enable-mfa', isAuthenticated, Users.enableMfa);
 routes.post('/disable-mfa', isAuthenticated, Users.disableMfa);

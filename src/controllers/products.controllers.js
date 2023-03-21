@@ -1,5 +1,9 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import Product from '../services/product.services';
+
+const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/
 
 /**
  * the product controller class
@@ -19,7 +23,7 @@ export default class Products {
       );
       if (error) return res.status(400).json({ message: 'bad request', error });
       return res
-        .status(200)
+        .status(201)
         .json({ message: 'product created', product: value });
     } catch (error) {
       return res.status(500).json({ message: 'server error', error });
@@ -52,14 +56,50 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
-  static async getProduct(req, res) {
+  static async getProducts(req, res) {
     try {
-      const products = await Product.getProduct();
+      const products = await Product.getProducts();
       return res.status(200).json({ products });
     } catch (err) {
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  static async deleteProduct(req, res) {
+    try {
+      const product = req.product;
+      await product.destroy();
+      return res.status(200).json({
+        status: 200,
+        message: 'Product deleted successfully',
+        item: product,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: error.message,
+      });
+    }
+  }
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async getProduct(req, res) {
+    try {
+      if (req.product) return res.status(200).json(req.product);
+
+      const product = await Product.getProduct(req.params.id);
+      if (!product || product === null) return res.status(404).json({ message: 'product not found' });
+      return res.status(200).json(product);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: err.message, message: 'server product' });
     }
   }
 
@@ -78,10 +118,10 @@ export default class Products {
         .json({ error: err.message, message: 'Failed to retrieve products' });
     }
   }
-
+  
   static async getProductById(req, res) {
     const id = req.params.id;
-    const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+    
   
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
@@ -99,7 +139,6 @@ export default class Products {
 
   static async getProductByIdAndSeller(req, res) {
     const id = req.params.id;
-    const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
   
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
@@ -116,6 +155,21 @@ export default class Products {
         return res.status(400).json({ message: 'Invalid product ID' });
       }
       return res.status(500).json({ error: err.message, message: 'Failed to retrieve product' });
+    }
+  }
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async toggleAvailable(req, res) {
+    try {
+      const product = await Product.changeAvailable(req.product);
+      return res.status(201).json({ message: 'availablility changed', product });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: err.message, message: 'Failed to retrieve products' });
     }
   }
 }
