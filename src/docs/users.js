@@ -279,6 +279,65 @@
  *         description: Internal server error
  *       default:
  *         description: Unexpected error
+ *
+ * @swagger
+ * /users/role/{email}:
+ *   patch:
+ *     summary: Assigning role to a given user.
+ *     tags:
+ *         - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         description: Email of the user you want to set a role to.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                   type: string
+ *     responses:
+ *       '200':
+ *         description: Role assigned to the user successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *       '404':
+ *         description: The user with that id was not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   description: error message.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Error:
+ *                   type: string
+ *                   description: error message.
  */
 
 /**

@@ -4,7 +4,7 @@
 /* eslint-disable object-shorthand */
 /* eslint-disable require-jsdoc */
 import bcrypt from 'bcrypt';
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved
 import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
 import { users } from '../database/models';
@@ -108,5 +108,9 @@ export default class User {
       if (err) return console.error('ERROR SENDING MAIL: ', err);
       console.log('MAIL SENT: ', info.response);
     });
+  }
+
+  static async setRole(role, email) {
+    await users.update({ role }, { where: { email, }, });
   }
 }

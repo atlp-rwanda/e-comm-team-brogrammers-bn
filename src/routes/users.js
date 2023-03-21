@@ -38,5 +38,7 @@ routes.post('/disable-mfa', isAuthenticated, Users.disableMfa);
 routes.post('/login', loginValidate, Users.login);
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
+// eslint-disable-next-line no-undef
+routes.patch('/role/:email', isAuthenticated, checkRole(['admin']), Users.setRole);
 
 export default routes;
