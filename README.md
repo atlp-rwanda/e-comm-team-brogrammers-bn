@@ -464,7 +464,32 @@ you will get this response
 ```
 {
   "value": {
-    "message": "added to cart successfully"
+    "message": "added to cart successfully",
+    "data": {
+      "id": "60d74375-540d-4f9f-9e2c-7afa4d09b8ef",
+      "userId": "13089152-d7d3-405d-84bc-0f098efa1f5c",
+      "products": [
+        {
+          "id": "42680429-46a2-43bd-ad08-5db59675b98c",
+          "name": "bed sheets",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679471871/dm23aha2zl9pihx3j4vi.jpg",
+          "price": 800,
+          "Ptotal": 8000,
+          "quantity": 10
+        },
+        {
+          "id": "1cc2f219-81a4-48fb-a98a-8c574416a320",
+          "name": "shoes",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679470404/pfyewd7rto4mtvle3viw.png",
+          "quantity": 7,
+          "price": 90,
+          "Ptotal": 630
+        }
+      ],
+      "total": 8630,
+      "createdAt": "2023-03-22T11:09:34.796Z",
+      "updatedAt": "2023-03-22T14:41:26.195Z"
+    }
   }
 }
 

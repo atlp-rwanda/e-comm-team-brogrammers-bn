@@ -43,6 +43,7 @@ export default class cartService {
         return {
           value: {
             message: 'added to cart successfully',
+            data: newCart
             // eslint-disable-next-line object-curly-newline
           } };
       }
@@ -60,7 +61,8 @@ export default class cartService {
       await cart.save();
       return {
         value: {
-          message: 'added to cart successfully'
+          message: 'added to cart successfully',
+          data: cart
           // eslint-disable-next-line object-curly-newline
         } };
     }

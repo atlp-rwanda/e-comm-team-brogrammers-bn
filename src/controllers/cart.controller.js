@@ -1,4 +1,4 @@
-// eslint-disable-next-line import/named
+// eslint-disable-next-line import/named, import/no-named-as-default
 import cartService from '../services/carts.services';
 
 /**
