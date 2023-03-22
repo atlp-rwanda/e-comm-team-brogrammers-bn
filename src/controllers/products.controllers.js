@@ -3,7 +3,7 @@
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import Product from '../services/product.services';
 
-const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/
+const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
 
 /**
  * the product controller class
@@ -134,11 +134,10 @@ export default class Products {
         .json({ error: err.message, message: 'Failed to retrieve products' });
     }
   }
-  
+
   static async getProductById(req, res) {
     const id = req.params.id;
-    
-  
+
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -155,11 +154,11 @@ export default class Products {
 
   static async getProductByIdAndSeller(req, res) {
     const id = req.params.id;
-  
+
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
     }
-  
+
     try {
       const product = await Product.getProductByIdAndSeller(id, req.user.id);
       if (!product) {
@@ -173,6 +172,7 @@ export default class Products {
       return res.status(500).json({ error: err.message, message: 'Failed to retrieve product' });
     }
   }
+
   /**
    * @param {Object} req
    * @param {Object} res

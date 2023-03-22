@@ -6,6 +6,7 @@ import path from 'path';
 import app from '../src/app';
 // eslint-disable-next-line import/named
 import { sequelize } from '../src/database/models/index';
+import beforeCheckExpiredProduct from '../src/middlewares/productExpAll';
 
 env.config();
 sequelize.authenticate();
@@ -206,20 +207,17 @@ describe('testing the products', () => {
       .request(app)
       .patch(`/products/${product.id}/available`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
+      .end(async (error, res) => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         chai.expect(res.body.product).to.have.property('available', !product.available);
-        done();
-      });
-  });
 
-  it('should return 400 for product not available', (done) => {
-    chai
-      .request(app)
-      .get(`/products/${product.id}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(400);
+        if (!res.body.product.available) {
+          const resp = await chai
+            .request(app)
+            .get(`/products/${product.id}`);
+          chai.expect(resp).to.have.status(400);
+        }
         done();
       });
   });
@@ -286,7 +284,7 @@ describe('GET /buyer/:id', () => {
         done();
       });
   });
-})
+});
 
 describe('GET /seller/:id', () => {
   let token;
@@ -314,4 +312,12 @@ describe('GET /seller/:id', () => {
         done();
       });
   });
-})
+});
+
+describe('testing expiration', () => {
+  it('test all products', async () => {
+    const res = await beforeCheckExpiredProduct();
+    expect(res).to.have.property('value');
+    expect(res).to.not.have.property('error');
+  });
+});

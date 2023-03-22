@@ -3,6 +3,7 @@
 // eslint-disable-next-line import/named
 import { products, reviews } from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
+import checkExpiredProduct from '../helpers/expiredProduct';
 
 /**
  * product services
@@ -45,6 +46,7 @@ export default class Product {
       category,
       images,
     });
+    checkExpiredProduct(value);
 
     return { value };
   }
@@ -56,12 +58,17 @@ export default class Product {
    * @returns {value | error} it returns value or error
    */
   static async editProduct(data, files, product) {
-    const { name, description, quantity, expdate, price, category } = data;
+    const {
+      name, description, quantity, expdate, price, category
+    } = data;
 
     if (name && name !== null) product.name = name;
     if (description && description !== null) product.description = description;
     if (quantity && quantity !== null) product.quantity = quantity;
-    if (expdate && expdate !== null) product.exp_date = new Date(expdate);
+    if (expdate && expdate !== null) {
+      product.exp_date = new Date(expdate);
+      checkExpiredProduct(product);
+    }
     if (price && price !== null) product.price = price;
     if (category && category !== null) product.category = category;
 
