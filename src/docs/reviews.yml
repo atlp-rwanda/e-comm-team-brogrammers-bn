@@ -1,0 +1,263 @@
+/reviews:
+  get:
+    tags:
+      - reviews
+    summary: Get all reviews
+    description: Returns a list of all reviews
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: OK
+        schema:
+          type: array
+          items:
+            properties:
+              rating:
+                type: number
+              feedback:
+                type: string
+              productId:
+                type: string
+      '500':
+        description: Internal Server Error
+  post:
+    tags:
+      - reviews
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Create a new review
+    description: Creates a new review for a product
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              rating:
+                type: number
+              feedback:
+                type: string
+              productId:
+                type: string
+    responses:
+      '201':
+        description: Created
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            rating:
+              type: number
+            feedback:
+              type: string
+            userId:
+              type: string
+            productId:
+              type: string
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+
+/reviews/{id}:
+  tags:
+    - Reviews
+  get:
+    tags:
+      - reviews
+    summary: Get a single review
+    description: Returns a single review by ID
+    produces:
+      - application/json
+    parameters:
+      - name: id
+        in: path
+        description: ID of the review to return
+        required: true
+        type: number
+    responses:
+      '200':
+        description: OK
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            rating:
+              type: number
+            feedback:
+              type: string
+            userId:
+              type: string
+            productId:
+              type: string
+      '404':
+        description: Review not found
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+  patch:
+    tags:
+      - reviews
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Update a review
+    description: Updates an existing review by ID
+    produces:
+      - application/json
+    parameters:
+      - name: id
+        in: path
+        description: ID of the review to return
+        required: true
+        type: number
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              rating:
+                type: number
+              feedback:
+                type: string
+    responses:
+      '200':
+        description: OK
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            rating:
+              type: number
+            feedback:
+              type: string
+            userId:
+              type: string
+            productId:
+              type: string
+      '404':
+        description: Review not found
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+  delete:
+    summary: Delete a review
+    tags:
+      - reviews
+    security:
+      - {}
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: ID of the review to delete
+    responses:
+      204:
+        description: Review successfully deleted
+      401:
+        description: Unauthorized - user must be authenticated
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      403:
+        description: Forbidden - user is not allowed to delete the review
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      404:
+        description: Review not found
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+/products/{id}/reviews:
+  tags:
+    - Reviews
+  get:
+    tags:
+      - reviews
+    summary: Get a product reviews
+    description: Returns an array of product reviews by product ID
+    produces:
+      - application/json
+    parameters:
+      - name: id
+        in: path
+        description: ID of the product
+        required: true
+        shema:
+          type: string
+    responses:
+      '200':
+        description: OK
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            rating:
+              type: number
+            feedback:
+              type: string
+            userId:
+              type: string
+            productId:
+              type: string
+      '404':
+        description: Product not found
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string

@@ -7,6 +7,7 @@ import productVatidate from '../middlewares/productValidate';
 import editProductVatidate from '../middlewares/editProductValidate';
 import isOwner from '../middlewares/isowner';
 import isAvailable from '../middlewares/isProductAvailable';
+import catchError from '../middlewares/catchError';
 
 const routes = express.Router();
 
@@ -41,11 +42,7 @@ routes.delete(
   isOwner,
   Products.deleteProduct
 );
-routes.get(
-  '/:id',
-  isAvailable,
-  Products.getProduct
-);
+routes.get('/:id', isAvailable, Products.getProduct);
 routes.patch(
   '/:id/available',
   isAuthenticated,
@@ -56,5 +53,6 @@ routes.patch(
 
 routes.get('/buyer/:id', isAuthenticated,checkRole(['buyer']),Products.getProductById);
 routes.get('/seller/:id',isAuthenticated,checkRole(['seller']),Products.getProductByIdAndSeller);
+routes.get('/:id/reviews', catchError(Products.getProductReviews));
 
 export default routes;
