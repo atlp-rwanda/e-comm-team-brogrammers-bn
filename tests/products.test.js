@@ -12,6 +12,7 @@ sequelize.authenticate();
 
 chai.should();
 chai.use(chaiHttp);
+const { expect } = chai;
 
 describe('testing the products', () => {
   const images = [
@@ -258,3 +259,59 @@ describe('testing the products', () => {
       });
   });
 });
+
+describe('GET /buyer/:id', () => {
+  let token;
+
+  before((done) => {
+    chai.request(app)
+      .post('/users/login')
+      .send({
+        email: 'habiholivier10@gmail.com',
+        password: '123@Pass',
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('should return a 404 error for invalid product ID', (done) => {
+    chai.request(app)
+      .get('/products/buyer/99898')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('Product not found');
+        done();
+      });
+  });
+})
+
+describe('GET /seller/:id', () => {
+  let token;
+
+  before((done) => {
+    chai.request(app)
+      .post('/users/login')
+      .send({
+        email: 'jean@gmail.com',
+        password: '123@Pass',
+      })
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+
+  it('should return a 404 error for invalid product ID', (done) => {
+    chai.request(app)
+      .get('/products/seller/99898')
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.message).to.equal('Product not found');
+        done();
+      });
+  });
+})
