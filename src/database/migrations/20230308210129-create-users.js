@@ -62,7 +62,10 @@ export default {
       resetPasswordExpires: {
         type: Sequelize.DATE
       },
-
+      mfa_enabled: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       disabledUser: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

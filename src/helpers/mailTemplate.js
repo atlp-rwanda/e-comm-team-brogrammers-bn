@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable arrow-body-style */
 /* eslint-disable arrow-spacing */
+import moment from 'moment';
+
 // eslint-disable-next-line import/prefer-default-export
 export const verifyEmailTemplate = (userToken) => {
   return `
@@ -52,4 +54,80 @@ export const disableEmailTemplate = (username, disabledReason) => {
       <p style="color: #000; font-size: 14px;">Thank you for choosing Brogrammers e-commerce.</p>
     </div>
   `;
+};
+
+export const expireProduct = (user, product) => {
+  return (`
+  <div style="width:100%; font-family: sans-serif, system-ui;">
+    <h1 style="text-align:center;background-color: #222;color: #fff;padding: 1.5rem;">
+      ⚠️ Important: ${product.name} has Expired
+    </h1>
+    <div style="padding: 0 1rem;">
+    <p>Dear ${user.username},</p>
+      <p>
+        I hope this email finds you well. We are writing to notify you that one of the products you 
+        have listed on our market is had expired. We take the quality and safety of our products 
+        very seriously, and it is important to us that our customers receive products that are fresh and effective.
+      </p>
+      <p>
+        Please take necessary actions to ensure that the product is either removed from the market 
+        or the expiry date is updated. We understand that mistakes can happen, and we appreciate 
+        your cooperation in resolving this issue.
+      </p>
+      <div style="display: flex; align-items: center;">
+        <img src="${product.images[0]}" style="width: 30%"/>
+        <div style="padding-left: 1rem;">
+          <p>name: <b>${product.name}</b></p>
+          <p>price: <b>US$${product.price}</b></p>
+          <p>quantity: <b>${product.quantity}</b></p>
+          <p>expires: <b>${product.exp_date}</b></p>
+        </div>
+      </div>
+      <p>
+        If you need any assistance in this matter or have any questions, please do not hesitate to 
+        contact us. We look forward to continuing to work with you and providing our customers with 
+        high-quality products.
+      </p>
+      <p>Best regards,</p>
+    </div>
+  </div>
+  `);
+};
+
+export const expireProductWarning = (user, product) => {
+  return (`
+    <div style="width:100%; font-family: sans-serif, system-ui;">
+      <h1 style="text-align:center;background-color: #222;color: #fff;padding: 1.5rem;">
+        ⚠️ Reminder: Expiry Date of ${product.name} is Approaching
+      </h1>
+      <div style="padding: 0 1rem;">
+      <p>Dear ${user.username},</p>
+        <p>
+          I hope this email finds you well. We are writing to notify you that one of the products you 
+          have listed on our market is about to expire. We take the quality and safety of our products 
+          very seriously, and it is important to us that our customers receive products that are fresh and effective.
+        </p>
+        <p>
+          Please take necessary actions to ensure that the product is either removed from the market 
+          or the expiry date is updated. We understand that mistakes can happen, and we appreciate 
+          your cooperation in resolving this issue.
+        </p>
+        <div style="display: flex; align-items: center;">
+          <img src="${product.images[0]}" style="width: 30%"/>
+          <div style="padding-left: 1rem;">
+            <p>name: <b>${product.name}</b></p>
+            <p>price: <b>US$${product.price}</b></p>
+            <p>quantity: <b>${product.quantity}</b></p>
+            <p>expires: <b>${moment(product.exp_date).fromNow()}</b></p>
+          </div>
+        </div>
+        <p>
+          If you need any assistance in this matter or have any questions, please do not hesitate to 
+          contact us. We look forward to continuing to work with you and providing our customers with 
+          high-quality products.
+        </p>
+        <p>Best regards,</p>
+      </div>
+    </div>
+  `);
 };

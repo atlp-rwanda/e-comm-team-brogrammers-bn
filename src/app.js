@@ -10,11 +10,13 @@ import allroutes from './routes/index';
 import swagger from './configs/swagger';
 import checkPasswordExpirationCronJob from './middlewares/passwordExpiration';
 import route from './routes/auth';
+import beforeCheckExpiredProduct from './middlewares/productExpAll';
 
 env.config();
 
 const app = express();
 checkPasswordExpirationCronJob.start();
+beforeCheckExpiredProduct();
 
 app.use(express.json());
 app.use(cors());
