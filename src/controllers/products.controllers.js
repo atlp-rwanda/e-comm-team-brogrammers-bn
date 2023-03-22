@@ -137,7 +137,6 @@ export default class Products {
 
   static async getProductById(req, res) {
     const id = req.params.id;
-
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
     }

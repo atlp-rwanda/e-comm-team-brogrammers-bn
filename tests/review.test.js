@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
 import app from '../src/app'; // assuming your app's entry point is in app.js
 // eslint-disable-next-line import/named
