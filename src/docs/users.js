@@ -341,43 +341,81 @@
  */
 
 /**
-* @swagger
-* /users/change-password:
-*   patch:
-*     summary: change user's password
-*     tags:
-*       - Users
-*     security:
-*       - bearerAuth: []
-*     parameters:
-*       - in: body
-*         name: Update Password
-*         description: Object containing user's current password and new password
-*         required: true
-*         schema:
-*           type: object
-*           properties:
-*             oldPassword:
-*               type: string
-*               description: User's current password
-*               example: Password@123
-*             newPassword:
-*               type: string
-*               description: User's new password
-*               example: newPassword@123
-*     responses:
-*       200:
-*         description: Password changed successfully
-*         schema:
-*           type: object
-*           properties:
-*             message:
-*               type: string
-*               example: Password changed successfully
-*       400:
-*         description: Invalid request body
-*       500:
-*         description: Internal server error
-*       default:
-*         description: Unexpected error
-*/
+ * @swagger
+ * /users/change-password:
+ *   patch:
+ *     summary: change user's password
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: body
+ *         name: Update Password
+ *         description: Object containing user's current password and new password
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             oldPassword:
+ *               type: string
+ *               description: User's current password
+ *               example: Password@123
+ *             newPassword:
+ *               type: string
+ *               description: User's new password
+ *               example: newPassword@123
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Password changed successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ *       default:
+ *         description: Unexpected error
+ * @swagger
+ * /users/disable/{userId}:
+ *   patch:
+ *     summary: Disable a user account
+ *     tags:
+ *       - Admin
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name:  userId
+ *     requestBody:
+ *       description: You violated our terms of service
+ *       content:
+ *         application/json:
+ *           schema:
+ *              type: object
+ *              properties:
+ *                reason:
+ *                  type: string
+ *                  description: Password changed successfully
+ *                  example: User account disabled successfully
+ *     responses:
+ *       200:
+ *         description: User account disabled successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: User account disabled successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ *       default:
+ *         description: Unexpected error
+ */

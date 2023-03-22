@@ -42,3 +42,14 @@ export const mfaEmailTemplate = (mfa_code) => {
     </div>
   `;
 };
+export const disableEmailTemplate = (username, disabledReason) => {
+  return `
+  <div style="background-color: #f2f2f2; padding: 20px;">
+      <h1 style="color: #004d99; text-align: center;">Dear ${username},<br/></h1>
+      <p style="color: #000; font-size: 16px;">Your account has been disabled due to the following reason(s):<br/><br/>
+      ${disabledReason}<br/><br/>Please contact the support team if you have any questions.<br/><br/><br/>Best regards, <br/><br/>The support team,</p>
+
+      <p style="color: #000; font-size: 14px;">Thank you for choosing Brogrammers e-commerce.</p>
+    </div>
+  `;
+};

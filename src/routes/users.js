@@ -10,6 +10,7 @@ import checkRole from '../middlewares/Checkrole';
 import isAuthenticated from '../middlewares/verifyToken';
 import { resetPassword } from '../validations/fields.validation';
 import requestValidator from '../middlewares/requestValidator';
+import disableUser from '../validations/disable.validation';
 
 const routes = express.Router();
 
@@ -40,5 +41,14 @@ routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
 // eslint-disable-next-line no-undef
 routes.patch('/role/:email', isAuthenticated, checkRole(['admin']), Users.setRole);
+
+// Disable account
+routes.patch(
+  '/disable/:userId',
+  isAuthenticated,
+  checkRole(['admin']),
+  requestValidator(disableUser),
+  Users.disableUser
+);
 
 export default routes;
