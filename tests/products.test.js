@@ -72,7 +72,7 @@ describe('testing the products', () => {
         done();
       });
   });
-  it('should return 200 code for product created', (done) => {
+  it('should return 201 code for product created', (done) => {
     chai
       .request(app)
       .post('/products/')

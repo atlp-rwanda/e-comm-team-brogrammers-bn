@@ -105,12 +105,11 @@ export default class User {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (err) return console.error('ERROR SENDING MAIL: ', err);
-      console.log('MAIL SENT: ', info.response);
+      if (err) return err;
     });
   }
 
   static async setRole(role, email) {
-    await users.update({ role }, { where: { email, }, });
+    await users.update({ role }, { where: { email } });
   }
 }
