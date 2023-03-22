@@ -6,9 +6,11 @@ import env from 'dotenv';
 import { isUuid } from 'uuidv4';
 import app from '../src/app';
 
-// eslint-disable-next-line import/named
+// eslint-disable-next-line import/named, import/no-duplicates
 import db, { sequelize } from '../src/database/models/index';
-
+// eslint-disable-next-line import/no-duplicates
+let userID;
+let adminToken;
 env.config();
 sequelize.authenticate();
 
@@ -53,6 +55,7 @@ describe('testing signup', () => {
         email_token = res.body.user.email_token;
         chai.expect(res).to.have.status(201);
         chai.expect(isUuid(res.body.user.id)).to.equal(true);
+        userID = res.body.user.id;
         done();
       });
   });
@@ -92,8 +95,6 @@ describe('testing user profile', () => {
       .post('/users/login')
       .send({ email: user.email, password: user.password })
       .end((error, res) => {
-        console.log(user.email);
-        console.log(res.body);
         chai.expect(res).to.have.status(200);
         token = res.body.token;
         chai.expect(res.body).to.have.property('token');
@@ -163,7 +164,6 @@ describe('testing user profile', () => {
         email: 'lucy@gmail.com',
       })
       .end((error, res) => {
-        console.log(res.body);
         chai.expect(res).to.have.status(400);
         done();
       });
@@ -264,7 +264,7 @@ it('should return 404 if a user is not found', async () => {
   const { token } = res.body;
   expect(res).to.have.status(200);
   expect(res.body).to.have.property('token');
-
+  adminToken = token;
   const verifyRes = await chai
     .request(app)
     .patch(`/users/Create-admin/${Invalidemail}`)
@@ -313,4 +313,37 @@ it('should return 401 if a user is not found', async () => {
       role: 'seller',
     });
   chai.expect(verifyRes).to.have.status(401);
+});
+// disable user account
+
+describe('should disable a user account and send an email with the disable reason', () => {
+  it('should return 200 code for disabling user successfully', (done) => {
+    chai
+      .request(app)
+      .patch(`/users/disable/${userID}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        reason: 'Requests from law enforcement',
+      })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        // eslint-disable-next-line no-undef
+        done();
+      });
+  });
+
+  // eslint-disable-next-line no-shadow
+  it('should return 401 code for no authorization', function (done) {
+    this.timeout(3000); // set timeout to 4 seconds
+    chai
+      .request(app)
+      .patch('/users/disable/userId')
+      .send({
+        reason: 'Requests from law enforcement',
+      })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
 });

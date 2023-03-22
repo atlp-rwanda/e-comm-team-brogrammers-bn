@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable require-jsdoc */
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies, import/no-named-as-default-member
 import User from '../services/user.services';
 
 export const sendEmail = (mailConfigurations) => {

@@ -1,6 +1,7 @@
+/* eslint-disable prefer-const */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named
-import { products } from '../database/models';
+import { products, reviews } from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
 
 /**
@@ -20,7 +21,13 @@ export default class Product {
 
     let {
       // eslint-disable-next-line prefer-const
-      name, description, quantity, price, expdate, category,
+      name,
+      // eslint-disable-next-line prefer-const
+      description,
+      quantity,
+      price,
+      expdate,
+      category,
     } = data;
     if (!expdate || expdate === null) expdate = '01-01-2100';
 
@@ -49,9 +56,7 @@ export default class Product {
    * @returns {value | error} it returns value or error
    */
   static async editProduct(data, files, product) {
-    const {
-      name, description, quantity, expdate, price, category
-    } = data;
+    const { name, description, quantity, expdate, price, category } = data;
 
     if (name && name !== null) product.name = name;
     if (description && description !== null) product.description = description;
@@ -108,6 +113,14 @@ export default class Product {
       throw new Error('Product not found');
     }
     return product;
+  }
+
+  static async getProductReviews(reviewsProductId) {
+    const productReviews = await reviews.findAll({
+      where: { productId: reviewsProductId },
+    });
+
+    return productReviews;
   }
 
   /**

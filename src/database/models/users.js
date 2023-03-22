@@ -60,6 +60,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      disabledUser: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       mfa_code: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -70,11 +74,11 @@ export default (sequelize, DataTypes) => {
       },
       mustUpdatePassword: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       lastTimePasswordUpdated: {
         type: DataTypes.DATE,
-        defaultValue: Date.now()
+        defaultValue: Date.now(),
       },
       resetPasswordToken: DataTypes.STRING,
       resetPasswordExpires: DataTypes.DATE,

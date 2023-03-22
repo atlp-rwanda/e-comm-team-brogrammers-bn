@@ -61,7 +61,12 @@ export default {
       },
       resetPasswordExpires: {
         type: Sequelize.DATE
-      }
+      },
+
+      disabledUser: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
     });
   },
   async down(queryInterface) {
