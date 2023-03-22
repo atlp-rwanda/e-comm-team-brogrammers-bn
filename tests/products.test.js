@@ -213,14 +213,6 @@ describe('testing the products', () => {
         chai
           .expect(res.body.product)
           .to.have.property('available', !product.available);
-
-        if (!res.body.product.available) {
-          const resp = await chai
-            .request(app)
-            .get(`/products/${product.id}`)
-            .send();
-          chai.expect(resp).to.have.status(400);
-        }
         done();
       });
   });

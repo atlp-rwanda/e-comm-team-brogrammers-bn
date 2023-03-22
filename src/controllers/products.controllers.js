@@ -153,11 +153,9 @@ export default class Products {
 
   static async getProductByIdAndSeller(req, res) {
     const id = req.params.id;
-
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
     }
-
     try {
       const product = await Product.getProductByIdAndSeller(id, req.user.id);
       if (!product) {
@@ -177,6 +175,7 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
+
   static async toggleAvailable(req, res) {
     try {
       const product = await Product.changeAvailable(req.product);

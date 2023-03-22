@@ -18,6 +18,10 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       users.hasOne(models.carts, { as: 'cart', foreignKey: 'userId' });
       users.hasMany(models.order, { as: 'orders', foreignKey: 'buyerId' });
+      users.hasMany(models.Chat, {
+        foreignKey: 'userId',
+        as: 'chats',
+      });
     }
   }
   users.init(
@@ -81,8 +85,6 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         defaultValue: Date.now(),
       },
-      resetPasswordToken: DataTypes.STRING,
-      resetPasswordExpires: DataTypes.DATE,
     },
     {
       sequelize,

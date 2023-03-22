@@ -6,6 +6,7 @@ import wishlist from './wishlist';
 import cart from './cart';
 import reviews from './reviews.routes';
 import checkoutRoutes from './checkout';
+import chat from './chat';
 
 const routes = express();
 
@@ -15,7 +16,6 @@ routes.use('/products', products);
 routes.use('/wishlist', wishlist);
 routes.use('/reviews', reviews);
 routes.use('/cart', cart);
-
 routes.use('/checkout', checkoutRoutes);
-
+routes.use('/chat', chat);
 export default routes;

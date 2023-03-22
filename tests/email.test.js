@@ -65,7 +65,6 @@ describe('User Controller', () => {
         .request(app)
         // eslint-disable-next-line quotes
         .get(`/users/verify-email/SOME_INVALID_TOKEN`);
-
       chai.expect(res).to.have.status(404);
       chai.expect(res.body).to.have.property('message', 'User not found');
     });

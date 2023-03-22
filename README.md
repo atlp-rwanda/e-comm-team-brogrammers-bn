@@ -708,3 +708,67 @@ you will get all carts created by users like this response
 }
 
 ```
+
+## PUBLIC CHAT
+
+`get /chat/all`
+
+- login  and put token in bearer auth 
+- note: `Token is required`
+- then excute
+you will get all messages created by other users like this response 
+
+```
+{
+  "message": "Fetched  messages",
+  "messages": [
+    {
+      "id": "1d7ed6d5-d4ae-4c09-8b97-ed50ff3ed048",
+      "room": "brogrammers",
+      "message": "hy",
+      "createdAt": "2023-03-25T09:20:20.481Z",
+      "updatedAt": "2023-03-25T09:20:20.481Z",
+      "userId": "00ddd0e0-1fda-41f8-89bc-fc402ff64bee",
+      "user": {
+        "username": "John Doe"
+      }
+    },
+    {
+      "id": "99b6997d-9f6b-41ad-9916-32876e310055",
+      "room": "brogrammers",
+      "message": "Hello, world!",
+      "createdAt": "2023-03-25T08:19:34.171Z",
+      "updatedAt": "2023-03-25T08:19:34.171Z",
+      "userId": "00ddd0e0-1fda-41f8-89bc-fc402ff64bee",
+      "user": {
+        "username": "John Doe"
+      }
+    },
+```
+
+`post /chat/message`
+
+Example of request body:
+
+```
+{
+  "message": "Hey",
+}
+```
+- login  and put token in bearer auth 
+- note: `Token is required`
+- then excute
+you will get this response 
+
+```
+{
+  "message": "Message sent.",
+  "messages": {
+    "id": "7f2765c7-7abb-4662-81df-b1f5f4a6bee0",
+    "room": "brogrammers",
+    "userId": "00ddd0e0-1fda-41f8-89bc-fc402ff64bee",
+    "message": "Hey",
+    "updatedAt": "2023-03-25T11:38:57.712Z",
+    "createdAt": "2023-03-25T11:38:57.712Z"
+  }
+}

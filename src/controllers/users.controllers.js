@@ -146,7 +146,7 @@ export default class Users {
       }
 
       if (user.mfa_enabled === false) {
-        const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        const token = jwt.sign({ email: req.body.email, id: user.id }, JWT_SECRET);
         return res.status(200).json({ email: req.body.email, token });
       }
 

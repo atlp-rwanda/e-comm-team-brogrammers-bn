@@ -272,7 +272,7 @@
  *               properties:
  *                 message:
  *                   type: string
- * 
+ *
  * /products/buyer/{id}:
  *    get:
  *      tags:
@@ -363,7 +363,7 @@
  *               properties:
  *                 message:
  *                   type: string
- * 
+ *
  * /products/delete/{id}:
  *    delete:
  *       tags:
