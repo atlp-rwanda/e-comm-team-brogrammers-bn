@@ -144,4 +144,42 @@ describe('cart', () => {
         done();
       });
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  it('it should clear all product from cart', (done) => {
+    chai
+      .request(app)
+      .delete('/cart')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions, no-undef
+        expect(res.body.value.message).to.equal('Cart cleared successfully');
+        done();
+      });
+  });
 });
