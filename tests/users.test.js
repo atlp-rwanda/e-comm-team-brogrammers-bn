@@ -253,7 +253,7 @@ describe('testing creation of admin', () => {
   });
 });
 
-const Invalidemail = 'ange1@gmail.com';
+const Invalidemail = 'ange1gagaga@gmail.com';
 
 it('should return 404 if a user is not found', async () => {
   const res = await chai
@@ -267,7 +267,7 @@ it('should return 404 if a user is not found', async () => {
   adminToken = token;
   const verifyRes = await chai
     .request(app)
-    .patch(`/users/Create-admin/${Invalidemail}`)
+    .patch(`/users/create-admin/${Invalidemail}`)
     .set('Authorization', `Bearer ${token}`);
   chai.expect(verifyRes).to.have.status(404);
 });
@@ -278,7 +278,7 @@ describe('testing setting role/permission to a given user', () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass', });
+      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
     // eslint-disable-next-line no-shadow
     const { token } = res.body;
     expect(res).to.have.status(200);

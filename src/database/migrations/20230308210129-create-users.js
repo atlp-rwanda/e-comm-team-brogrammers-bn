@@ -5,36 +5,36 @@ export default {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       username: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       email: {
         allowNull: false,
         unique: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       password: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       role: {
         defaultValue: 'buyer',
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       gender: {
         defaultValue: 'none',
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       verified: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       email_token: {
         type: Sequelize.TEXT,
-        allowNull: true
+        allowNull: true,
       },
       isEmailVerified: {
         type: Sequelize.BOOLEAN,
@@ -42,11 +42,11 @@ export default {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       mustUpdatePassword: {
         type: Sequelize.BOOLEAN,
@@ -54,13 +54,13 @@ export default {
       },
       lastTimePasswordUpdated: {
         type: Sequelize.DATE,
-        defaultValue: Date.now()
+        defaultValue: Date.now(),
       },
       resetPasswordToken: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       resetPasswordExpires: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       mfa_enabled: {
         type: Sequelize.BOOLEAN,
@@ -68,11 +68,11 @@ export default {
       },
       disabledUser: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users');
-  }
+    await queryInterface.dropTable('users', { force: true, cascade: true });
+  },
 };
