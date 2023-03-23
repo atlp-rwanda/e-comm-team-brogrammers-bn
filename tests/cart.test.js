@@ -144,36 +144,10 @@ describe('cart', () => {
         done();
       });
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   it('it should clear all product from cart', (done) => {
     chai
       .request(app)
-      .delete('/cart')
+      .delete('/cart/')
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
         expect(res.status).to.equal(200);
