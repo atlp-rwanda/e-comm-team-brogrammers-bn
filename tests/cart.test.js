@@ -1,13 +1,14 @@
+/* eslint-disable no-unused-vars */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import env from 'dotenv';
 import path from 'path';
 
-// eslint-disable-next-line import/no-unresolved, import/extensions
 import app from '../src/app';
-// eslint-disable-next-line import/named, import/no-unresolved, import/extensions
+// eslint-disable-next-line import/named
 import { sequelize } from '../src/database/models/index';
 
+// eslint-disable-next-line no-unused-vars
 const { expect } = chai;
 
 env.config();
@@ -16,12 +17,13 @@ sequelize.authenticate();
 chai.should();
 chai.use(chaiHttp);
 
-describe('testing the products', () => {
+describe('cart', () => {
   const images = [
     './test-images/image1.png',
     './test-images/image2.png',
     './test-images/image3.png',
   ];
+
   let sellerToken;
   let product;
   let productId;
@@ -99,118 +101,30 @@ describe('testing the products', () => {
         done();
       });
   });
-
-  it('should return 200 code for product updated', (done) => {
+  it('should add a product to the cart', (done) => {
     chai
       .request(app)
-      .patch(`/products/${product.id}`)
+      .post(`/cart/${productId}`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .set('Content-Type', 'multipart/form-data')
-      .field({
-        price: '90',
-        quantity: '20',
+      .send({
+        quantities: 5
       })
-      .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        chai.expect(res.body).to.have.property('product');
-        product = res.body.product;
-        done();
-      });
-  });
-
-  it('should return 400 code for not valid data', (done) => {
-    chai
-      .request(app)
-      .patch(`/products/${product.id}`)
-      .set('Authorization', `Bearer ${sellerToken}`)
-      .set('Content-Type', 'multipart/form-data')
-      .field({
-        price: '-90',
-      })
-      .end((error, res) => {
-        chai.expect(res).to.have.status(400);
-        done();
-      });
-  });
-
-  it('should return 400 code for not valid data', (done) => {
-    chai
-      .request(app)
-      .patch(`/products/${product.id}`)
-      .set('Authorization', `Bearer ${sellerToken}`)
-      .set('Content-Type', 'multipart/form-data')
-      .field({
-        price: '-90',
-      })
-      .attach('images', path.join(__dirname, images[0]))
-      .end((error, res) => {
-        chai.expect(res).to.have.status(400);
-        product = res.body.product;
-        done();
-      });
-  });
-
-  it('should return 200 code', (done) => {
-    chai
-      .request(app)
-      .get('/products/')
-      .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        done();
-      });
-  });
-
-  it('should return 401 code', (done) => {
-    chai
-      .request(app)
-      .get('/products/collection')
-      .end((error, res) => {
-        chai.expect(res).to.have.status(401);
-        done();
-      });
-  });
-
-  it('should return 200 ', (done) => {
-    chai
-      .request(app)
-      .get('/products/collection')
-      .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(200);
-        done();
-      });
-  });
-
-  it('should add a product to the wishlist', (done) => {
-    chai
-      .request(app)
-      .post(`/wishlist/${productId}`)
-      .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         // eslint-disable-next-line no-unused-expressions
-        expect(res.body.message).to.equal('product added to your wishlist successfully');
-        done();
-      });
-  });
-  it('should add return 400 if product already in user wishlist ', (done) => {
-    chai
-      .request(app)
-      .post(`/wishlist/${productId}`)
-      .set('Authorization', `Bearer ${sellerToken}`)
-      .end((err, res) => {
-        expect(res.statusCode).to.equal(400);
-        // eslint-disable-next-line no-unused-expressions
-        expect(res.body.message).to.equal('product already in wishlist');
+        expect(res.body.value.message).to.equal('added to cart successfully');
         done();
       });
   });
   const id = '79114227-13e3-4c53-abea-a2969c67d582';
-  it('should add return 400 if product id is not found', (done) => {
+  it('should add a product to the cart', (done) => {
     chai
       .request(app)
-      .post(`/wishlist/${id}`)
+      .post(`/cart/${id}`)
       .set('Authorization', `Bearer ${sellerToken}`)
+      .send({
+        quantities: 5
+      })
       .end((err, res) => {
         expect(res.statusCode).to.equal(400);
         // eslint-disable-next-line no-unused-expressions
@@ -218,14 +132,15 @@ describe('testing the products', () => {
         done();
       });
   });
-  it('should return users wishlist', (done) => {
+  it('should delete a product from cart', (done) => {
     chai
       .request(app)
-      .get('/wishlist/')
+      .delete(`/cart/${productId}`)
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         // eslint-disable-next-line no-unused-expressions
+        expect(res.body.value.message).to.equal('removed product from cart  successfully');
         done();
       });
   });

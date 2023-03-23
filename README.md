@@ -451,3 +451,39 @@ you will get this response
 }
 
 ```
+
+## adding product to cart
+`post /cart/id`
+
+- login and put token in bearer auth
+- product id must be available
+- note: `token is required`
+-put the is of the product you want in parameters 
+you will get this response 
+
+```
+{
+  "value": {
+    "message": "added to cart successfully"
+  }
+}
+
+```
+
+## deleting product from cart
+`delete /cart/id`
+
+- login and put token in bearer auth
+- product id must be available
+- note: `token is required`
+-put the is of the product you want to delete in parameters 
+you will get this response 
+
+```
+{
+  "value": {
+    "message": "removed product from cart  successfully"
+  }
+}
+
+```
