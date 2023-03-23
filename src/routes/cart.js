@@ -9,4 +9,6 @@ const routes = express.Router();
 
 routes.post('/:id', isAuthenticated, doesProductExist, Cartcontroller.addItemTocart);
 routes.delete('/:id', isAuthenticated, doesProductExist, isOwnerOfCart, Cartcontroller.deleteItemFromCart);
+
+routes.delete('/', isAuthenticated, isOwnerOfCart, Cartcontroller.clearCart);
 export default routes;
