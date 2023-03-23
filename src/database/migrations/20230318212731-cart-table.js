@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 export default {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('cart', {
+    await queryInterface.createTable('carts', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -18,6 +18,9 @@ export default {
       products: {
         type: Sequelize.ARRAY(Sequelize.JSONB),
       },
+      total: {
+        type: Sequelize.FLOAT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -29,6 +32,6 @@ export default {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('cart');
+    await queryInterface.dropTable('carts');
   }
 };

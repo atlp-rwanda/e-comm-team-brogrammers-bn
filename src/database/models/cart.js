@@ -8,7 +8,7 @@ import { Model } from 'sequelize';
  */
 export default (sequelize, DataTypes) => {
   // eslint-disable-next-line require-jsdoc
-  class cart extends Model {
+  class carts extends Model {
     // eslint-disable-next-line valid-jsdoc
     /**
      * Helper method for defining associations.
@@ -19,7 +19,7 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  cart.init(
+  carts.init(
     {
       id: {
         allowNull: false,
@@ -36,12 +36,13 @@ export default (sequelize, DataTypes) => {
         },
       },
       products: DataTypes.ARRAY(DataTypes.JSONB),
+      total: DataTypes.FLOAT,
     },
     {
       sequelize,
-      modelName: 'cart',
+      modelName: 'carts',
     }
   );
   // eslint-disable-next-line no-undef
-  return cart;
+  return carts;
 };
