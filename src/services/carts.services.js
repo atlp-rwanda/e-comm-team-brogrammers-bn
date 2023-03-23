@@ -13,9 +13,11 @@ export default class cartService {
    * @returns {data} for the created user
    */
   static async addItem(req) {
-    const { id } = req.params;
+    const { id: productId } = req.params;
     const quantitie = req.body.quantities || 1;
-    const product = await products.findOne({ where: { id, available: true } });
+    const product = await products.findOne({
+      where: { id: productId, available: true },
+    });
     if (product) {
       if (product.quantity < quantitie) {
         return { error: { message: 'not enough product in stock' } };
@@ -44,7 +46,8 @@ export default class cartService {
           value: {
             message: 'added to cart successfully',
             // eslint-disable-next-line object-curly-newline
-          } };
+          },
+        };
       }
       const itemExists = cart.products.findIndex(
         (cartitem) => cartitem.id === item.id
@@ -57,12 +60,18 @@ export default class cartService {
         .map((prod1) => JSON.parse(prod1.Ptotal))
         .reduce((sum, next) => sum + next);
       cart.total = subtotal;
-      await cart.save();
+      // await cart.save();
+      await carts.update(
+        { products: cart.products, total: subtotal },
+        { where: { id: cart.id } }
+      );
+
       return {
         value: {
-          message: 'added to cart successfully'
+          message: 'added to cart successfully',
           // eslint-disable-next-line object-curly-newline
-        } };
+        },
+      };
     }
   }
 

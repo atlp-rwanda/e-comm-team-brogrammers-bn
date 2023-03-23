@@ -210,12 +210,12 @@ describe('testing the products', () => {
       .end(async (error, res) => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
-        chai.expect(res.body.product).to.have.property('available', !product.available);
+        chai
+          .expect(res.body.product)
+          .to.have.property('available', !product.available);
 
         if (!res.body.product.available) {
-          const resp = await chai
-            .request(app)
-            .get(`/products/${product.id}`);
+          const resp = await chai.request(app).get(`/products/${product.id}`);
           chai.expect(resp).to.have.status(400);
         }
         done();
@@ -230,7 +230,9 @@ describe('testing the products', () => {
       .end((error, res) => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
-        chai.expect(res.body.product).to.have.property('available', product.available);
+        chai
+          .expect(res.body.product)
+          .to.have.property('available', product.available);
         done();
       });
   });
@@ -262,7 +264,8 @@ describe('GET /buyer/:id', () => {
   let token;
 
   before((done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .post('/users/login')
       .send({
         email: 'habiholivier10@gmail.com',
@@ -275,7 +278,8 @@ describe('GET /buyer/:id', () => {
   });
 
   it('should return a 404 error for invalid product ID', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get('/products/buyer/99898')
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
@@ -290,7 +294,8 @@ describe('GET /seller/:id', () => {
   let token;
 
   before((done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .post('/users/login')
       .send({
         email: 'jean@gmail.com',
@@ -303,7 +308,8 @@ describe('GET /seller/:id', () => {
   });
 
   it('should return a 404 error for invalid product ID', (done) => {
-    chai.request(app)
+    chai
+      .request(app)
       .get('/products/seller/99898')
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
