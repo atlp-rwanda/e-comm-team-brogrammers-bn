@@ -1,5 +1,7 @@
 /* eslint-disable import/named */
-import { users, order, orderitem, products, carts } from '../database/models';
+import {
+  users, order, orderitem, products, carts
+} from '../database/models';
 
 export const getCurrentUserOrders = async (req, res) => {
   const user = await users.findOne({
@@ -24,8 +26,9 @@ export const createOrder = async (req, res) => {
 
   const cartProducts = userCart.products;
 
-  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } =
-    req.body;
+  const {
+    deliveryCountry, deliveryCity, deliveryStreet, paymentMethod
+  } = req.body;
 
   const userOrder = await order.create({
     deliveryCountry,
