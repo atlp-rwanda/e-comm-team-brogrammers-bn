@@ -464,7 +464,32 @@ you will get this response
 ```
 {
   "value": {
-    "message": "added to cart successfully"
+    "message": "added to cart successfully",
+    "data": {
+      "id": "60d74375-540d-4f9f-9e2c-7afa4d09b8ef",
+      "userId": "13089152-d7d3-405d-84bc-0f098efa1f5c",
+      "products": [
+        {
+          "id": "42680429-46a2-43bd-ad08-5db59675b98c",
+          "name": "bed sheets",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679471871/dm23aha2zl9pihx3j4vi.jpg",
+          "price": 800,
+          "Ptotal": 8000,
+          "quantity": 10
+        },
+        {
+          "id": "1cc2f219-81a4-48fb-a98a-8c574416a320",
+          "name": "shoes",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679470404/pfyewd7rto4mtvle3viw.png",
+          "quantity": 7,
+          "price": 90,
+          "Ptotal": 630
+        }
+      ],
+      "total": 8630,
+      "createdAt": "2023-03-22T11:09:34.796Z",
+      "updatedAt": "2023-03-22T14:41:26.195Z"
+    }
   }
 }
 
@@ -483,6 +508,145 @@ you will get this response
 {
   "value": {
     "message": "removed product from cart  successfully"
+  }
+}
+
+```
+
+## viewing your cart
+`get /cart`
+
+- login and put token in bearer auth
+- there must be cart created by you if not first create cart by adding product into cart and come back to view
+- note: `token is required`
+- then excute
+you will get your cart like this response 
+
+```
+{
+  "value": {
+    "message": "added to cart successfully",
+    "data": {
+      "id": "60d74375-540d-4f9f-9e2c-7afa4d09b8ef",
+      "userId": "13089152-d7d3-405d-84bc-0f098efa1f5c",
+      "products": [
+        {
+          "id": "42680429-46a2-43bd-ad08-5db59675b98c",
+          "name": "bed sheets",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679471871/dm23aha2zl9pihx3j4vi.jpg",
+          "price": 800,
+          "Ptotal": 8000,
+          "quantity": 10
+        },
+        {
+          "id": "1cc2f219-81a4-48fb-a98a-8c574416a320",
+          "name": "shoes",
+          "image": "http://res.cloudinary.com/du0vsc2pt/image/upload/v1679470404/pfyewd7rto4mtvle3viw.png",
+          "quantity": 7,
+          "price": 90,
+          "Ptotal": 630
+        }
+      ],
+      "total": 8630,
+      "createdAt": "2023-03-22T11:09:34.796Z",
+      "updatedAt": "2023-03-22T14:41:26.195Z"
+    }
+  }
+}
+
+```
+
+## as admin you can view all carts created by all users
+`get /cart/all`
+
+- login as admin and put token in bearer auth
+- there must be soome carts created by users 
+- note: `adminToken is required`
+- note: any other token can't view all carts created by users
+- then excute
+you will get all carts created by users like this response 
+
+```
+{
+  "value": {
+    "message": "Here are all the carts",
+    "data": [
+      {
+        "id": "1e6a5624-85b5-46e5-8273-663e09462345",
+        "userId": "d8ccf7d9-b4aa-49ef-a3c9-4c04006a8803",
+        "products": [
+          {
+            "id": "76cf772d-8100-4fc7-a90d-292e12d68263",
+            "name": "Unbranded Plastic Car",
+            "image": "https://loremflickr.com/640/480",
+            "price": 741,
+            "Ptotal": 2964,
+            "quantity": 4
+          },
+          {
+            "id": "fe948ec7-72f1-4369-a7be-458a8464d4c7",
+            "name": "Intelligent Frozen Bacon",
+            "image": "https://loremflickr.com/640/480",
+            "price": 325,
+            "Ptotal": 4225,
+            "quantity": 13
+          }
+        ],
+        "total": 7189,
+        "createdAt": "2023-03-23T13:12:54.345Z",
+        "updatedAt": "2023-03-23T13:13:47.249Z"
+      },
+      {
+        "id": "8cc05f93-ac3d-42a0-a55c-3ab1cd3c2341",
+        "userId": "4e97e20a-cf0d-46b1-b09c-163b0a493405",
+        "products": [
+          {
+            "id": "fe948ec7-72f1-4369-a7be-458a8464d4c7",
+            "name": "Intelligent Frozen Bacon",
+            "image": "https://loremflickr.com/640/480",
+            "price": 325,
+            "Ptotal": 3250,
+            "quantity": 10
+          },
+          {
+            "id": "76cf772d-8100-4fc7-a90d-292e12d68263",
+            "name": "Unbranded Plastic Car",
+            "image": "https://loremflickr.com/640/480",
+            "price": 741,
+            "Ptotal": 14820,
+            "quantity": 20
+          }
+        ],
+        "total": 18070,
+        "createdAt": "2023-03-23T16:05:03.779Z",
+        "updatedAt": "2023-03-23T16:05:41.462Z"
+      },
+      {
+        "id": "eaae06de-78d1-4dc5-a635-4a8591f7c7f6",
+        "userId": "6a4d9add-7976-48bf-a637-d5d177776086",
+        "products": [
+          {
+            "id": "76cf772d-8100-4fc7-a90d-292e12d68263",
+            "name": "Unbranded Plastic Car",
+            "image": "https://loremflickr.com/640/480",
+            "price": 741,
+            "Ptotal": 3705,
+            "quantity": 5
+          },
+          {
+            "id": "fe948ec7-72f1-4369-a7be-458a8464d4c7",
+            "name": "Intelligent Frozen Bacon",
+            "image": "https://loremflickr.com/640/480",
+            "price": 325,
+            "Ptotal": 3250,
+            "quantity": 10
+          }
+        ],
+        "total": 6955,
+        "createdAt": "2023-03-23T15:03:43.687Z",
+        "updatedAt": "2023-03-23T15:40:19.954Z"
+      }
+    ]
   }
 }
 
