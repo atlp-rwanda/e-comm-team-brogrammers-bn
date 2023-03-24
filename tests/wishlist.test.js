@@ -189,7 +189,9 @@ describe('testing the products', () => {
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
         // eslint-disable-next-line no-unused-expressions
-        expect(res.body.message).to.equal('product added to your wishlist successfully');
+        expect(res.body.message).to.equal(
+          'product added to your wishlist successfully'
+        );
         done();
       });
   });
@@ -225,6 +227,66 @@ describe('testing the products', () => {
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        done();
+      });
+  });
+  it('should return all wishlists for all users', async () => {
+    const res = await chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+    // eslint-disable-next-line no-shadow
+    const { token } = res.body;
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property('token');
+
+    const verifyRes = await chai
+      .request(app)
+      .get('/wishlist/all')
+      .set('Authorization', `Bearer ${token}`);
+    chai.expect(verifyRes).to.have.status(200);
+  });
+  it('should return 404 for user who is not admin', (done) => {
+    chai
+      .request(app)
+      .get('/wishlist/all')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(401);
+        // eslint-disable-next-line no-unused-expressions
+        done();
+      });
+  });
+  it('should delete a product from  wishlist of a user', (done) => {
+    chai
+      .request(app)
+      .delete(`/wishlist/${productId}`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        done();
+      });
+  });
+  it('should clear the wishlist of a user', (done) => {
+    chai
+      .request(app)
+      .patch('/wishlist/clear')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        done();
+      });
+  });
+  it('should return a 400 product that does not exist in user wishlist', (done) => {
+    chai
+      .request(app)
+      .delete(`/wishlist/${productId}`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(400);
         // eslint-disable-next-line no-unused-expressions
         done();
       });
