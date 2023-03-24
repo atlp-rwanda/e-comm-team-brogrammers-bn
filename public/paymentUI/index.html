@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>payment</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui;
+      outline: none;
+    }
+
+    form.login {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      background: radial-gradient(at 20% top, #5a5a5a, #222222 50%);
+      margin: 2rem auto;
+      max-width: 94%;
+      width: 30rem;
+      border-radius: 10px;
+      color: #fff;
+    }
+
+    form.login :is(input, button) {
+      padding: 0.5rem 1rem;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+    }
+
+    form.login :is(button) {
+      background: #fa0;
+      font-weight: bold;
+      padding-block: 0.7rem;
+    }
+
+    form.login h2 {
+      color: #fa0;
+      border-bottom: 1px solid;
+      padding-bottom: 0.5rem;
+      margin-bottom: -0.5rem;
+    }
+
+    form.login label>div {
+      padding: 5px 0.5rem;
+    }
+  </style>
+  <script type="module" defer>
+    let token = sessionStorage.getItem("token");
+    if(token) {
+      window.location = '/public/paymentUI/cart.html'
+    }
+    const login = document.querySelector("#login");
+
+    login.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = login.querySelector("input[type=text]");
+      const password = login.querySelector("input[type=password]");
+      let res = await fetch("/users/login", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email.value,
+          password: password.value
+        })
+      });
+      let data = await res.json();
+      sessionStorage.setItem("token", `Bearer ${data.token}`);
+      window.location = '/public/paymentUI/cart.html'
+    });
+  </script>
+</head>
+
+<body>
+  <form class="login" id="login">
+    <h2 align="center">Log In</h2>
+    <label>
+      <div>Email:</div>
+      <input type="text" placeholder="email" />
+    </label>
+    <label>
+      <div>Password: </div>
+      <input type="password" placeholder="password" />
+    </label>
+    <button>Sign In</button>
+  </form>
+</body>
+
+</html>

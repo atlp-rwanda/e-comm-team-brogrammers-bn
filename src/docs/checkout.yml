@@ -66,4 +66,54 @@
           properties:
             message:
               type: string
-              swagger: '2.0'
+
+/payment/order/{id}:
+  post:
+    tags:
+      - Payment
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Paying the order
+    description: here the user get the url for payment and he get the items to be paid
+    parameters:
+      - name: id
+        in: path
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: string
+                example: http://www.example.com/success
+              fail:
+                type: string
+                example: http://www.example.com/success
+    responses:
+      '200':
+        description: Payment created
+        schema:
+          type: object
+          properties:
+            items:
+              type: array
+            url:
+              type: string
+              example: http://www.example.com/payment
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string

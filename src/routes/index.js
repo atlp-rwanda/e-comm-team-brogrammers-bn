@@ -8,6 +8,8 @@ import reviews from './reviews.routes';
 import checkoutRoutes from './checkout';
 import chat from './chat';
 import notification from './notification';
+import payment from './payment';
+
 const routes = express();
 
 routes.get('/home', HomeControllers.welcome);
@@ -19,4 +21,5 @@ routes.use('/cart', cart);
 routes.use('/checkout', checkoutRoutes);
 routes.use('/chat', chat);
 routes.use('/notification', notification);
+routes.use('/payment', payment);
 export default routes;

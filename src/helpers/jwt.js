@@ -14,9 +14,9 @@ export class Jwt {
   static verifyToken(token) {
     return JWT.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        return err;
+        return { error: err };
       }
-      return decoded;
+      return { value: decoded };
     });
   }
 }

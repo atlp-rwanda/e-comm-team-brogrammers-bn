@@ -20,6 +20,10 @@ export default (sequelize, DataTypes) => {
         as: 'orderitems',
         foreignKey: 'productId',
       });
+      products.belongsTo(models.users, {
+        as: 'seller',
+        foreignKey: 'sellerId',
+      });
     }
   }
   products.init(

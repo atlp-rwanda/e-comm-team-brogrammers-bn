@@ -34,6 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', route);
 
+app.use('/public', express.static('public'));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swagger));
 
 app.use(allroutes);

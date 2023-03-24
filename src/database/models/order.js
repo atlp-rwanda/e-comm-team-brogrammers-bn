@@ -9,8 +9,9 @@ export default (sequelize, DataTypes) => {
         as: 'products',
         through: 'orderitem',
         foreignKey: 'orderId',
+        onDelete: 'cascade'
       });
-      order.belongsTo(models.users, { as: 'buyer', foreignKey: 'buyerId' });
+      order.belongsTo(models.users, { as: 'buyer', foreignKey: 'buyerId', onDelete: 'cascade' });
     }
   }
   order.init(
@@ -31,9 +32,17 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      isPaid: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      paymentId: {
+        type: DataTypes.UUID
+      },
       status: {
         type: DataTypes.STRING,
-        allowNull: false,
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
+        defaultValue: 'Pending',
       },
       totalAmount: {
         type: DataTypes.DOUBLE,
