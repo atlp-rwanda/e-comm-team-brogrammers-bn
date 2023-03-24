@@ -45,6 +45,7 @@ export default class cartService {
         return {
           value: {
             message: 'added to cart successfully',
+            data: newCart
             // eslint-disable-next-line object-curly-newline
           },
         };
@@ -65,10 +66,17 @@ export default class cartService {
         { products: cart.products, total: subtotal },
         { where: { id: cart.id } }
       );
+<<<<<<< HEAD
 
       return {
         value: {
           message: 'added to cart successfully',
+=======
+      return {
+        value: {
+          message: 'added to cart successfully',
+          data: cart
+>>>>>>> ft-buyer-checksout-184581356
           // eslint-disable-next-line object-curly-newline
         },
       };
@@ -100,5 +108,38 @@ export default class cartService {
     cart1.total = subtotal;
     await cart1.save();
     return { value: { message: 'removed product from cart  successfully' } };
+  }
+
+  /**
+   *  view the cart
+   * @param {Object} req the data for product
+   * @returns {data} for viewing product in cart
+   */
+  static async viewCart(req) {
+    const userid = req.user.id;
+    const cart = await carts.findOne({ where: { userId: userid } });
+    return {
+      value: {
+        message: 'Hey Here is your cart!',
+        data: cart
+        // eslint-disable-next-line object-curly-newline
+      } };
+  }
+
+  /**
+ * view all carts
+ * @param {Object} req the data for product
+ * @returns {data} for viewing product in cart
+ */
+  static async viewAllCarts() {
+    // eslint-disable-next-line no-use-before-define
+    const allcart = await carts.findAll();
+    return {
+      value: {
+        message: 'Here are all the carts',
+        data: allcart
+      // eslint-disable-next-line object-curly-newline
+      }
+    };
   }
 }

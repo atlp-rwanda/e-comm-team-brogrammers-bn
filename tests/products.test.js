@@ -207,7 +207,7 @@ describe('testing the products', () => {
       .request(app)
       .patch(`/products/${product.id}/available`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end(async (error, res) => {
+      .end(async (err, res) => {
         chai.expect(res).to.have.status(201);
         chai.expect(res.body).to.have.property('product');
         chai
@@ -215,26 +215,27 @@ describe('testing the products', () => {
           .to.have.property('available', !product.available);
 
         if (!res.body.product.available) {
-          const resp = await chai.request(app).get(`/products/${product.id}`);
+          const resp = await chai
+            .request(app)
+            .get(`/products/${product.id}`)
+            .send();
           chai.expect(resp).to.have.status(400);
         }
         done();
       });
   });
 
-  it('should return 201 for changing product availability', (done) => {
-    chai
+  it('should return 201 for changing product availability', async () => {
+    const res = await chai
       .request(app)
       .patch(`/products/${product.id}/available`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .end((error, res) => {
-        chai.expect(res).to.have.status(201);
-        chai.expect(res.body).to.have.property('product');
-        chai
-          .expect(res.body.product)
-          .to.have.property('available', product.available);
-        done();
-      });
+      .send();
+    chai.expect(res).to.have.status(201);
+    chai.expect(res.body).to.have.property('product');
+    chai
+      .expect(res.body.product)
+      .to.have.property('available', product.available);
   });
 
   it('should return 401 code for wrong token', (done) => {
