@@ -418,7 +418,7 @@ this will change product availability to true if it was false or false if it was
 ```
 
 ## Getting all  products in your  wishlist
-`post /wishlist/`
+`get /wishlist/`
 
 - login and put token in bearer auth
 - product id must be available
@@ -452,7 +452,63 @@ you will get this response
 
 ```
 
-## adding product to cart
+
+## Remove a product from your wishlist 
+`delete /wishlist/productID`
+
+- login and put token in bearer auth
+- product id must be available
+- note: `token is required`
+
+you will get this response 
+
+```
+{
+  "message": "deleted from wishlist "
+}
+```
+
+## Remove clear your wishlist 
+`patch /wishlist/clear`
+
+- login and put token in bearer auth
+- note: `token is required`
+
+```
+{
+  "message": " wishlists have been cleared"
+}
+```
+
+## Get all wishlists for all users
+`get /wishlist/all`
+
+- login and put token in bearer auth
+- note: `token is required`
+
+```
+{
+  "message": " all wishlists",
+  "data": [
+    {
+      "id": "e22a63de-3e61-4ee4-89b4-d5489ef3b24c",
+      "userId": "98bb7cc4-3c62-45ca-9e38-fcaa4f664917",
+      "productId": "b0caa512-30f7-4baf-91c9-85ead104ac16",
+      "createdAt": "2023-03-23T16:10:15.372Z",
+      "updatedAt": "2023-03-23T16:10:15.372Z"
+    },
+    {
+      "id": "65b6bcda-99e0-4658-ac5d-98f3752aceda",
+      "userId": "6fef5a6d-b659-4c54-be1b-61af27c1e0e4",
+      "productId": "998d7b3e-27c3-4949-a80b-944172d128e5",
+      "createdAt": "2023-03-23T19:27:16.910Z",
+      "updatedAt": "2023-03-23T19:27:16.910Z"
+    }
+  ]
+}
+```
+
+## Adding product to cart
 `post /cart/id`
 
 - login and put token in bearer auth
@@ -495,7 +551,8 @@ you will get this response
 
 ```
 
-## deleting product from cart
+
+## Deleting product from cart
 `delete /cart/id`
 
 - login and put token in bearer auth
