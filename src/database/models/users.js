@@ -15,8 +15,9 @@ export default (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-      // define association here
+    static associate(models) {
+      users.hasOne(models.carts, { as: 'cart', foreignKey: 'userId' });
+      users.hasMany(models.order, { as: 'orders', foreignKey: 'buyerId' });
     }
   }
   users.init(
@@ -62,7 +63,7 @@ export default (sequelize, DataTypes) => {
       },
       disabledUser: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       mfa_code: {
         type: DataTypes.INTEGER,

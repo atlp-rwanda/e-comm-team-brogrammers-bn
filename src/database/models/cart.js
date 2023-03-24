@@ -15,8 +15,9 @@ export default (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
+    static associate(models) {
       // define association here
+      carts.belongsTo(models.users, { as: 'owner', foreignKey: 'userId' });
     }
   }
   carts.init(
@@ -30,10 +31,6 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
       },
       products: DataTypes.ARRAY(DataTypes.JSONB),
       total: DataTypes.FLOAT,

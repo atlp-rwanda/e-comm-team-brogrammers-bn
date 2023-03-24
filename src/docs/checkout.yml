@@ -1,0 +1,68 @@
+/checkout:
+  post:
+    tags:
+      - checkout
+    security:
+      - {}
+      - bearerAuth: []
+    summary: Checkout
+    description: Process a new order for a buyer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              deliveryCountry:
+                type: string
+                example: Rwanda
+              deliveryCity:
+                type: string
+                example: Kigali
+              deliveryStreet:
+                type: string
+                example: KG 603 ST
+              paymentMethod:
+                type: string
+                example: Momopay,
+    responses:
+      '201':
+        description: Created
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+            totalAmount:
+              type: number
+            buyerId:
+              type: string
+            deliveryCountry:
+              type: string
+              example: Rwanda
+            deliveryCity:
+              type: string
+              example: Kigali
+            deliveryStreet:
+              type: string
+              example: KG 603 ST
+            paymentMethod:
+              type: string
+              example: Momopay,
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
