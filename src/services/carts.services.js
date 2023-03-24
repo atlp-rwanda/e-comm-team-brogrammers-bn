@@ -97,6 +97,21 @@ export default class cartService {
     await cart1.save();
     return { value: { message: 'removed product from cart  successfully' } };
   }
+ 
+/**
+ * clearing cart and resetting total to zero
+ * @param {Object} req
+ * @returns {Promise<Object>} confirmation message
+ */
+static async clearCart(req) {
+  const userid = req.user.id;
+  const cart = await carts.findOne({ where: { userId: userid } });
+  if (cart) {
+    await cart.destroy();
+  }
+  return { value: { message: 'Cart cleared successfully' } };
+}
+
 
   /**
    *  view the cart

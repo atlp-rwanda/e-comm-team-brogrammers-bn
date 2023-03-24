@@ -98,6 +98,7 @@
 *                 Error:
 *                   type: string
 *                   description: The error message.
+*
 * @swagger
 * /cart:
 *   get:
@@ -174,6 +175,46 @@
 *                 message:
 *                   type: string
 *                   example: Unauthorized
+*       '500':
+*         description: Internal server error occurred.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 Error:
+*                   type: string
+*                   description: The error message.
+*
+*@swagger
+* /cart:
+*   delete:
+*     summary: Clear buyer's cart
+*     description: reset the buyer cart and return a success message
+*     tags:
+*         - Cart
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       '200':
+*         description: Cart cleared successfully
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   description: Cart cleared confirmation message
+*       '401':
+*         description: User not logged In
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
 *       '500':
 *         description: Internal server error occurred.
 *         content:
