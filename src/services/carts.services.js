@@ -66,17 +66,10 @@ export default class cartService {
         { products: cart.products, total: subtotal },
         { where: { id: cart.id } }
       );
-<<<<<<< HEAD
-
-      return {
-        value: {
-          message: 'added to cart successfully',
-=======
       return {
         value: {
           message: 'added to cart successfully',
           data: cart
->>>>>>> ft-buyer-checksout-184581356
           // eslint-disable-next-line object-curly-newline
         },
       };

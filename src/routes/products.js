@@ -51,7 +51,6 @@ routes.patch(
   Products.toggleAvailable
 );
 
-<<<<<<< HEAD
 routes.get(
   '/buyer/:id',
   isAuthenticated,
@@ -64,10 +63,6 @@ routes.get(
   checkRole(['seller']),
   Products.getProductByIdAndSeller
 );
-=======
-routes.get('/buyer/:id', isAuthenticated, checkRole(['buyer']), Products.getProductById);
-routes.get('/seller/:id', isAuthenticated, checkRole(['seller']), Products.getProductByIdAndSeller);
->>>>>>> ft-buyer-checksout-184581356
 routes.get('/:id/reviews', catchError(Products.getProductReviews));
 
 export default routes;
