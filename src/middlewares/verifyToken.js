@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 // eslint-disable-next-line import/named
-import { users } from '../database/models';
+import { users, Blockedtoken } from '../database/models';
 
 dotenv.config();
 /**
@@ -12,14 +12,17 @@ dotenv.config();
  * @param {object} next next to other function
  * @returns {object} response if error
  */
-function isAuthenticated(req, res, next) {
+async function isAuthenticated(req, res, next) {
   try {
     const { authorization } = req.headers;
     if (!authorization) {
       return res.status(401).json({ statusCode: 401, message: 'Please Login' });
     }
     const token = authorization.split(' ')[1];
-
+    const blokentoken = await Blockedtoken.findOne({ where: { token } });
+    if (blokentoken) {
+      return res.status(401).json({ statusCode: 401, message: 'OOps access denied please login again' });
+    }
     if (token) {
       jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
         if (err) {

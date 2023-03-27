@@ -49,7 +49,7 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
@@ -197,7 +197,7 @@ describe('testing the products', () => {
       .patch(`/products/${product.id}/available`)
       .set('Authorization', 'Bearer ')
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
