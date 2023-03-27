@@ -178,14 +178,16 @@ export default class Product {
       ],
     };
     if (categry) {
-      const cat = await category.findAll({ where: { title: { [Op.iLike]: `%${categry}%` } } });
+      const cat = await category.findAll({
+        where: { title: { [Op.iLike]: `%${categry}%` } },
+      });
       const ids = cat.map((item) => Number(item.id));
       if (cat) {
-        where.category = { [Op.in]: ids };
+        where.category = { [Op.in]: ids || [] };
       }
     }
     const product = await products.findAll({
-      where
+      where,
     });
 
     return product;
