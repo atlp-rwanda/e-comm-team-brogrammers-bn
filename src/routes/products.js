@@ -14,7 +14,7 @@ const routes = express.Router();
 routes.post(
   '/',
   isAuthenticated,
-  checkRole(['seller']),
+  checkRole(['seller','admin']),
   upload.array('images'),
   productVatidate,
   Products.postProduct
@@ -22,7 +22,7 @@ routes.post(
 routes.patch(
   '/:id',
   isAuthenticated,
-  checkRole(['seller']),
+  checkRole(['seller','admin']),
   isOwner,
   upload.array('images'),
   editProductVatidate,
@@ -32,13 +32,13 @@ routes.get('/', Products.getProducts);
 routes.get(
   '/collection',
   isAuthenticated,
-  checkRole(['seller']),
+  checkRole(['seller','admin']),
   Products.sellergetProduct
 );
 routes.delete(
   '/delete/:id',
   isAuthenticated,
-  checkRole(['seller']),
+  checkRole(['seller','admin']),
   isOwner,
   Products.deleteProduct
 );
@@ -46,13 +46,13 @@ routes.get('/:id', isAvailable, Products.getProduct);
 routes.patch(
   '/:id/available',
   isAuthenticated,
-  checkRole(['seller']),
+  checkRole(['seller','admin']),
   isOwner,
   Products.toggleAvailable
 );
 
-routes.get('/buyer/:id', isAuthenticated, checkRole(['buyer']), Products.getProductById);
-routes.get('/seller/:id', isAuthenticated, checkRole(['seller']), Products.getProductByIdAndSeller);
+routes.get('/buyer/:id', isAuthenticated, checkRole(['buyer','admin']), Products.getProductById);
+routes.get('/seller/:id', isAuthenticated, checkRole(['seller','admin']), Products.getProductByIdAndSeller);
 routes.get('/:id/reviews', catchError(Products.getProductReviews));
 
 routes.get('/search/query', Products.searchProduct);

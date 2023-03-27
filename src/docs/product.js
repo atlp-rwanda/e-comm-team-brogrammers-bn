@@ -5,7 +5,7 @@
  *       tags:
  *         - Products
  *       summary: create new product
- *       description: the seller can create new product
+ *       description: the seller or admin can create new product
  *       security:
  *        - bearerAuth: []
  *       requestBody:
@@ -139,7 +139,7 @@
  *       tags:
  *         - Products
  *       summary: update new product
- *       description: the seller can create update product in his/her collection
+ *       description: the seller or admin can  update product in his/her collection
  *       parameters:
  *        - in: path
  *          name: id
@@ -247,7 +247,7 @@
  *                   type: object
  * /products/collection:
  *   get:
- *     summary: get all products by a seller
+ *     summary: get all products by a seller or admin
  *     tags:
  *         - Products
  *     security:
@@ -277,7 +277,7 @@
  *    get:
  *      tags:
  *         - Products
- *      summary: buyer get any product by id
+ *      summary: buyer or admin can get any product by id
  *      description: the buyer can get any product by id from any seller collection
  *      parameters:
  *        - in: path
@@ -323,7 +323,7 @@
  *    get:
  *      tags:
  *         - Products
- *      summary: seller get any product by id from his collection
+ *      summary: seller or admin can get any product by id from his collection
  *      description: the seller can get any product by id from his collection only
  *      parameters:
  *        - in: path
@@ -368,7 +368,7 @@
  *    delete:
  *       tags:
  *         - Products
- *       summary: delete a product by ID
+ *       summary: seller or admin can delete a product by ID
  *       description: the seller can delete a product by ID from his/her collection
  *       parameters:
  *        - in: path
