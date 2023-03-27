@@ -1,12 +1,17 @@
+/* eslint-disable no-console */
 import env from 'dotenv';
+import http from 'http';
 // eslint-disable-next-line import/named
 import { sequelize } from './database/models/index';
 import app from './app';
+import io from './helpers/socket';
 
 env.config();
 const port = process.env.PORT || 6000;
+const server = http.createServer(app);
+io.attach(server);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('server started,', port);
 });
 
@@ -17,4 +22,5 @@ sequelize.authenticate()
   .catch((error) => {
     console.error('Unable to connect to the database:', error);
   });
+app.emit('appStarted \n');
 export default app;
