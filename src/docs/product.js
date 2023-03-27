@@ -272,7 +272,7 @@
  *               properties:
  *                 message:
  *                   type: string
- * 
+ *
  * /products/buyer/{id}:
  *    get:
  *      tags:
@@ -363,7 +363,7 @@
  *               properties:
  *                 message:
  *                   type: string
- * 
+ *
  * /products/delete/{id}:
  *    delete:
  *       tags:
@@ -439,4 +439,37 @@
  *                  error:
  *                    type: object
  *                    description: error message
+ * /products/search/query:
+ *   get:
+ *     summary: Search for a product
+ *     tags:
+ *       - Products
+ *     parameters:
+ *       - name: q
+ *         in: query
+ *         description: Product name
+ *         schema:
+ *           type: string
+ *       - name: min
+ *         in: query
+ *         description: Minimum product price
+ *         schema:
+ *           type: number
+ *       - name: max
+ *         in: query
+ *         description: Maximum product price
+ *         schema:
+ *           type: number
+ *       - name: category
+ *         in: query
+ *         description: Product category
+ *         schema:
+ *           type: string
+ *     responses:
+ *       "200":
+ *         description: OK
+ *       "400":
+ *         description: Bad Request
+ *       "500":
+ *         description: Internal Server Error
  */

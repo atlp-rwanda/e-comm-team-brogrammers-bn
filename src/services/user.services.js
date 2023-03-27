@@ -112,4 +112,9 @@ export default class User {
   static async setRole(role, email) {
     await users.update({ role }, { where: { email } });
   }
+
+  static async findById(id) {
+    const user = await users.findOne({ where: { id: `${id}` } });
+    return user;
+  }
 }

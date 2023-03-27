@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
@@ -153,11 +154,9 @@ export default class Products {
 
   static async getProductByIdAndSeller(req, res) {
     const id = req.params.id;
-
     if (!validUUID.test(id)) {
       return res.status(404).json({ message: 'Product not found' });
     }
-
     try {
       const product = await Product.getProductByIdAndSeller(id, req.user.id);
       if (!product) {
@@ -187,6 +186,15 @@ export default class Products {
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  static async searchProduct(req, res) {
+    try {
+      const products = await Product.searchProducts(req.query.q, req.query.min, req.query.max, req.query.category);
+      res.status(200).json(products);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   }
 }

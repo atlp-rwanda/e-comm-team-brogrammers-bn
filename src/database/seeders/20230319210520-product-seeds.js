@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
 import { uuid } from 'uuidv4';
 // eslint-disable-next-line import/named

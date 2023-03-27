@@ -1,7 +1,10 @@
+/* eslint-disable no-shadow */
+/* eslint-disable import/named */
 /* eslint-disable prefer-const */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named
-import { products, reviews } from '../database/models';
+import { Op } from 'sequelize';
+import { products, category, reviews } from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
 import checkExpiredProduct from '../helpers/expiredProduct';
 
@@ -152,6 +155,39 @@ export default class Product {
   static async changeAvailable(product) {
     product.available = !product.available;
     product.save();
+    return product;
+  }
+
+  static async searchProducts(query, min, max, categry) {
+    let where = {};
+    if (!min) {
+      min = 0;
+    }
+    if (!max || max < min) {
+      max = Infinity;
+    }
+    if (!query) {
+      query = '';
+    }
+    where = {
+      // eslint-disable-next-line no-undef
+      price: { [Op.between]: [min, max] },
+      [Op.or]: [
+        { name: { [Op.iLike]: `%${query}%` } },
+        { description: { [Op.iLike]: `%${query}%` } },
+      ],
+    };
+    if (categry) {
+      const cat = await category.findAll({ where: { title: { [Op.iLike]: `%${categry}%` } } });
+      const ids = cat.map((item) => Number(item.id));
+      if (cat) {
+        where.category = { [Op.in]: ids };
+      }
+    }
+    const product = await products.findAll({
+      where
+    });
+
     return product;
   }
 }
