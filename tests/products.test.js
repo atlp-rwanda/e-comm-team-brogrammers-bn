@@ -320,3 +320,41 @@ describe('testing expiration', () => {
     expect(res).to.not.have.property('error');
   });
 });
+
+describe('Product search', () => {
+  it('should return an array of products', (done) => {
+    chai
+      .request(app)
+      .get('/products/search/query?q=shoes')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.an('array');
+        done();
+      });
+  });
+
+  it('should return products with prices within the specified range', (done) => {
+    chai
+      .request(app)
+      .get('/products/search/query?min=100&max=500')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.forEach((product) => {
+          product.price.should.be.within(100, 500);
+        });
+        done();
+      });
+  });
+  it('should return products that match the specified category', (done) => {
+    chai
+      .request(app)
+      .get('/products/search/query?category=Consumer')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.forEach((product) => {
+          product.category.should.equal(1);
+        });
+        done();
+      });
+  });
+});

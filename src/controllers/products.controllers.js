@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
@@ -175,7 +176,6 @@ export default class Products {
    * @param {Object} res
    * @returns {res} response
    */
-
   static async toggleAvailable(req, res) {
     try {
       const product = await Product.changeAvailable(req.product);
@@ -186,6 +186,15 @@ export default class Products {
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  static async searchProduct(req, res) {
+    try {
+      const products = await Product.searchProducts(req.query.q, req.query.min, req.query.max, req.query.category);
+      res.status(200).json(products);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   }
 }

@@ -55,4 +55,5 @@ routes.get('/buyer/:id', isAuthenticated, checkRole(['buyer']), Products.getProd
 routes.get('/seller/:id', isAuthenticated, checkRole(['seller']), Products.getProductByIdAndSeller);
 routes.get('/:id/reviews', catchError(Products.getProductReviews));
 
+routes.get('/search/query', Products.searchProduct);
 export default routes;
