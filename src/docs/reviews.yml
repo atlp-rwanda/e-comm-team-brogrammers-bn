@@ -191,7 +191,7 @@
         required: true
         description: ID of the review to delete
     responses:
-      204:
+      200:
         description: Review successfully deleted
       401:
         description: Unauthorized - user must be authenticated

@@ -43,11 +43,24 @@ export default class NotificationServices {
     if (!notification) {
       return 'not exist';
     }
-    if (notification.recipientId !== data.userId) {
+    if (notification.receiverId !== data.userId) {
       return 'forbidden';
     }
     await notification.destroy({
-      where: { id: data.notId, recipientId: data.userId },
+      where: { id: data.notId, receiverId: data.userId },
+    });
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  static async clearNotifications(data) {
+    const notification = await notifications.findAll({
+      where: { id: data.userId },
+    });
+    if (!notification) {
+      return 'no notifications to clear';
+    }
+    await notifications.destroy({
+      where: { receiverId: data.userId },
     });
   }
 }

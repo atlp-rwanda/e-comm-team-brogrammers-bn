@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/named */
 import {
-  users, order, orderitem, products, carts
+  users, order, orderitem, products, carts, notifications
 } from '../database/models';
+import { sendEmail } from '../helpers/mail';
+import { emailConfig } from '../helpers/emailConfig';
+import { notificationTemplate2 } from '../helpers/mailTemplate';
 
 export const getCurrentUserOrders = async (req, res) => {
   const user = await users.findOne({
@@ -26,7 +29,6 @@ export const createOrder = async (req, res) => {
     include: { model: carts, as: 'cart' },
   });
   const userCart = user.cart;
-
   if (!userCart || userCart.products.length === 0) {
     return res
       .status(400)
@@ -58,6 +60,30 @@ export const createOrder = async (req, res) => {
       orderId: userOrder.id,
       price: pro.price,
     });
+    const useremail = await users.findOne({ where: { id: product.sellerId } });
+    const newNotification = {
+      message: 'your product have been ordered ',
+      type: 'Product sales update',
+    };
+    const newN = { ...newNotification };
+    newN.receiverId = user.id;
+    const receiver = {
+      username: useremail.username,
+      email: useremail.email,
+    };
+    const notifyEmail = notificationTemplate2(
+      receiver.username,
+      newN.message,
+      newN.type
+    );
+    sendEmail(
+      emailConfig({
+        email: receiver.email,
+        subject: 'Notification !! product sales update',
+        content: notifyEmail,
+      })
+    );
+    await notifications.create(newN);
 
     await product.save();
   });
@@ -66,6 +92,29 @@ export const createOrder = async (req, res) => {
   user.cart.products = [];
   user.cart.total = 0;
   await user.cart.save();
+  const newNotification = {
+    message: 'you have been assigned new role which is ',
+    type: 'user role updates',
+  };
+  const newN = { ...newNotification };
+  newN.receiverId = user.id;
+  const receiver = {
+    username: user.username,
+    email: user.email,
+  };
+  const notifyEmail = notificationTemplate2(
+    receiver.username,
+    newN.message,
+    newN.type
+  );
+  sendEmail(
+    emailConfig({
+      email: receiver.email,
+      subject: 'Notification !! role updates',
+      content: notifyEmail,
+    })
+  );
+  await notifications.create(newN);
 
   res.json({ message: 'Order was created successfully', order: userOrder });
 };

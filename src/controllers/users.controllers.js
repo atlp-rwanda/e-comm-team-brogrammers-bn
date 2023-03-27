@@ -12,7 +12,7 @@ import moment from 'moment';
 import eventEmitter from '../helpers/eventEmitter';
 
 // eslint-disable-next-line import/named, import/no-duplicates
-import { users } from '../database/models';
+import { users, notifications } from '../database/models';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -21,6 +21,7 @@ import {
   mfaEmailTemplate,
   passwordResetEmailTemplate,
   disableEmailTemplate,
+  notificationTemplate2
 } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
@@ -103,6 +104,31 @@ export default class Users {
       const { role } = req.body;
       const { email } = req.params;
       await User.setRole(role, email);
+      const user = await users.findOne({ where: { email } });
+      const newNotification = {
+        message: `you have been assigned new role which is ${role}`,
+        type: 'user role updates',
+      };
+      const newN = { ...newNotification };
+      newN.receiverId = user.id;
+      const receiver = {
+        username: user.username,
+        email: user.email
+      };
+      const notifyEmail = notificationTemplate2(
+        receiver.username,
+        newN.message,
+        newN.type
+      );
+      sendEmail(
+        emailConfig({
+          email: receiver.email,
+          subject: 'Notification !! role updates',
+          content: notifyEmail,
+        })
+      );
+      await notifications.create(newN);
+
       return res.status(200).json({
         status: 200,
         message: 'Role assigned to the user successfully',
@@ -146,7 +172,10 @@ export default class Users {
       }
 
       if (user.mfa_enabled === false) {
-        const token = jwt.sign({ email: req.body.email, id: user.id }, JWT_SECRET);
+        const token = jwt.sign(
+          { email: req.body.email, id: user.id },
+          JWT_SECRET
+        );
         return res.status(200).json({ email: req.body.email, token });
       }
 
@@ -285,6 +314,30 @@ export default class Users {
       }
       Nwuser.role = 'admin';
       await Nwuser.save();
+      const newNotification = {
+        message: 'you have been assigned new role which is admin',
+        type: 'user role updates',
+      };
+      const newN = { ...newNotification };
+      newN.receiverId = Nwuser.id;
+      const receiver = {
+        username: Nwuser.username,
+        email: Nwuser.email
+      };
+      const notifyEmail = notificationTemplate2(
+        receiver.username,
+        newN.message,
+        newN.type,
+      );
+      sendEmail(
+        emailConfig({
+          email: receiver.email,
+          subject: 'Notification !! ',
+          content: notifyEmail,
+        })
+      );
+      await notifications.create(newN);
+
       res.status(200).json({
         user: Nwuser,
         message: `user ${Nwuser.username} sucessfully made admin`,
@@ -420,12 +473,14 @@ export default class Users {
 
       await user.save();
 
-      sendEmail(emailConfig({
-        email: user.email,
-        subject: 'Your account has been disabled',
-        // eslint-disable-next-line no-undef
-        content: disableEmailTemplate(user.username, user.disabledReason)
-      }));
+      sendEmail(
+        emailConfig({
+          email: user.email,
+          subject: 'Your account has been disabled',
+          // eslint-disable-next-line no-undef
+          content: disableEmailTemplate(user.username, user.disabledReason),
+        })
+      );
 
       res.status(200).json({ message: 'User account disabled successfully' });
 

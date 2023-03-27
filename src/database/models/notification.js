@@ -21,6 +21,7 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'receiverId',
       });
     }
+    // define association here
   }
   notifications.init(
     {
