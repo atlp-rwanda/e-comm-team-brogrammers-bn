@@ -37,7 +37,7 @@ export default class Cartcontroller {
     }
   }
 
-/**
+  /**
   /**
    * @param {Object} req
    * @param {Object} res
@@ -56,32 +56,33 @@ export default class Cartcontroller {
   }
 
   /**
- * @param {Object} req
- * @param {Object} res
- * @returns {res} response
- */
-static async clearCart(req, res) {
-  try {
-    const result = await cartService.clearCart(req);
-    return res.status(200).json({ value: result.value });
-  } catch (error) {
-    res.status(500).json({ status: 500, message: error });
-  }
-}
- /**
- * @param {Object} req
- * @param {Object} res
- * @returns {res} response
- */
- static async viewAllCartOfUsers(req, res) {
-  try {
-    const result = await cartService.viewAllCarts();
-    if (result.error) {
-      return res.status(400).json({ error: result.error });
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async clearCart(req, res) {
+    try {
+      const result = await cartService.clearCart(req);
+      return res.status(200).json({ value: result.value });
+    } catch (error) {
+      res.status(500).json({ status: 500, message: error });
     }
-    return res.status(200).json({ value: result.value });
-  } catch (error) {
-    res.status(500).json({ status: 500, message: error });
   }
-}
+
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async viewAllCartOfUsers(req, res) {
+    try {
+      const result = await cartService.viewAllCarts();
+      if (result.error) {
+        return res.status(400).json({ error: result.error });
+      }
+      return res.status(200).json({ value: result.value });
+    } catch (error) {
+      res.status(500).json({ status: 500, message: error });
+    }
+  }
 }
