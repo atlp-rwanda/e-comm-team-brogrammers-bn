@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-// eslint-disable-next-line import/no-named-as-default
+// eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import User from '../services/user.services';
 // eslint-disable-next-line import/no-duplicates
 import db from '../database/models';
@@ -430,6 +430,21 @@ export default class Users {
       res.status(200).json({ message: 'User account disabled successfully' });
 
       // res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  /**
+ * Logout a user by invalidating the JWT token.
+ * @param {Object} req valiable
+ * @param {Object} res valiable
+ * @return {Object} res
+ */
+  static async logout(req, res) {
+    try {
+      await User.logout(req.headers.authorization);
+      res.status(200).json({ message: 'You logged out successfully' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

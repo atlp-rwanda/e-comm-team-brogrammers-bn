@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved
 import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
-import { users } from '../database/models';
+import { users, Blockedtoken } from '../database/models';
 
 const saltRounds = Number(process.env.SALTROUNDS) || 10;
 
@@ -113,8 +113,8 @@ export default class User {
     await users.update({ role }, { where: { email } });
   }
 
-  static async findById(id) {
-    const user = await users.findOne({ where: { id: `${id}` } });
-    return user;
+  static async logout(data) {
+    const token = data.split(' ')[1];
+    await Blockedtoken.create({ token });
   }
 }

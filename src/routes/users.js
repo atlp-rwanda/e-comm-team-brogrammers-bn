@@ -50,5 +50,9 @@ routes.patch(
   requestValidator(disableUser),
   Users.disableUser
 );
-
+routes.get(
+  '/logout',
+  isAuthenticated,
+  Users.logout
+);
 export default routes;
