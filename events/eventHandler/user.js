@@ -29,7 +29,7 @@ emitter.on('passwordExpired', async (userObj) => {
       null
     ).expiredPassword();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 emitter.isPasswordExpired();
@@ -40,7 +40,7 @@ userEventEmitter.on('sendWelcome', async (data) => {
     const url = `${process.env.UI_URL}/users/verify-email/${token}`;
     await new SendEmail({ name, email }, url, null).sendWelcome();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -53,7 +53,7 @@ userEventEmitter.on('passwordUpdated', async (data) => {
     ).passwordUpdated();
   } catch (error) {
     /* istanbul ignore next */
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -67,7 +67,7 @@ userEventEmitter.on('passwordReset', async (data) => {
     ).successPassReset();
   } catch (error) {
     /* istanbul ignore next */
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -77,7 +77,7 @@ userEventEmitter.on('sendGooglePassword', async (data) => {
     await new SendEmail(userObj, null, password).sendGooglePassword();
   } catch (error) {
     /* istanbul ignore next */
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -91,7 +91,7 @@ userEventEmitter.on('resetRequest', async (data) => {
     ).reset();
   } catch (error) {
     /* istanbul ignore next */
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -100,7 +100,7 @@ userEventEmitter.on('disableAccount', async (data) => {
     const { user } = data;
     await new SendEmail(user, null, null).deactivate();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -110,7 +110,7 @@ userEventEmitter.on('activateAccount', async (data) => {
     const { user } = data;
     await new SendEmail(user, null, null).activate();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -119,6 +119,6 @@ userEventEmitter.on('twoFactorAuth', async (data) => {
     const { userInfo, randomAuth } = data;
     await new SendEmail(userInfo, null, randomAuth).twoFactorAuth();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });

@@ -13,7 +13,8 @@ export default {
         references: {
           model: 'users',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       productId: {
         type: Sequelize.UUID,

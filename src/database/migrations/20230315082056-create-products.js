@@ -26,8 +26,9 @@ export default {
         allowNull: false,
         references: {
           model: 'users',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        onDelete: 'CASCADE'
       },
       exp_date: {
         type: Sequelize.DATE,

@@ -25,7 +25,7 @@ eventObj.on('productExpired', async (data) => {
   try {
     await ProductServices.productExpired(data.id);
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -53,7 +53,7 @@ eventObj.on('productDelayedInCart', async (id) => {
     };
     await new SendEmail(obj, null, null).productDelayedInCart();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -129,7 +129,7 @@ prodEmitter.on('productMadeExpired', async (data) => {
     ).expiredProduct();
     // The notification intended for the buyers who bought the product and is not yet derivered.
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -165,7 +165,7 @@ prodEmitter.on('productMadeAvailable', async (data) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -202,7 +202,7 @@ prodEmitter.on('productMadeUnAvailable', async (data) => {
       });
     });
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -237,7 +237,7 @@ prodEmitter.on('addedToWishList', async (data) => {
     };
     await new SendEmail(obj, null, null).wishList();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -273,7 +273,7 @@ prodEmitter.on('removedFromWishList', async (data) => {
     };
     await new SendEmail(obj, null, null).wishList();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -330,7 +330,7 @@ prodEmitter.on('productAdded', async (data) => {
     });
     await new SendEmail(userObj, null, null).productAdded();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -387,7 +387,7 @@ prodEmitter.on('productRemoved', async (data) => {
     });
     await new SendEmail(userObj, null, null).productRemoved();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -454,7 +454,7 @@ prodEmitter.on('productBought', async (data) => {
     };
     await new SendEmail(obj, null, null).productBought();
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 });
 
@@ -466,7 +466,7 @@ prodEmitter.on('productBought', async (data) => {
 // );
 // await new SendEmail(obj, null, null).orderAccepted();
 //   }catch(error){
-//     console.log(error);
+//     throw new Error(error);
 //   }
 // })
 
@@ -478,6 +478,6 @@ prodEmitter.on('productBought', async (data) => {
 // );
 // await new SendEmail(obj, null, null).orderDenied();
 //   }catch(error){
-//     console.log(error);
+//     throw new Error(error);
 //   }
 // })
