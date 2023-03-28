@@ -1,58 +1,49 @@
-// eslint-disable-next-line import/named, no-unused-vars
+// eslint-disable-next-line import/named
 import { notifications, users } from '../database/models';
 
 /**
- * notification  services
+ * notification services
  */
-export class NotificationService {
-// eslint-disable-next-line valid-jsdoc, require-jsdoc
-  static async saveNotification(notification) {
-    return notifications.create(notification);
-  }
-
+export default class NotificationServices {
   // eslint-disable-next-line require-jsdoc
-  static async updateNotifications(field, query) {
-    return notifications.update(field, { where: query });
-  }
-  // eslint-disable-next-line require-jsdoc
-
-  // eslint-disable-next-line require-jsdoc
-  static async getNotifications(query, limit, page) {
-    const offset = (page - 1) * limit;
-    const { count, rows } = await notifications.findAndCountAll({
-      limit,
-      offset,
-      where: query,
-      order: [['createdAt', 'DESC']],
+  static async getAllNotifications(id) {
+    const notificationz = await notifications.findAll({
+      where: { receiverId: id },
       include: {
         model: users,
-        as: 'receiver',
-        attributes: {
-          exclude: [
-            'password',
-            'authCode',
-            'mustUpdatePassword',
-            'lastTimePasswordUpdated',
-          ],
-        },
+        as: 'user',
+        attributes: ['username', 'email'],
       },
     });
-    const totalPages = Math.ceil(count / limit);
-    const currentPage = page;
-    const totalItems = count;
-    return {
-      totalPages, currentPage, totalItems, rows
-    };
+    return notificationz;
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  static async deleteNotification(data) {
+    const notification = await notifications.findOne({
+      where: { receiverId: data.userId },
+    });
+    if (!notification) {
+      return 'not exist';
+    }
+    if (notification.receiverId !== data.userId) {
+      return 'forbidden';
+    }
+    await notification.destroy({
+      where: { id: data.notId, recipientId: data.userId },
+    });
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  static async clearNotifications(data) {
+    const notification = await notifications.findAll({
+      where: { id: data.userId },
+    });
+    if (!notification) {
+      return 'no notifications to clear';
+    }
+    await notifications.destroy({
+      where: { receiverId: data.userId },
+    });
   }
 }
-
-export const knownNotificationType = {
-  changePassword: 'change-password',
-  productExpired: 'product-expired',
-  productWished: 'product-wished',
-  productDeleted: 'product-deleted',
-  productAvailable: 'product-available',
-  newOrder: 'new-order',
-  changeOrderStatus: 'change-order-status',
-  productRating: 'product-rating',
-};

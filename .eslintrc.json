@@ -1,9 +1,6 @@
 {
   "root": true,
-  "extends": [
-    "eslint:recommended",
-    "prettier"
-  ],
+  "extends": "airbnb-base",
   "overrides": [],
   "env": {
     "node": true,

@@ -15,9 +15,13 @@ export default (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-      // define association here
+    static associate(model) {
+      notifications.belongsTo(model.users, {
+        as: 'user',
+        foreignKey: 'receiverId',
+      });
     }
+    // define association here
   }
   notifications.init(
     {

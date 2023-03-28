@@ -131,3 +131,21 @@ export const expireProductWarning = (user, product) => {
     </div>
   `);
 };
+
+export const notificationTemplate = (username, message, type, url)=>{
+  return ` <div style="width:100%; font-family: sans-serif, system-ui;">
+  <h1 style="text-align:center;background-color: #f2f2f2;color: ;padding: 1.5rem;">
+    !!${type}
+  </h1>
+  <div style="padding: 0 1rem;">
+  <h3>Dear ${username},</h3>
+    <h3>
+      I hope this email finds you well, email if for follow up about your showed interest in before, so this to notify you that  ${message} 
+    </h3>
+<div style="text-align:left;">
+    <button style="text-align:center;background-color: #004d99;color: #fff;padding: 1.2rem;width:50%;color:black; margin-top:50px;border:none "><a href =${url} style="text-decoration:none;color:black ;font-size: 23px;"> view here</a> </button>,
+  </div>
+    <p>Best regards, form Brogrammers</p>
+  </div>
+</div>`;
+};

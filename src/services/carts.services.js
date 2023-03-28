@@ -45,7 +45,7 @@ export default class cartService {
         return {
           value: {
             message: 'added to cart successfully',
-            data: newCart
+            data: newCart,
             // eslint-disable-next-line object-curly-newline
           },
         };
@@ -69,7 +69,7 @@ export default class cartService {
       return {
         value: {
           message: 'added to cart successfully',
-          data: cart
+          data: cart,
           // eslint-disable-next-line object-curly-newline
         },
       };
@@ -102,21 +102,20 @@ export default class cartService {
     await cart1.save();
     return { value: { message: 'removed product from cart  successfully' } };
   }
- 
-/**
- * clearing cart and resetting total to zero
- * @param {Object} req
- * @returns {Promise<Object>} confirmation message
- */
-static async clearCart(req) {
-  const userid = req.user.id;
-  const cart = await carts.findOne({ where: { userId: userid } });
-  if (cart) {
-    await cart.destroy();
-  }
-  return { value: { message: 'Cart cleared successfully' } };
-}
 
+  /**
+   * clearing cart and resetting total to zero
+   * @param {Object} req
+   * @returns {Promise<Object>} confirmation message
+   */
+  static async clearCart(req) {
+    const userid = req.user.id;
+    const cart = await carts.findOne({ where: { userId: userid } });
+    if (cart) {
+      await cart.destroy();
+    }
+    return { value: { message: 'Cart cleared successfully' } };
+  }
 
   /**
    *  view the cart
@@ -129,25 +128,26 @@ static async clearCart(req) {
     return {
       value: {
         message: 'Hey Here is your cart!',
-        data: cart
+        data: cart,
         // eslint-disable-next-line object-curly-newline
-      } };
+      },
+    };
   }
 
   /**
- * view all carts
- * @param {Object} req the data for product
- * @returns {data} for viewing product in cart
- */
+   * view all carts
+   * @param {Object} req the data for product
+   * @returns {data} for viewing product in cart
+   */
   static async viewAllCarts() {
     // eslint-disable-next-line no-use-before-define
     const allcart = await carts.findAll();
     return {
       value: {
         message: 'Here are all the carts',
-        data: allcart
-      // eslint-disable-next-line object-curly-newline
-      }
+        data: allcart,
+        // eslint-disable-next-line object-curly-newline
+      },
     };
   }
 }
