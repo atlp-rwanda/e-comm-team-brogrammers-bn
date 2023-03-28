@@ -5,7 +5,7 @@
     security:
       - {}
       - bearerAuth: []
-    summary: Checkout
+    summary: create an order
     description: Process a new order for a buyer
     requestBody:
       required: true
@@ -66,3 +66,4 @@
           properties:
             message:
               type: string
+              swagger: '2.0'
