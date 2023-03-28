@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/named */
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
 import socketio from 'socket.io';
 import { findById } from '../services/user.services';
 import { Jwt } from './jwt';

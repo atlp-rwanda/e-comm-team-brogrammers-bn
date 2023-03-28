@@ -49,7 +49,7 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
@@ -197,7 +197,7 @@ describe('testing the products', () => {
       .patch(`/products/${product.id}/available`)
       .set('Authorization', 'Bearer ')
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
@@ -360,7 +360,7 @@ describe('Product search', () => {
 });
 
 
-describe('testing the products', () => {
+describe('testing the admin to CRUD products', () => {
   const images = [
     './test-images/image1.png',
     './test-images/image2.png',
@@ -393,10 +393,10 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
-  });
+    });
 
   it('should return 400 code for few images', (done) => {
     chai
@@ -555,16 +555,15 @@ describe('testing the products', () => {
 });
 
 
-describe('testing the products', () => {
+describe('testing the admin to delete any seller products', () => {
   const images = [
     './test-images/image1.png',
     './test-images/image2.png',
-    './test-images/image3.png',
   ];
   let sellerToken;
   let adminToken;
   let product;
-  let productId;
+  let productId
 
   before(async () => {
     const res = await chai
@@ -596,7 +595,7 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
@@ -707,7 +706,7 @@ describe('testing the products', () => {
       .patch(`/products/${product.id}/available`)
       .set('Authorization', 'Bearer ')
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });

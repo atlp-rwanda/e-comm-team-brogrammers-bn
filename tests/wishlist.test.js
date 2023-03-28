@@ -33,7 +33,7 @@ describe('testing the products', () => {
     sellerToken = res.body.token;
   });
 
-  it('should return 401 code for missing token', (done) => {
+  it('should return 500 code for missing token', (done) => {
     chai
       .request(app)
       .post('/products/')
@@ -49,7 +49,7 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });

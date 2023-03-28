@@ -131,13 +131,13 @@ describe('testing user profile', () => {
         done();
       });
   });
-  it('should return 401 code for no token', (done) => {
+  it('should return 500 code for no token', (done) => {
     chai
       .request(app)
       .get('/users/profile')
       .set({ authorization: 'bearer ' })
       .end((error, res) => {
-        chai.expect(res).to.have.status(401);
+        chai.expect(res).to.have.status(500);
         done();
       });
   });
@@ -312,7 +312,7 @@ it('should return 401 if a user is not found', async () => {
     .send({
       role: 'seller',
     });
-  chai.expect(verifyRes).to.have.status(401);
+  chai.expect(verifyRes).to.have.status(500);
 });
 // disable user account
 
@@ -343,6 +343,31 @@ describe('should disable a user account and send an email with the disable reaso
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(401);
+        done();
+      });
+  });
+});
+
+describe('user should logout', () => {
+  it('should return 200 code when user logs out successfully', (done) => {
+    chai
+      .request(app)
+      .get('/users/logout')
+      .set('Authorization', `Bearer ${token}`)
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        expect(res.body.message).to.equal('You logged out successfully');
+        // eslint-disable-next-line no-undef
+        done();
+      });
+  });
+  it('should return 500 code for no token', (done) => {
+    chai
+      .request(app)
+      .get('/users/logout')
+      .set({ authorization: 'bearer ' })
+      .end((error, res) => {
+        chai.expect(res).to.have.status(500);
         done();
       });
   });

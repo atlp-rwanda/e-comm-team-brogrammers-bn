@@ -12,6 +12,7 @@ export default {
           model: 'products',
           key: 'id',
         },
+        onDelete:'CASCADE'
       },
       userId: {
         type: Sequelize.UUID,

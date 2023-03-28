@@ -419,3 +419,33 @@
  *       default:
  *         description: Unexpected error
  */
+
+/**
+ * @swagger
+ * /users/logout:
+ *   get:
+ *     summary: User logout!
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: You logged out successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: you logged out successfully
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Error:
+ *                   type: string
+ *                   description: error message.
+ */
