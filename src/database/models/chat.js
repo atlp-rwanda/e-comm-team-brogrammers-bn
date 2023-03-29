@@ -1,8 +1,6 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable valid-jsdoc */
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
@@ -14,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       models.users.hasMany(Chat, {
         foreignKey: 'userId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       });
       Chat.belongsTo(models.users, {
         foreignKey: 'userId',
@@ -33,15 +31,16 @@ module.exports = (sequelize, DataTypes) => {
       room: {
         type: DataTypes.STRING,
         default: 'brogrammers',
-        allowNull: false
+        allowNull: false,
       },
       message: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
+      freezeTableName: true,
       modelName: 'Chat',
     }
   );

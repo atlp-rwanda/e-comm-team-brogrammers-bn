@@ -113,8 +113,33 @@ export default class User {
     await users.update({ role }, { where: { email } });
   }
 
+  static async findById(id) {
+    const user = await users.findOne({ where: { id: `${id}` } });
+    return user;
+  }
+
   static async logout(data) {
     const token = data.split(' ')[1];
     await Blockedtoken.create({ token });
+  }
+
+  static async getAllUsers() {
+    const allUsers = await users.findAll();
+    return allUsers;
+  }
+
+  static async registerAdmin(data) {
+    data.password = await bcrypt.hash(data.password, saltRounds);
+
+    const { username, email, password, gender, email_verified, role } = data;
+    const user = await users.create({
+      username,
+      email,
+      password,
+      gender,
+      email_verified,
+      role
+    });
+    return { data: user };
   }
 }

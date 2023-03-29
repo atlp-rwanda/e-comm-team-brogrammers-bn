@@ -11,6 +11,7 @@ import isAuthenticated from '../middlewares/verifyToken';
 import { resetPassword } from '../validations/fields.validation';
 import requestValidator from '../middlewares/requestValidator';
 import disableUser from '../validations/disable.validation';
+import Admin from '../controllers/admin.controller';
 
 const routes = express.Router();
 
@@ -55,4 +56,30 @@ routes.get(
   isAuthenticated,
   Users.logout
 );
+// Admin Routes
+routes.post(
+  '/createUser',
+  isAuthenticated,
+  checkRole(['admin']),
+  Admin.signup
+);
+routes.patch(
+  '/:id',
+  isAuthenticated,
+  checkRole(['admin']),
+  Admin.updateUser
+);
+routes.delete(
+  '/:id',
+  isAuthenticated,
+  checkRole(['admin']),
+  Admin.deleteUser
+);
+routes.get(
+  '/all',
+  isAuthenticated,
+  checkRole(['admin']),
+  Admin.getAllUsers
+);
+
 export default routes;
