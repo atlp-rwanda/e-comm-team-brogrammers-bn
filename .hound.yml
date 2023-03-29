@@ -3,6 +3,7 @@ ignore:
   - node_modules/
   - coverage/
   - tests/
+  - src/database/migrations 
 
 # Specify the rules that HoundCI should follow for JavaScript files.
 javascript:

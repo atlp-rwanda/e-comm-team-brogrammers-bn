@@ -772,3 +772,14 @@ you will get this response
     "createdAt": "2023-03-25T11:38:57.712Z"
   }
 }
+
+## A user should be able to mark one/all notifications as read (needs login)
+```
+ - To mark notification as read make the following request
+    - `POST /notification/read/{notificationId}`
+ - To mark notification as unread make the following request
+    - `POST /notification/unread/{notificationId}`
+ - To mark all single user notifications as read make the following request
+    - `POST /notification/read/all`
+
+```
