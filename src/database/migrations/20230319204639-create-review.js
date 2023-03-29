@@ -12,7 +12,7 @@ export default {
           model: 'products',
           key: 'id',
         },
-        onDelete:'CASCADE'
+        onDelete: 'CASCADE'
       },
       userId: {
         type: Sequelize.UUID,
@@ -20,6 +20,7 @@ export default {
           model: 'users',
           key: 'id',
         },
+        onDelete: 'CASCADE'
       },
       feedback: {
         type: Sequelize.TEXT,

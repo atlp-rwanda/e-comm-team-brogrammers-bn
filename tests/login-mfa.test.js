@@ -26,7 +26,6 @@ let authToken = '';
 before('Clear everyting from test db before testing', async () => {
   const res = await chai.request(app).post('/users/signup').send(testUserData);
   // eslint-disable-next-line no-console
-  console.log(res);
   expect(res).to.have.status(201);
   expect(res.body.user).to.have.a.property('id');
   expect(res.body.user).to.have.a.property('email_token');
