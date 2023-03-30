@@ -13,6 +13,7 @@ env.config();
 chai.use(chaiHttp);
 
 let authToken;
+let adminToken;
 let userId;
 let order;
 
@@ -37,6 +38,18 @@ describe('testing buyer should checkout', () => {
       .post('/users/login')
       .send({ email: userData.email, password: userData.password });
     authToken = login.body.token;
+
+    const adminData = {
+      email: 'inezapatience2@gmail.com',
+      password: '123@Pass',
+    };
+
+    const adminLogin = await chai
+      .request(app)
+      .post('/users/login')
+      .send(adminData);
+
+    adminToken = adminLogin.body.token;
   });
 
   describe('POST /checkout', async () => {
@@ -96,6 +109,16 @@ describe('testing buyer should checkout', () => {
       expect(res.body).to.have.property('message');
       expect(res.body.message).to.equal('Order was created successfully');
       order = res.body.order;
+    });
+    it('should return 200 for admin getting all orders from all buyers ', (done) => {
+      chai
+        .request(app)
+        .get('/checkout/buyer-orders')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((error, res) => {
+          chai.expect(res).to.have.status(200);
+          done();
+        });
     });
   });
 });
