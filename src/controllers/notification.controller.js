@@ -13,6 +13,26 @@ export default class NotificationController {
     }
   }
 
+  static async markAllAsRead(req, res) {
+    return NotificationServices.markAllNotificationAsRead(req.user.id, res);
+  }
+
+  static async markAsRead(req, res) {
+    return NotificationServices.markNotificationAsReadOrUnread(
+      req.params.notificationId,
+      res,
+      true
+    );
+  }
+
+  static async markAsUnread(req, res) {
+    return NotificationServices.markNotificationAsReadOrUnread(
+      req.params.notificationId,
+      res,
+      false
+    );
+  }
+
   static async deleteNotification(req, res) {
     try {
       const response = await NotificationServices.deleteNotification({
@@ -38,23 +58,26 @@ export default class NotificationController {
     }
   }
 
-  static async markAllAsRead(req, res) {
-    return NotificationServices.markAllNotificationAsRead(req.user.id, res);
-  }
-
-  static async markAsRead(req, res) {
-    return NotificationServices.markNotificationAsReadOrUnread(
-      req.params.notificationId,
-      res,
-      true
-    );
-  }
-
-  static async markAsUnread(req, res) {
-    return NotificationServices.markNotificationAsReadOrUnread(
-      req.params.notificationId,
-      res,
-      false
-    );
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
+  static async clearNotifications(req, res) {
+    try {
+      const response = await NotificationServices.clearNotifications({
+        userId: req.user.id,
+      });
+      if (response === 'not exist') {
+        return res
+          .status(404)
+          .json({ status: 404, error: 'no notification to clear' });
+      }
+      return res
+        .status(202)
+        .json({ status: 202, message: 'Notification cleared' });
+    } catch (error) {
+      return res.status(500).json({ status: 500, error: error.message });
+    }
   }
 }

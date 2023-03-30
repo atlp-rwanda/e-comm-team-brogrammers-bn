@@ -358,8 +358,6 @@ describe('Product search', () => {
       });
   });
 });
-
-
 describe('testing the admin to CRUD products', () => {
   const images = [
     './test-images/image1.png',
@@ -396,7 +394,7 @@ describe('testing the admin to CRUD products', () => {
         chai.expect(res).to.have.status(500);
         done();
       });
-    });
+  });
 
   it('should return 400 code for few images', (done) => {
     chai
@@ -554,7 +552,6 @@ describe('testing the admin to CRUD products', () => {
   });
 });
 
-
 describe('testing the admin to delete any seller products', () => {
   const images = [
     './test-images/image1.png',
@@ -563,7 +560,7 @@ describe('testing the admin to delete any seller products', () => {
   let sellerToken;
   let adminToken;
   let product;
-  let productId
+  let productId;
 
   before(async () => {
     const res = await chai
@@ -573,10 +570,10 @@ describe('testing the admin to delete any seller products', () => {
     sellerToken = res.body.token;
 
     const adminRes = await chai
-    .request(app)
-    .post('/users/login')
-    .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
-  adminToken = adminRes.body.token;
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+    adminToken = adminRes.body.token;
   });
 
   it('should return 401 code for missing token', (done) => {
