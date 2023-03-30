@@ -31,7 +31,7 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', async (socket) => {
-  const { id: userId, username, } = await findById(currentUser.id);
+  const { id: userId, username, } = await findById(currentUser.value.id);
   const user = userJoin(userId, username, chatName);
   socket.join(user.room);
 

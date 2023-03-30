@@ -16,12 +16,9 @@ export default (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      users.hasMany(models.notifications, { as: 'notifications', foreignKey: 'receiverId' });
       users.hasOne(models.carts, { as: 'cart', foreignKey: 'userId' });
       users.hasMany(models.order, { as: 'orders', foreignKey: 'buyerId' });
-      users.hasMany(models.notifications, {
-        as: 'notifications',
-        foreignKey: 'receiverId',
-      });
       users.hasMany(models.Chat, {
         foreignKey: 'userId',
         as: 'chats',

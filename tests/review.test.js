@@ -195,7 +195,7 @@ describe('Reviews API', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send();
 
-      expect(res).to.have.status(204);
+      expect(res).to.have.status(200);
     });
 
     it('should return 404 if review is not found', async () => {

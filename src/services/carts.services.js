@@ -45,7 +45,7 @@ export default class cartService {
         return {
           value: {
             message: 'added to cart successfully',
-            data: newCart
+            data: newCart,
             // eslint-disable-next-line object-curly-newline
           },
         };
@@ -68,7 +68,7 @@ export default class cartService {
       return {
         value: {
           message: 'added to cart successfully',
-          data: cart
+          data: cart,
           // eslint-disable-next-line object-curly-newline
         },
       };
@@ -127,17 +127,17 @@ export default class cartService {
     return {
       value: {
         message: 'Hey Here is your cart!',
-        data: cart
+        data: cart,
         // eslint-disable-next-line object-curly-newline
       }
     };
   }
 
   /**
- * view all carts
- * @param {Object} req the data for product
- * @returns {data} for viewing product in cart
- */
+   * view all carts
+   * @param {Object} req the data for product
+   * @returns {data} for viewing product in cart
+   */
   static async viewAllCarts() {
     // eslint-disable-next-line no-use-before-define
     const allcart = await carts.findAll();

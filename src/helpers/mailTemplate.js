@@ -211,3 +211,42 @@ export const paymentEmail = (user, products, url) => {
     </div>
   `);
 };
+export const notificationTemplate = (username, message, type, url)=>{
+  return `  <div style="width:100%;hight:50%; background-color:#f2f2f2; font-family: sans-serif, system-ui;color:black;">
+  <div style="width:100%; font-family: sans-serif, system-ui;">
+    <h1 style="text-align:center;background-color: #f2f2f2;color: ;padding: 1.5rem;">
+      ${type}
+    </h1>
+    <div style="padding: 0 1rem;">
+    <h3>Dear ${username},</h3>
+      <p>
+        I hope this email finds you well, email if for follow up about your showed interest in before, as we promissed to notify you whenever there is a a message that may seem interesting to you according to your recorded interests 
+        <p> I wanted to notify you that <b> ${message}</b></p>   
+      </p>
+      <div style="text-align:center;">
+       <a href=${url} style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Check this out </a> </button>,
+    </div>
+    <p>Best regards, from <b>Brogrammers </b></p>
+    </div>
+  </div><div>`;
+};
+
+export const notificationTemplate2 = (username, message, type)=>{
+  return ` <div style="width:100%;hight:50%; background-color:#f2f2f2; font-family: sans-serif, system-ui;">
+  <div style="width:100%; font-family: sans-serif, system-ui;">
+    <h1 style="text-align:center;background-color: #f2f2f2;color: ;padding: 1.5rem;">
+      ${type}
+    </h1>
+    <div style="padding: 0 1rem;">
+    <h3>Dear ${username},</h3>
+      <p>
+        I hope this email finds you well, email if for follow up about your showed interest in before, as we promissed to notify you whenever there is a a message that may seem interesting to you according to your recorded interests 
+        <p> I wanted to notify you that <b> ${message}</b></p>   
+      </p>
+      <div style="text-align:center;">
+       <a href="/users/login" style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Login to check </a> </button>,
+    </div>
+    <p>Best regards, from <b>Brogrammers </b></p>
+    </div>
+  </div><div>`;
+};

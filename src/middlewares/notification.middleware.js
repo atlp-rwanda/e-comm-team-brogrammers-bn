@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-named-as-default
 import NotificationService from '../services/notification.services';
 
 export const checkIfHasUnread = async (req, res, next) => {
