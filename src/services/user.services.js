@@ -35,6 +35,11 @@ export default class User {
     return { data: user };
   }
 
+  static async registerGoogle(data) {
+    // eslint-disable-next-line no-return-await
+    return await users.create(data);
+  }
+
   static async startMfaProcess(email) {
     const user = await users.findOne({ where: { email } });
     user.mfa_code = Math.floor(Math.random() * 100000 + 10000);

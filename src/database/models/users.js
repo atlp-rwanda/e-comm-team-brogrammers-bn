@@ -85,7 +85,7 @@ export default (sequelize, DataTypes) => {
       lastTimePasswordUpdated: {
         type: DataTypes.DATE,
         defaultValue: Date.now(),
-      },
+      }
     },
     {
       sequelize,

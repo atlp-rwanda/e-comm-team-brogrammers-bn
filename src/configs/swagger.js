@@ -17,6 +17,14 @@ const options = {
     servers: [{ url: swaggerServer }],
     components: {
       securitySchemes: {
+        google_auth: {
+          type: 'oauth2',
+          flows: {
+            authorizationCode: {
+              authorizationUrl:process.env.GOOGLE_SERVER,
+            },
+          },
+        },
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',

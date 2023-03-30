@@ -8,6 +8,8 @@ import { users, notifications, wishlists } from '../database/models';
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate } from '../helpers/mailTemplate';
+import dotenv from 'dotenv'
+dotenv.config()
 
 const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
 
@@ -49,7 +51,7 @@ export default class Products {
           receiver.username,
           newN.message,
           newN.type,
-          `http://localhost:5000/products/${value.id}`
+          `${process.env.SWAGGER_SERVER}/products/${value.id}`
         );
         sendEmail(
           emailConfig({
@@ -119,7 +121,7 @@ export default class Products {
           receiver.username,
           newN.message,
           newN.type,
-          `http://localhost:5000/products/${value.id}`
+          `${process.env.SWAGGER_SERVER}/products/${value.id}`
         );
         sendEmail(
           emailConfig({
@@ -181,7 +183,7 @@ export default class Products {
           receiver.username,
           newN.message,
           newN.type,
-          `http://localhost:5000/products/${product.id}`
+          `${process.env.SWAGGER_SERVER}/products/${product.id}`
         );
         sendEmail(
           emailConfig({
@@ -316,7 +318,7 @@ export default class Products {
           receiver.username,
           newN.message,
           newN.type,
-          `http://localhost:5000/products/${product.id}`
+          `${process.env.SWAGGER_SERVER}/products/${product.id}`
         );
         sendEmail(
           emailConfig({
