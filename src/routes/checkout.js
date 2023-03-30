@@ -1,5 +1,7 @@
 import express from 'express';
-import { createOrder, getCurrentUserOrders } from '../controllers/checkout';
+import {
+  createOrder, getCurrentUserOrders, updateOrder, deleteOrder
+} from '../controllers/checkout';
 import catchError from '../middlewares/catchError';
 import checkRole from '../middlewares/Checkrole';
 import isAuthenticated from '../middlewares/verifyToken';
@@ -22,5 +24,8 @@ router.post(
   checkRole(['buyer']),
   catchError(createOrder)
 );
+
+router.patch('/:order_id', isAuthenticated, requestValidator(orderValidation), catchError(updateOrder));
+router.delete('/:order_id', isAuthenticated, catchError(deleteOrder));
 
 export default router;

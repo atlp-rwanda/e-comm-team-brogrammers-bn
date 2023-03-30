@@ -14,6 +14,7 @@ chai.use(chaiHttp);
 
 let authToken;
 let userId;
+let order;
 
 describe('testing buyer should checkout', () => {
   before(async () => {
@@ -94,6 +95,57 @@ describe('testing buyer should checkout', () => {
       expect(res).to.have.status(200);
       expect(res.body).to.have.property('message');
       expect(res.body.message).to.equal('Order was created successfully');
+      order = res.body.order;
+    });
+  });
+});
+
+describe('Orders API', () => {
+  describe('PATCH /checkout/:{order}', () => {
+    it('should update an order', (done) => {
+      chai
+        .request(app)
+        .patch(`/checkout/${order.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          deliveryCountry: 'Rwanda',
+          deliveryCity: 'Rwamagana',
+          deliveryStreet: '607 st',
+          paymentMethod: 'Momo',
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          done();
+        });
+    });
+  });
+
+  describe('DELETE /checkout/:order_id', () => {
+    it('should delete an order', (done) => {
+      chai
+        .request(app)
+        .delete(`/checkout/${order.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a('object');
+          res.body.should.have
+            .property('message');
+          done();
+        });
+    });
+
+    it('should return 404 when order is not found', (done) => {
+      chai
+        .request(app)
+        .delete(`/checkout/${order.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a('object');
+          done();
+        });
     });
   });
 });
