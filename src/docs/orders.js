@@ -109,3 +109,18 @@
  *       500:
  *         description: Server error
  */
+ /**
+ * @swagger
+ * /checkout/orders:
+ *   get:
+ *     summary: Get all orders from all buyers and sellers
+ *     tags: [checkout]
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All orders retrieved successfully
+ *       500:
+ *         description: Server error
+ */
