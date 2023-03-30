@@ -21,6 +21,34 @@
 /**
  * @swagger
  * /checkout/{order_id}:
+ *   get:
+ *     summary: view one order by ID
+ *     tags: [checkout]
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               deliveryCountry:
+ *                 type: string
+ *               deliveryCity:
+ *                 type: string
+ *               deliveryStreet:
+ *                 type: string
+ *               paymentMethod:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Order not found
+ *       500:
+ *         description: Server error
  *   patch:
  *     summary: Update an order by ID
  *     tags: [checkout]
@@ -41,12 +69,14 @@
  *           schema:
  *             type: object
  *             properties:
- *               buyer_id:
+ *               deliveryCountry:
  *                 type: string
- *               product_id:
+ *               deliveryCity:
  *                 type: string
- *               quantity:
- *                 type: integer
+ *               deliveryStreet:
+ *                 type: string
+ *               paymentMethod:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Success

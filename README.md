@@ -772,6 +772,7 @@ you will get this response
     "createdAt": "2023-03-25T11:38:57.712Z"
   }
 }
+```
 
 ## A user should be able to mark one/all notifications as read (needs login)
 ```
@@ -783,3 +784,32 @@ you will get this response
     - `POST /notification/read/all`
 
 ```
+
+## PAYMENT
+
+`get /payment/order/{orderID}`
+
+- login  and put token in bearer auth 
+- note: `Token is required`
+- then excute
+here the user get the url for payment and he/she get the items to be paid
+
+request body
+```
+{
+  "success": "http://www.example.com/success",
+  "fail": "http://www.example.com/success"
+}
+```
+the `success` is the url that will be redirected to when the payment is complete,
+
+then the `fail` is when payment if failed due to some problems
+
+the response will be like
+```
+{
+  "items": [arrays of items],
+  "url": "<the link to pay the your order>"
+}
+```
+you'll put the link to the browser in order to pay

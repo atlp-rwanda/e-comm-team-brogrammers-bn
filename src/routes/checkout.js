@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  createOrder, getCurrentUserOrders, updateOrder, deleteOrder
+  createOrder, getCurrentUserOrders, updateOrder, deleteOrder, viewOrder
 } from '../controllers/checkout';
 import catchError from '../middlewares/catchError';
 import isAuthenticated from '../middlewares/verifyToken';
@@ -22,6 +22,7 @@ router.post(
   catchError(createOrder)
 );
 
+router.get('/:order_id', isAuthenticated, catchError(viewOrder));
 router.patch('/:order_id', isAuthenticated, requestValidator(orderValidation), catchError(updateOrder));
 router.delete('/:order_id', isAuthenticated, catchError(deleteOrder));
 
