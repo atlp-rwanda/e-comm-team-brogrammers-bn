@@ -50,7 +50,6 @@ export const createOrder = async (req, res) => {
 
   cartProducts.forEach(async (pro) => {
     const product = await products.findOne({ where: { id: pro.id } });
-    product.quantity -= pro.quantity;
 
     await orderitem.create({
       quantity: pro.quantity,
@@ -68,6 +67,31 @@ export const createOrder = async (req, res) => {
   await user.cart.save();
 
   res.json({ message: 'Order was created successfully', order: userOrder });
+};
+
+export const viewOrder = async (req, res) => {
+  try {
+    const { order_id } = req.params;
+    const orders = await order.findOne({
+      where: { id: order_id, buyerId: res.user.id },
+      include: {
+        model: order,
+        as: 'orders',
+        include: {
+          model: products,
+          as: 'products',
+          attributes: ['id', 'images', 'name', 'available', 'price']
+        }
+      },
+    });
+
+    if (!orders) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+    return res.status(200).json(orders);
+  } catch (error) {
+    return res.status(500).json({ error: 'Server error.' });
+  }
 };
 
 export const updateOrder = async (req, res) => {

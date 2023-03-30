@@ -27,7 +27,7 @@ const signIn = async () => {
     email,
     password
   };
-  const response = await fetch('https://ecomerce-6lek.onrender.com/users/login', {
+  const response = await fetch('/users/login', {
     method: 'post',
     body: JSON.stringify(data),
     headers: {
