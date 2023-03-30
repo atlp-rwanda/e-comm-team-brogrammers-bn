@@ -1,14 +1,10 @@
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('order', {
       deliveryCountry: { type: Sequelize.STRING, allowNull: false },
       deliveryCity: { type: Sequelize.STRING, allowNull: false },
       deliveryStreet: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      status: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -23,6 +19,20 @@ module.exports = {
       },
       paymentMethod: {
         type: Sequelize.STRING,
+      },
+      isPaid: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+      },
+      paymentId: {
+        type: Sequelize.UUID
+      },
+      status: {
+        type: Sequelize.STRING,
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
+        defaultValue: 'Pending',
+        allowNull: false
       },
       totalAmount: {
         type: Sequelize.DECIMAL,

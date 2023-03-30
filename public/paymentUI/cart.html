@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>payment</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui;
+      outline: none;
+    }
+
+    body>div {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      border-bottom: 1px solid #0004;
+    }
+
+    .profile h2 {
+      font-size: 2em;
+    }
+
+    .profile p {
+      color: #888;
+    }
+
+    .summary {
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
+    }
+
+    .summary> * {
+      padding: 1rem;
+      width: fit-content;
+    }
+    .summary button {
+      background-color: #fa0;
+      color: #111;
+      border: none;
+      font-size: 1em;
+      font-weight: bold;
+      padding: 1rem 2rem;
+      width: fit-content;
+    }
+
+    .summary button:hover {
+      box-shadow: 0px 8px 5px -5px #0005;
+    }
+
+    .summary button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .summary button:disabled:hover {
+      box-shadow: 0px 0 5px #0005;
+    }
+  </style>
+  <script type="module" defer>
+    let token = sessionStorage.getItem("token");
+    let orders;
+    let ordersBox = document.querySelector('.summary')
+    let orderTemplate = ordersBox.querySelector('.template')
+
+    fetch('/users/profile', {
+      headers: {
+        authorization: token
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        }
+        else {
+          sessionStorage.removeItem('token')
+          window.location.assign('/public/paymentUI')
+        }
+      })
+      .then(data => {
+        document.querySelector('.profile h2').innerText = data.username
+        document.querySelector('.profile p').innerText = data.email
+      })
+
+    fetch('/checkout/', {
+      headers: {
+        authorization: token
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        }
+        else {
+          checkout.disabled = true
+        }
+      })
+      .then(data => {
+        ordersBox.innerHTML = ''
+        orders = data
+        window.orders = orders // for getting it in window variables
+        orders.forEach(order => {
+          let box = orderTemplate.cloneNode(true)
+          box.classList.remove('template')
+          box.querySelector('.price b').innerText = order.totalAmount
+          box.querySelector('.method b').innerText = order.paymentMethod
+          let checkout = box.querySelector('button#checkout')
+          if(order.paymentId !== null){
+            checkout.disabled = true
+            checkout.innerText = 'Checked'
+          }
+
+          checkout.addEventListener('click', async e => {
+            let res = await fetch(`/payment/order/${order.id}`, {
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+                authorization: token,
+              },
+              body: JSON.stringify({
+                success: '/public/paymentUI/success.html'
+              })
+            })
+            if(res.status === 200) {
+              let data = await res.json()
+              console.log(data)
+              window.open(data.url, "_blank")
+            }
+          })
+          ordersBox.append(box)
+        });
+      })
+  </script>
+</head>
+
+<body>
+  <div class="profile">
+    <h2>User Name</h2>
+    <p>email@domain.com</p>
+  </div>
+  <h2 style="padding: .5rem 1rem 0;">Your Order</h2>
+  <div class="summary">
+    <div class="template">
+      <p class="price">Total: $<b>0.00</b></p>
+      <p class="method">Method: <b>Visa</b></p>
+      <button id="checkout">Checkout Items</button>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -61,7 +61,6 @@ export default class cartService {
         .map((prod1) => JSON.parse(prod1.Ptotal))
         .reduce((sum, next) => sum + next);
       cart.total = subtotal;
-      // await cart.save();
       await carts.update(
         { products: cart.products, total: subtotal },
         { where: { id: cart.id } }
@@ -102,21 +101,20 @@ export default class cartService {
     await cart1.save();
     return { value: { message: 'removed product from cart  successfully' } };
   }
- 
-/**
- * clearing cart and resetting total to zero
- * @param {Object} req
- * @returns {Promise<Object>} confirmation message
- */
-static async clearCart(req) {
-  const userid = req.user.id;
-  const cart = await carts.findOne({ where: { userId: userid } });
-  if (cart) {
-    await cart.destroy();
-  }
-  return { value: { message: 'Cart cleared successfully' } };
-}
 
+  /**
+   * clearing cart and resetting total to zero
+   * @param {Object} req
+   * @returns {Promise<Object>} confirmation message
+   */
+  static async clearCart(req) {
+    const userid = req.user.id;
+    const cart = await carts.findOne({ where: { userId: userid } });
+    if (cart) {
+      await cart.destroy();
+    }
+    return { value: { message: 'Cart cleared successfully' } };
+  }
 
   /**
    *  view the cart
@@ -131,7 +129,8 @@ static async clearCart(req) {
         message: 'Hey Here is your cart!',
         data: cart
         // eslint-disable-next-line object-curly-newline
-      } };
+      }
+    };
   }
 
   /**
@@ -146,7 +145,7 @@ static async clearCart(req) {
       value: {
         message: 'Here are all the carts',
         data: allcart
-      // eslint-disable-next-line object-curly-newline
+        // eslint-disable-next-line object-curly-newline
       }
     };
   }

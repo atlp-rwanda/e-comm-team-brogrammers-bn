@@ -4,7 +4,9 @@
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named
 import { Op } from 'sequelize';
-import { products, category, reviews } from '../database/models';
+import {
+  products, category, reviews, users
+} from '../database/models';
 import CloudUpload from '../helpers/cloud.upload';
 import checkExpiredProduct from '../helpers/expiredProduct';
 
@@ -91,7 +93,14 @@ export default class Product {
    * @returns {products} allproducts
    */
   static async getProducts() {
-    const allproducts = await products.findAll({ where: { available: true } });
+    const allproducts = await products.findAll({
+      where: { available: true },
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email']
+      }
+    });
     return allproducts;
   }
 

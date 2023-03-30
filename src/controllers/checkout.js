@@ -7,7 +7,15 @@ import {
 export const getCurrentUserOrders = async (req, res) => {
   const user = await users.findOne({
     where: { email: req.user.email },
-    include: { model: order, as: 'orders' },
+    include: {
+      model: order,
+      as: 'orders',
+      include: {
+        model: products,
+        as: 'products',
+        attributes: ['id', 'images', 'name', 'available', 'price']
+      }
+    },
   });
   res.json(user.orders);
 };
@@ -36,7 +44,6 @@ export const createOrder = async (req, res) => {
     deliveryCity,
     deliveryStreet,
     paymentMethod,
-    status: 'active',
     totalAmount: userCart.total,
     buyerId: req.user.id,
   });
