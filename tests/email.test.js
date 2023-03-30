@@ -25,11 +25,16 @@ describe('User Controller', () => {
         email: 'edwin12@gmail.com',
         password: 'Edwin@123',
       };
+      const userDatas = {
+        username: 'tresor2023',
+        email: 'edwin123@gmail.com',
+        password: 'Edwin@123',
+      };
 
       const res = await chai
         .request(app)
         .post('/users/signup')
-        .send(userData);
+        .send(userData, userDatas);
       email_token = res.body.user.email_token;
       chai.expect(res).to.have.status(201);
       chai.expect(res.body).to.have.property('message', 'Check your email to verify your account');
