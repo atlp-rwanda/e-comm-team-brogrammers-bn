@@ -39,9 +39,9 @@ export default class Payments {
       discount: session.total_details.amount_discount,
       stripeId: session.id
     };
-    const orderPayment = await payments.create(pay);
+    await payments.create(pay);
     await order.update(
-      { status: 'Processing', isPaid: true, paymentId: orderPayment.id },
+      { status: 'Processing', isPaid: true },
       { where: { id: ordered.id } }
     );
     // eslint-disable-next-line no-restricted-syntax

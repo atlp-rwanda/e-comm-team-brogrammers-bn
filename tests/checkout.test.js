@@ -40,7 +40,7 @@ describe('testing buyer should checkout', () => {
     authToken = login.body.token;
 
     const adminData = {
-      email: 'inezapatience2@gmail.com',
+      email: 'brogrammer@gmail.com',
       password: '123@Pass',
     };
 

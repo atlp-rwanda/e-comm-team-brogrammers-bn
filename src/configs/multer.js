@@ -8,7 +8,7 @@ export default multer({
     const ext = path.extname(file.originalname);
     const supported = ['.png', '.jpg', '.jpeg', '.webp'];
     if (!supported.includes(ext)) {
-      next(new Error('file type not supported'), false);
+      next(new Error(`file type not supported\ntry ${supported} are supported`), false);
     }
     next(null, true);
   }

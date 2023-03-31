@@ -21,7 +21,8 @@ export const getMessages = async (room) => {
           as: 'user',
           attributes: ['username']
         }
-      ]
+      ],
+      order: [['createdAt', 'DESC']]
     });
   } catch (error) {
     return { error };

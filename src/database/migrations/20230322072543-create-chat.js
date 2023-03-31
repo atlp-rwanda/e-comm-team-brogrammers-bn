@@ -15,7 +15,7 @@ module.exports = {
         allowNull: false
       },
       message: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(10000),
         allowNull: false
       },
       userId: {

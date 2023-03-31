@@ -122,15 +122,11 @@ export const viewOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
     const orders = await order.findOne({
-      where: { id: order_id, buyerId: res.user.id },
+      where: { id: order_id, buyerId: req.user.id },
       include: {
-        model: order,
-        as: 'orders',
-        include: {
-          model: products,
-          as: 'products',
-          attributes: ['id', 'images', 'name', 'available', 'price']
-        }
+        model: products,
+        as: 'products',
+        attributes: ['id', 'images', 'name', 'available', 'price']
       },
     });
 

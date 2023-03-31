@@ -19,7 +19,7 @@ let authToken;
 
 describe('Reviews API', () => {
   before(async () => {
-    sampleUser = await users.findOne({ where: { email: 'ange@gmail.com' } });
+    sampleUser = await users.findOne({ where: { email: 'mary@gmail.com' } });
     const res = await chai
       .request(app)
       .post('/users/signup')
@@ -49,7 +49,7 @@ describe('Reviews API', () => {
     const login = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'ange@gmail.com', password: '123@Pass' });
+      .send({ email: 'mary@gmail.com', password: '123@Pass' });
     authToken = login.body.token;
   });
 

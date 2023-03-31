@@ -95,6 +95,7 @@ export default class Product {
   static async getProducts() {
     const allproducts = await products.findAll({
       where: { available: true },
+      attributes: { exclude: ['sellerId'] },
       include: {
         model: users,
         as: 'seller',
@@ -109,7 +110,15 @@ export default class Product {
    * @returns {products} allproducts
    */
   static async getProduct(id) {
-    const product = await products.findOne({ where: { id } });
+    const product = await products.findOne({
+      where: { id },
+      attributes: { exclude: ['sellerId'] },
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email']
+      }
+    });
     return product;
   }
 

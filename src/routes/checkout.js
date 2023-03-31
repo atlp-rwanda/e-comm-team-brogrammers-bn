@@ -25,7 +25,7 @@ router.post(
 
 router.get('/orders', isAuthenticated, checkRole(['admin']), catchError(getAllOrders));
 
-router.get('/:order_id', isAuthenticated, catchError(viewOrder));
+router.get('/:order_id', isAuthenticated, viewOrder);
 router.patch('/:order_id', isAuthenticated, requestValidator(orderValidation), catchError(updateOrder));
 router.delete('/:order_id', isAuthenticated, catchError(deleteOrder));
 
