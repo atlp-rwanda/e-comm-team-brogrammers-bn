@@ -1,11 +1,12 @@
 import express from 'express';
 import {
-  createOrder, getCurrentUserOrders, updateOrder, deleteOrder, viewOrder
+  createOrder, getCurrentUserOrders, updateOrder, deleteOrder, viewOrder, getAllOrders,
 } from '../controllers/checkout';
 import catchError from '../middlewares/catchError';
 import isAuthenticated from '../middlewares/verifyToken';
 import requestValidator from '../middlewares/requestValidator';
 import orderValidation from '../validations/checkout.validation';
+import checkRole from '../middlewares/Checkrole';
 
 const router = express.Router();
 
@@ -21,6 +22,8 @@ router.post(
   requestValidator(orderValidation),
   catchError(createOrder)
 );
+
+router.get('/orders', isAuthenticated, checkRole(['admin']), catchError(getAllOrders));
 
 router.get('/:order_id', isAuthenticated, catchError(viewOrder));
 router.patch('/:order_id', isAuthenticated, requestValidator(orderValidation), catchError(updateOrder));

@@ -190,3 +190,27 @@ export const deleteOrder = async (req, res) => {
     return res.status(500).json({ error: 'Server error.' });
   }
 };
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await order.findAll({
+      include: [
+      {
+        model: users,
+        as: 'buyer',
+        attributes: ['username','email'],
+      },
+      {
+        model: products,
+        as: 'products',
+        attributes: ['id', 'images', 'name', 'available', 'price']
+      }
+    ],
+    order: [['createdAt', 'DESC']]
+  });
+
+    res.status(200).json({ message: 'All orders retrieved successfully', orders });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error.' });
+  }
+};
