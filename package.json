@@ -41,6 +41,7 @@
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
     "cloudinary": "^1.35.0",
+    "colors": "^1.4.0",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
     "cron": "^2.2.0",
@@ -53,6 +54,7 @@
     "joi": "^17.8.3",
     "joi-password": "^4.0.0",
     "jsonwebtoken": "^9.0.0",
+    "logger": "^0.0.1",
     "mocha": "^10.2.0",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
@@ -71,7 +73,10 @@
     "sinon": "^15.0.3",
     "socket.io": "^4.6.1",
     "stripe": "^11.16.0",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "winston": "^3.8.2",
+    "winston-papertrail": "^1.0.5",
+    "winston-papertrail-transport": "^1.0.9"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",

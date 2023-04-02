@@ -4,6 +4,9 @@ import { wishlists } from '../database/models';
 import paginatedResults from '../middlewares/paginating';
 // eslint-disable-next-line import/named, import/no-duplicates
 import { products } from '../database/models';
+import {
+  deleteWishlists, clearWishlists, AdmingetWishlists, getWishlists, wishlistError, createWishlist
+} from '../loggers/wishlist.logger';
 /**
  * the wishlist controller class
  */
@@ -24,11 +27,13 @@ export default class wishlist {
         productId: product_id,
       };
       const wish = await Wishlist.createWish(newWish);
+      createWishlist(req);
       return res.status(200).json({
         data: wish,
         message: 'product added to your wishlist successfully',
       });
     } catch (error) {
+      wishlistError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Could not add product to wishlist, try again',
@@ -52,11 +57,13 @@ export default class wishlist {
           id: productIds,
         },
       });
+      getWishlists(req, Products);
       return res.status(200).json({
         message: `${req.user.username} here is product in your wishlist`,
         data: Products,
       });
     } catch (error) {
+      wishlistError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Could not get  wishlist, try again',
@@ -76,6 +83,7 @@ export default class wishlist {
       if (userwish) {
         await wishlists.destroy({ where: { productId } });
         await userwish.save();
+        deleteWishlists(req, userwish);
         return res.status(200).json({
           message: 'deleted from wishlist '
         });
@@ -84,6 +92,7 @@ export default class wishlist {
         message: 'you dont have this product in your wishlist'
       });
     } catch (error) {
+      wishlistError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Could delete   wish, try again',
@@ -99,7 +108,9 @@ export default class wishlist {
   static async getallawishlists(req, res) {
     try {
       paginatedResults(wishlists)(req, res, () => res.status(200).json(res.paginatedResults));
+      AdmingetWishlists(req, res.paginatedResults);
     } catch (error) {
+      wishlistError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Could not get  wishlist, try again',
@@ -118,6 +129,7 @@ export default class wishlist {
       const userwishes = await wishlists.findAll({ where: { userId } });
       if (userwishes !== []) {
         await wishlists.destroy({ where: { userId } });
+        clearWishlists(req, userwishes);
         return res.status(200).json({
           message: ' wishlists have been cleared'
         });
@@ -127,6 +139,7 @@ export default class wishlist {
         message: 'no wishlist to clear'
       });
     } catch (error) {
+      wishlistError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Could not clear  wishlist, try again',

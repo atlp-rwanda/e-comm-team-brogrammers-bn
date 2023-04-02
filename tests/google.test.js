@@ -37,7 +37,7 @@ describe('Google authentication', () => {
 
   describe('GET /redirect', () => {
     it('should return a user object and token when given a valid token', async () => {
-      const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBiYjhmYjBhLWMzN2QtNDE2My1hNmJhLTIzODIzZjJmZGI4NiIsImVtYWlsIjoibmFtYmFqZWVlZHdpbkBnbWFpbC5jb20iLCJpYXQiOjE2ODAzNjMyMTksImV4cCI6MTY4MDM2NjgxOX0.UtmH8GQFDqS_pFq1O-Qmbm2EJF-fiHtOGTVvM6Iq0UU';
+      const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZjY1OGM0LWMxNzctNDQ0OS1hOWFhLTBjMmI5Yjk4YjMzZSIsImVtYWlsIjoibmFtYmFqZWVlZHdpbkBnbWFpbC5jb20iLCJpYXQiOjE2ODA3MzEyOTAsImV4cCI6MTY4MDczNDg5MH0.VZ5t0yYPP1iCyKFQExjabb0714A_nEj_cYNQdsI3qmo';
       const res = await chai
         .request(app)
         .get(`/users/redirect?key=${userToken}`);

@@ -154,7 +154,7 @@
 *         in: query
 *         type: integer
 *         format: int32
-*         description: The maximum number of users to retrieve per page.
+*         description: The maximum number of results to retrieve per page.
 *       - name: page
 *         in: query
 *         type: integer

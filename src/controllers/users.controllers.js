@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable object-shorthand */
 /* eslint-disable camelcase */
 /* eslint-disable object-curly-newline */
@@ -15,6 +16,7 @@ import eventEmitter from '../helpers/eventEmitter';
 
 // eslint-disable-next-line import/named, import/no-duplicates
 import { users, notifications } from '../database/models';
+import { redirectGoogle } from '../loggers/signup.logger';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -26,6 +28,10 @@ import {
   notificationTemplate2
 } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
+
+const {
+  logSignup, logError, logSetRole, logEmailSent, logLogout, logVerifyEmail, logLogin, viewProfile, editProfiles, enableMfaLog, disableMfaLog, verifiedMfaLog, createAdminLog, resetPasswordLog, verifyPasswordLog, changePasswordLog, disableAccountLog
+} = require('../loggers/signup.logger');
 
 // eslint-disable-next-line operator-linebreak
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
@@ -63,12 +69,15 @@ export default class Users {
           content: verificationEmail,
         })
       );
+      logSignup(req);
+      logEmailSent(data.email);
       return res.status(201).json({
         message: 'Check your email to verify your account',
         user: data,
         signupToken,
       });
     } catch (e) {
+      logError(req, e);
       return res.status(500).json({
         error: e.message,
         message: 'Failed to register a new user',
@@ -81,6 +90,7 @@ export default class Users {
       const emailToken = req.params.token;
       Users.verifyUser(emailToken, res);
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ 'Error:': error });
     }
   }
@@ -95,6 +105,7 @@ export default class Users {
     user.email_token = null;
     user.verified = true;
     await user.save();
+    logVerifyEmail(user.email);
     res.status(200).send({
       message: 'Your account has been verified successfully!',
       verified: true,
@@ -130,12 +141,13 @@ export default class Users {
         })
       );
       await notifications.create(newN);
-
+      logSetRole(req, role);
       return res.status(200).json({
         status: 200,
         message: 'Role assigned to the user successfully',
       });
     } catch (error) {
+      logError(req, error);
       return res.status(500).json({
         status: 500,
         message: error.message,
@@ -178,6 +190,7 @@ export default class Users {
           { email: req.body.email, id: user.id },
           JWT_SECRET
         );
+        logLogin(user.email, user);
         return res.status(200).json({ email: req.body.email, token });
       }
 
@@ -189,10 +202,12 @@ export default class Users {
         subject: 'Brogrammers authentication code',
         content: mfaEmailContent,
       });
+      logLogin(user.email);
       return res
         .status(200)
         .json({ message: 'Please check your email for authentication code' });
     } catch (error) {
+      logError(req, error);
       res
         .status(500)
         .json({ error: error.message, message: 'Failed to login a user' });
@@ -209,10 +224,12 @@ export default class Users {
   static async getProfile(req, res) {
     try {
       const { avatar, cover_image, email, username, role, gender } = req.user;
+      viewProfile(req, req.user);
       res.status(200).json({
         avatar, cover_image, email, username, role, gender,
       });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ error: error.message, message: 'server error' });
     }
   }
@@ -231,10 +248,12 @@ export default class Users {
       const { avatar, cover_image, email, username, role, gender } = value;
       const token = Jwt.generateToken({ email });
       await db.users.update({ email_token: token }, { where: { email } });
+      editProfiles(req, value);
       res.status(200).json({
         avatar, cover_image, email, username, role, gender, token, email_token: token,
       });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ error: error.message, message: 'server error' });
     }
   }
@@ -245,11 +264,12 @@ export default class Users {
         { mfa_enabled: true },
         { where: { email: req.user.email } }
       );
-
+      enableMfaLog(req);
       return res.status(200).json({
         message: 'Multi-factor authentication is enabled',
       });
     } catch (error) {
+      logError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Failed to enable Multi-factor authentication',
@@ -263,11 +283,12 @@ export default class Users {
         { mfa_enabled: false },
         { where: { email: req.user.email } }
       );
-
+      disableMfaLog(req);
       return res.status(200).json({
         message: 'Multi-factor authentication is disabled',
       });
     } catch (error) {
+      logError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Failed to disable Multi-factor authentication',
@@ -284,11 +305,13 @@ export default class Users {
 
       if (isValid) {
         const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        verifiedMfaLog(req, token);
         return res.status(200).json({ email: req.body.email, token });
       }
 
       return res.status(403).json({ message });
     } catch (error) {
+      logError(req, error);
       return res.status(500).json({
         error: error.message,
         message: 'Failed to verify authentication code',
@@ -331,12 +354,13 @@ export default class Users {
         })
       );
       await notifications.create(newN);
-
+      createAdminLog(req, Nwuser);
       res.status(200).json({
         user: Nwuser,
         message: `user ${Nwuser.username} sucessfully made admin`,
       });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ 'Error:': error });
     }
   }
@@ -364,10 +388,11 @@ export default class Users {
           content: resetPasswordContent,
         })
       );
-
+      resetPasswordLog(req);
       res.status(200).json({ message: 'Check your email for reset link' });
     } catch (error) {
-      res.status(500).json({ message: 'Failed to send reset link' });
+      logError(req, error);
+      res.status(500).json({ message: error.message });
     }
   }
 
@@ -395,6 +420,7 @@ export default class Users {
             user.verified = true;
             user.password = bcrypt.hashSync(newPassword, saltRounds);
             user.save();
+            verifyPasswordLog(req, user);
             return res
               .status(200)
               .json({ message: 'Password reset successful' });
@@ -402,6 +428,7 @@ export default class Users {
         );
       }
     } catch (error) {
+      logError(req, error);
       res.status(500).json({
         message:
           error.message
@@ -416,7 +443,7 @@ export default class Users {
       const { oldPassword, newPassword } = req.body;
 
       // check if the old password matches the one in the database
-      const isPasswordValid = bcrypt.compareSync(
+      const isPasswordValid = await bcrypt.compare(
         oldPassword,
         req.user.password
       );
@@ -436,15 +463,17 @@ export default class Users {
       }
 
       // hash the new password and update the database
-      const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
       req.user.password = hashedPassword;
       req.user.lastTimePasswordUpdated = moment();
       req.user.mustUpdatePassword = false;
       await req.user.save();
       // Emit event to notify password update
       eventEmitter.emit('passwordUpdated', req.user);
+      changePasswordLog(req, req.user);
       res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
+      logError(req, error);
       res
         .status(500)
         .json({ error: error.message, message: 'Failed to change password' });
@@ -477,9 +506,9 @@ export default class Users {
       );
 
       res.status(200).json({ message: 'User account disabled successfully' });
-
-      // res.json(user);
+      disableAccountLog(req, user);
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ message: error.message });
     }
   }
@@ -493,8 +522,10 @@ export default class Users {
   static async logout(req, res) {
     try {
       await User.logout(req.headers.authorization);
+      logLogout(req);
       res.status(200).json({ message: 'You logged out successfully' });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ message: error.message });
     }
   }
@@ -514,6 +545,7 @@ export default class Users {
       id: id,
       email: email,
     }, '1h');
+    redirectGoogle(email);
     return res.redirect(`/users/redirect?key=${userToken}`);
   }
 
@@ -526,6 +558,7 @@ export default class Users {
         avatar, cover_image, email, username, role, gender,
       });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ message: error.message });
     }
   }
@@ -539,6 +572,7 @@ export default class Users {
         avatar, cover_image, email, username, role, gender,
       });
     } catch (error) {
+      logError(req, error);
       res.status(500).json({ message: error.message });
     }
   }

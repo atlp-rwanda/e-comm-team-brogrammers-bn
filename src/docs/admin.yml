@@ -147,7 +147,39 @@ paths:
           description: Unauthorized
         500:
           description: Internal server error
-
+  /users/logs/all:
+    get:
+      summary: Get all logs of all users
+      tags:
+        - Admin
+      security:
+        - {}
+        - bearerAuth: []
+      parameters:
+      - name: limit
+        in: query
+        type: integer
+        format: int32
+        description: The maximum number of results to retrieve per page.
+      - name: page
+        in: query
+        type: integer
+        format: int32
+        description: The page number to retrieve. Default value is 1.  
+      responses:
+        200:
+          description: Returns all logs by all users
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+        401:
+          description: Unauthorized
+        500:
+          description: Internal server error
 definitions:
   User:
     type: object

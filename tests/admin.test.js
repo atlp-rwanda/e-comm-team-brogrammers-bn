@@ -12,7 +12,8 @@ describe('Admin Controller', () => {
   let user;
 
   before(async () => {
-    await db.users.destroy({ where: { email: 'janedoe123@gmail.com' } });
+    await db.users.destroy({ where: { email: 'janedoe@gmail.com' } });
+    await db.users.destroy({ where: { email: 'edwinnambaje4@gmail.com' } });
     const adminCredentials = {
       email: 'brogrammer@gmail.com',
       password: '123@Pass',
@@ -22,25 +23,13 @@ describe('Admin Controller', () => {
       .post('/users/login')
       .send(adminCredentials);
     adminToken = adminLoginResponse.body.token;
-    const newUser = {
-      username: 'Eric Doe',
-      email: 'janedoe@gmail.com',
-      password: '123@Pass',
-      gender: 'male',
-    };
-    const createResponse = await chai
-      .request(app)
-      .post('/users/createUser')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .send(newUser);
-    user = createResponse.body.user;
   });
 
   describe('POST /users/createUser', () => {
     it('should create a new user', async () => {
       const newUser = {
         username: 'jane Doe',
-        email: 'janedoe123@gmail.com',
+        email: 'janedoe@gmail.com',
         password: '123@Pass',
         gender: 'female',
       };
@@ -49,6 +38,7 @@ describe('Admin Controller', () => {
         .post('/users/createUser')
         .set('Authorization', `Bearer ${adminToken}`)
         .send(newUser);
+      user = res.body.user;
       expect(res).to.have.status(201);
       expect(res.body.user).to.have.property('id');
       expect(res.body.user.username).to.equal(newUser.username);
@@ -59,7 +49,7 @@ describe('Admin Controller', () => {
     it('should return a 400 error if email is already registered', async () => {
       const newUser = {
         username: 'johnsmith',
-        email: user.email,
+        email: 'brogrammer@gmail.com',
         password: 'password',
         gender: 'male',
       };
@@ -75,7 +65,7 @@ describe('Admin Controller', () => {
   describe('PATCH /users/admin/update/:id', () => {
     it('should update user details', async () => {
       const updatedUser = {
-        email: 'edwinnambaje@gmail.com',
+        email: 'edwinnambaje4@gmail.com',
         gender: 'male',
       };
       const res = await chai
@@ -83,7 +73,6 @@ describe('Admin Controller', () => {
         .patch(`/users/${user.id}`)
         .set('Authorization', `Bearer ${adminToken}`)
         .send(updatedUser);
-
       expect(res).to.have.status(200);
       expect(res.body.data.email).to.equal(updatedUser.email);
       expect(res.body.data.gender).to.equal(updatedUser.gender);

@@ -16,9 +16,11 @@ import {
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate } from '../helpers/mailTemplate';
+import {
+  deleteProducts, sellerProduct, createProduct, retrieveAllProduct, productError, updateProduct, searchPro, toggleAvailablePro, retrieveOneProduct, viewProductReview
+} from '../loggers/product.logger';
 
 dotenv.config();
-
 const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
 
 /**
@@ -70,10 +72,12 @@ export default class Products {
         );
         await notifications.create(newN);
       });
+      createProduct(req, value);
       return res
         .status(201)
         .json({ message: 'product created', product: value });
     } catch (error) {
+      productError(req, error);
       return res.status(500).json({ message: 'server error', error });
     }
   }
@@ -89,6 +93,7 @@ export default class Products {
       return res.status(404).json({ message: 'product not found' });
     }
     const productReviews = await Product.getProductReviews(req.params.id);
+    viewProductReview();
     return res.status(200).json(productReviews);
   }
 
@@ -139,10 +144,12 @@ export default class Products {
         );
         await notifications.create(newN);
       });
+      updateProduct(req, value);
       return res
         .status(200)
         .json({ message: 'product edited', product: value });
     } catch (error) {
+      productError(req, error);
       return res.status(500).json({ message: 'server error', error });
     }
   }
@@ -190,11 +197,13 @@ export default class Products {
         offset: startIndex,
       });
       const allproducts = results;
+      retrieveAllProduct();
       res
         .status(200)
         .json({ message: 'All products retrieved successfully', allproducts });
       // eslint-disable-next-line no-shadow
     } catch (err) {
+      productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
@@ -248,12 +257,14 @@ export default class Products {
       });
 
       await product.destroy();
+      deleteProducts(req, product);
       return res.status(200).json({
         status: 200,
         message: 'Product deleted successfully',
         item: product,
       });
     } catch (error) {
+      productError(req, error);
       return res.status(500).json({
         status: 500,
         error: error.message,
@@ -274,8 +285,10 @@ export default class Products {
       if (!product || product === null) {
         return res.status(404).json({ message: 'product not found' });
       }
+      retrieveOneProduct(req, product);
       return res.status(200).json(product);
     } catch (err) {
+      productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'server product' });
@@ -324,6 +337,7 @@ export default class Products {
         offset: startIndex,
       });
       const allProducts = results;
+      sellerProduct(req, allProducts);
       res
         .status(200)
         .json({
@@ -331,6 +345,7 @@ export default class Products {
           allProducts,
         });
     } catch (err) {
+      productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
@@ -347,8 +362,10 @@ export default class Products {
       if (!product) {
         return res.status(404).json({ message: 'Product not found' });
       }
+      retrieveOneProduct(req, id);
       return res.status(200).json({ product });
     } catch (err) {
+      productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve product' });
@@ -367,8 +384,10 @@ export default class Products {
           .status(404)
           .json({ message: 'Product not found in your collection' });
       }
+      retrieveOneProduct(req, id);
       return res.status(200).json({ product });
     } catch (err) {
+      productError(req, err);
       if (err.name === 'CastError' || err.name === 'NotFoundError') {
         return res.status(400).json({ message: 'Invalid product ID' });
       }
@@ -420,10 +439,12 @@ export default class Products {
         );
         await notifications.create(newN);
       });
+      toggleAvailablePro(req, product);
       return res
         .status(201)
         .json({ message: 'availablility changed', product });
     } catch (err) {
+      productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
@@ -439,8 +460,10 @@ export default class Products {
         req.query.max,
         req.query.category
       );
+      searchPro(products);
       res.status(200).json(products);
     } catch (error) {
+      productError(req, error);
       res.status(500).json({ message: error.message });
     }
   }
