@@ -2,15 +2,40 @@
 <html>
   <head>
     <title>payment</title>
-    <style>
-
-    </style>
+    <style></style>
     <script type="module" defer>
-      let token = sessionStorage.getItem("token");
-
+      let token = sessionStorage.getItem('token');
     </script>
   </head>
   <body>
     success
   </body>
+
+  <script>
+    function fetchData() {
+      fetch('http://localhost:3000/order/status/', {
+        headers: { Authorization: 'Bearer' },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const orders = data.data;
+          const orderData = orders.orders.reduce((prev, curr, i) => {
+            return prev + `<tr><td>${curr.id}</td><td>${curr.status}</td></tr>`;
+          }, '');
+          document.body.innerHTML = `
+        <table>
+          <thead><th>Order Id</th><th>Status</th></thead>
+          <tbody>
+            <tbody>
+              ${orderData}
+            </tbody>
+          </tbody>
+        </table>
+        `;
+          console.log({ orders });
+        });
+    }
+
+    setInterval(fetchData, 2000);
+  </script>
 </html>
