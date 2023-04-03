@@ -1,7 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/named */
 import {
-  users, order, orderitem, products, carts, notifications
+  users,
+  order,
+  orderitem,
+  products,
+  carts,
+  notifications,
 } from '../database/models';
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
@@ -16,8 +21,8 @@ export const getCurrentUserOrders = async (req, res) => {
       include: {
         model: products,
         as: 'products',
-        attributes: ['id', 'images', 'name', 'available', 'price']
-      }
+        attributes: ['id', 'images', 'name', 'available', 'price'],
+      },
     },
   });
   res.json(user.orders);
@@ -126,7 +131,7 @@ export const viewOrder = async (req, res) => {
       include: {
         model: products,
         as: 'products',
-        attributes: ['id', 'images', 'name', 'available', 'price']
+        attributes: ['id', 'images', 'name', 'available', 'price'],
       },
     });
 
@@ -144,7 +149,7 @@ export const updateOrder = async (req, res) => {
     const { order_id } = req.params;
     const updatedOrder = req.body;
     const orders = await order.findOne({
-      where: { id: order_id }
+      where: { id: order_id },
     });
 
     if (!orders) {
@@ -152,7 +157,9 @@ export const updateOrder = async (req, res) => {
     }
     // Ensure that the buyer is authenticated and authorized to update the order
     if (orders.buyerId !== req.user.id) {
-      return res.status(403).json({ error: 'You are not authorized to update this order.' });
+      return res
+        .status(403)
+        .json({ error: 'You are not authorized to update this order.' });
     }
 
     // Update the order with the new data
@@ -168,14 +175,16 @@ export const deleteOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
     const orders = await order.findOne({
-      where: { id: order_id }
+      where: { id: order_id },
     });
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
     }
     // Ensure that the buyer is authenticated and authorized to update the order
     if (orders.buyerId !== req.user.id) {
-      return res.status(403).json({ error: 'You are not authorized to delete this order.' });
+      return res
+        .status(403)
+        .json({ error: 'You are not authorized to delete this order.' });
     }
 
     // Delete the order from the database
@@ -191,21 +200,23 @@ export const getAllOrders = async (req, res) => {
   try {
     const orders = await order.findAll({
       include: [
-      {
-        model: users,
-        as: 'buyer',
-        attributes: ['username','email'],
-      },
-      {
-        model: products,
-        as: 'products',
-        attributes: ['id', 'images', 'name', 'available', 'price']
-      }
-    ],
-    order: [['createdAt', 'DESC']]
-  });
+        {
+          model: users,
+          as: 'buyer',
+          attributes: ['username', 'email'],
+        },
+        {
+          model: products,
+          as: 'products',
+          attributes: ['id', 'images', 'name', 'available', 'price'],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
 
-    res.status(200).json({ message: 'All orders retrieved successfully', orders });
+    res
+      .status(200)
+      .json({ message: 'All orders retrieved successfully', orders });
   } catch (error) {
     res.status(500).json({ error: 'Server error.' });
   }
