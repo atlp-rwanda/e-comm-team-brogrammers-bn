@@ -14,7 +14,7 @@ describe('Admin Controller', () => {
   before(async () => {
     await db.users.destroy({ where: { email: 'janedoe123@gmail.com' } });
     const adminCredentials = {
-      email: 'admin@mail.com',
+      email: 'brogrammer@gmail.com',
       password: '123@Pass',
     };
     const adminLoginResponse = await chai

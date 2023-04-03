@@ -25,9 +25,6 @@ export default {
         defaultValue: false,
         allowNull: false
       },
-      paymentId: {
-        type: Sequelize.UUID
-      },
       status: {
         type: Sequelize.STRING,
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],

@@ -7,6 +7,14 @@ export default {
         primaryKey: true,
         type: Sequelize.UUID,
       },
+      avatar: {
+        type: Sequelize.STRING(1000),
+        defaultValue: 'https://t3.ftcdn.net/jpg/01/28/56/34/360_F_128563455_bGrVZnfDCL0PxH1sU33NpOhGcCc1M7qo.jpg'
+      },
+      cover_image: {
+        type: Sequelize.STRING(1000),
+        defaultValue: 'https://cdn.conceptartempire.com/images/360/01-concept-art-video-game-item-shop.jpg'
+      },
       username: {
         allowNull: false,
         type: Sequelize.STRING,

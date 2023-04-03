@@ -109,7 +109,7 @@
           box.querySelector('.price b').innerText = order.totalAmount
           box.querySelector('.method b').innerText = order.paymentMethod
           let checkout = box.querySelector('button#checkout')
-          if(order.paymentId !== null){
+          if(order.isPaid){
             checkout.disabled = true
             checkout.innerText = 'Checked'
           }

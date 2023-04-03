@@ -19,6 +19,7 @@ import disableUser from '../validations/disable.validation';
 import Admin from '../controllers/admin.controller';
 import { Jwt } from '../helpers/jwt';
 import { googlePass } from '../controllers/oauth.controller';
+import upload from '../configs/multer';
 
 googlePass();
 const routes = express.Router();
@@ -48,8 +49,11 @@ routes.post('/disable-mfa', isAuthenticated, Users.disableMfa);
 routes.post('/login', loginValidate, Users.login);
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
-// eslint-disable-next-line no-undef
 routes.patch('/role/:email', isAuthenticated, checkRole(['admin']), Users.setRole);
+
+// images
+routes.patch('/profile/avatar', isAuthenticated, upload.single('image'), Users.updateAvatar);
+routes.patch('/profile/cover-image', isAuthenticated, upload.single('image'), Users.updateCoverImage);
 
 // Disable account
 routes.patch(

@@ -12,6 +12,7 @@ export default (sequelize, DataTypes) => {
         onDelete: 'cascade'
       });
       order.belongsTo(models.users, { as: 'buyer', foreignKey: 'buyerId', onDelete: 'cascade' });
+      order.hasOne(models.payments, { as: 'payment', foreignKey: 'orderId' });
     }
   }
   order.init(
@@ -35,9 +36,6 @@ export default (sequelize, DataTypes) => {
       isPaid: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-      },
-      paymentId: {
-        type: DataTypes.UUID
       },
       status: {
         type: DataTypes.STRING,

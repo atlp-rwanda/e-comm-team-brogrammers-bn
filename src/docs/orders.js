@@ -27,21 +27,10 @@
  *     security:
  *        - {}
  *        - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               deliveryCountry:
- *                 type: string
- *               deliveryCity:
- *                 type: string
- *               deliveryStreet:
- *                 type: string
- *               paymentMethod:
- *                 type: string
+ *     parameters:
+ *       - name: order_id
+ *         in: path
+ *         description: order id to get it
  *     responses:
  *       200:
  *         description: Success

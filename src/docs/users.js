@@ -131,6 +131,10 @@
  *                   type: string
  *                 role:
  *                   type: string
+ *                 avatar:
+ *                   type: string
+ *                 cover-image:
+ *                   type: string
  *       '401':
  *         description: Invalid email or password
  *         content:
@@ -179,6 +183,10 @@
  *                   type: string
  *                 role:
  *                   type: string
+ *                 avatar:
+ *                   type: string
+ *                 cover-image:
+ *                   type: string
  *       '401':
  *         description: Invalid email or password
  *         content:
@@ -188,6 +196,125 @@
  *               properties:
  *                 message:
  *                   type: string
+ *
+ * /users/profile/avatar:
+ *   patch:
+ *     summary: change the user avatar
+ *     tags:
+ *         - Users
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     requestBody:
+ *         content:
+ *           multipart/form-data:
+ *              schema:
+ *                 type: object
+ *                 required:
+ *                    - image
+ *                 properties:
+ *                    image:
+ *                      type: string
+ *                      format: binary
+ *                      description: the avatar image file
+ *     responses:
+ *       '200':
+ *         description: Successfully changed the avatar image for logged user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 gender:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 avatar:
+ *                   type: string
+ *                 cover-image:
+ *                   type: string
+ *       '401':
+ *         description: Invalid token or user don't have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '500':
+ *         description: server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *
+ * /users/profile/cover-image:
+ *   patch:
+ *     summary: change the user cover picture
+ *     tags:
+ *         - Users
+ *     security:
+ *        - {}
+ *        - bearerAuth: []
+ *     requestBody:
+ *         content:
+ *           multipart/form-data:
+ *              schema:
+ *                 type: object
+ *                 required:
+ *                    - image
+ *                 properties:
+ *                    image:
+ *                      type: string
+ *                      format: binary
+ *                      description: the cover image file
+ *     responses:
+ *       '200':
+ *         description: Successfully changed the cover image for logged user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 username:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 gender:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 avatar:
+ *                   type: string
+ *                 cover-image:
+ *                   type: string
+ *       '401':
+ *         description: Invalid token or user don't have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '500':
+ *         description: server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *
  *
  * @swagger
  * /users/create-admin/{email}:
@@ -255,7 +382,7 @@
  *             email:
  *               type: string
  *               description: User email
- *               example: ange@gmail.com.com
+ *               example: mary@gmail.com.com
  *             oldPassword:
  *               type: string
  *               description: User's current password
