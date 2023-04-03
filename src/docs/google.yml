@@ -1,0 +1,14 @@
+paths:
+  /users/auth/google/:
+    get:
+      tags:
+        - Users
+      summary: Get redirected by google
+      description: Login and authenticate with google
+      security:
+        - google_auth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: {}

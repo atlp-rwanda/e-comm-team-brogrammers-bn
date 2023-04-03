@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable object-curly-newline */
 import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
@@ -503,5 +504,23 @@ export default class Users {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  }
+
+  static async googleAuthHandler(req, res) {
+    const { value } = req.user.emails[0];
+    const { familyName } = req.user.name;
+    const newUser = {
+      username: familyName,
+      email: value,
+      avatar: req.user.photos[0].value,
+      verified: true,
+      password: '12345'
+    };
+    const { id, email } = await User.registerGoogle(newUser);
+    const userToken = Jwt.generateToken({
+      id: id,
+      email: email,
+    }, '1h');
+    return res.redirect(`/users/redirect?key=${userToken}`);
   }
 }

@@ -7,6 +7,8 @@ import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 // eslint-disable-next-line import/named
 import { notificationTemplate } from '../helpers/mailTemplate';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const listReviews = async (req, res) => {
   res.json(await reviews.findAll());
@@ -34,7 +36,7 @@ export const createReview = async (req, res) => {
     receiver.username,
     newN.message,
     newN.type,
-    `http://localhost:5000/reviews/${review.id}`
+    `${process.env.SWAGGER_SERVER}/reviews/${review.id}`
   );
   sendEmail(
     emailConfig({
@@ -84,7 +86,7 @@ export const updateReview = async (req, res) => {
     receiver.username,
     newN.message,
     newN.type,
-    `http://localhost:5000/reviews/${review.id}`
+    `${process.env.SWAGGER_SERVER}/reviews/${review.id}`
   );
   sendEmail(
     emailConfig({
@@ -128,7 +130,7 @@ export const deleteReview = async (req, res) => {
     receiver.username,
     newN.message,
     newN.type,
-    `http://localhost:5000/reviews/${review.id}`
+    `${process.env.SWAGGER_SERVER}/reviews/${review.id}`
   );
   sendEmail(
     emailConfig({
