@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 // eslint-disable-next-line import/named
 import { users, Blockedtoken } from '../database/models';
+import CloudUpload from '../helpers/cloud.upload';
 
 const saltRounds = Number(process.env.SALTROUNDS) || 10;
 
@@ -81,6 +82,8 @@ export default class User {
       if (exist && exist !== null) return { error: 'email exists' };
     }
     const {
+      avatar,
+      cover_image,
       role,
       password,
       id,
@@ -146,5 +149,25 @@ export default class User {
       role
     });
     return { data: user };
+  }
+
+  static async updateAvatar(user, image) {
+    const result = await CloudUpload.single(image);
+    const avatar = result.url;
+
+    await this.updateUser({ avatar }, user.id);
+    const newUser = { ...user.dataValues, avatar };
+
+    return { value: newUser };
+  }
+
+  static async updateCoverImage(user, image) {
+    const result = await CloudUpload.single(image);
+    const cover_image = result.url;
+
+    await this.updateUser({ cover_image }, user.id);
+    const newUser = { ...user.dataValues, cover_image };
+
+    return { value: newUser };
   }
 }

@@ -261,7 +261,7 @@ describe('GET /buyer/:id', () => {
       .request(app)
       .post('/users/login')
       .send({
-        email: 'habiholivier10@gmail.com',
+        email: 'mary@gmail.com',
         password: '123@Pass',
       })
       .end((err, res) => {
@@ -371,7 +371,7 @@ describe('testing the admin to CRUD products', () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
     adminToken = res.body.token;
   });
 
@@ -572,7 +572,7 @@ describe('testing the admin to delete any seller products', () => {
     const adminRes = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
     adminToken = adminRes.body.token;
   });
 

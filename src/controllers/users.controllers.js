@@ -1,4 +1,5 @@
 /* eslint-disable object-shorthand */
+/* eslint-disable camelcase */
 /* eslint-disable object-curly-newline */
 import bcrypt from 'bcrypt';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
@@ -207,12 +208,9 @@ export default class Users {
    */
   static async getProfile(req, res) {
     try {
-      const { email, username, role, gender } = req.user;
+      const { avatar, cover_image, email, username, role, gender } = req.user;
       res.status(200).json({
-        email,
-        username,
-        role,
-        gender,
+        avatar, cover_image, email, username, role, gender,
       });
     } catch (error) {
       res.status(500).json({ error: error.message, message: 'server error' });
@@ -230,16 +228,11 @@ export default class Users {
     try {
       const { error, value } = await User.editProfile(req.body, req.user);
       if (error) return res.status(400).json(error);
-      const { email, username, role, gender } = value;
+      const { avatar, cover_image, email, username, role, gender } = value;
       const token = Jwt.generateToken({ email });
       await db.users.update({ email_token: token }, { where: { email } });
       res.status(200).json({
-        email,
-        username,
-        role,
-        gender,
-        token,
-        email_token: token,
+        avatar, cover_image, email, username, role, gender, token, email_token: token,
       });
     } catch (error) {
       res.status(500).json({ error: error.message, message: 'server error' });
@@ -522,5 +515,31 @@ export default class Users {
       email: email,
     }, '1h');
     return res.redirect(`/users/redirect?key=${userToken}`);
+  }
+
+  static async updateAvatar(req, res) {
+    try {
+      const { error, value } = await User.updateAvatar(req.user, req.file);
+      if (error) return res.status(400).json(error);
+      const { avatar, cover_image, email, username, role, gender } = value;
+      res.status(200).json({
+        avatar, cover_image, email, username, role, gender,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  static async updateCoverImage(req, res) {
+    try {
+      const { error, value } = await User.updateCoverImage(req.user, req.file);
+      if (error) return res.status(400).json(error);
+      const { avatar, cover_image, email, username, role, gender } = value;
+      res.status(200).json({
+        avatar, cover_image, email, username, role, gender,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 }

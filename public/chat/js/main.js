@@ -153,7 +153,7 @@ const loadMessages = () => {
         para.classList.add('text');
         para.innerText = el.message;
         div.appendChild(para);
-        document.querySelector('.chat-messages').appendChild(div);
+        document.querySelector('.chat-messages').prepend(div);
       });
     }
   }

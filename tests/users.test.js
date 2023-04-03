@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import env from 'dotenv';
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-unresolved
 import { isUuid } from 'uuidv4';
+import path from 'path';
 import app from '../src/app';
 
 // eslint-disable-next-line import/named, import/no-duplicates
@@ -89,6 +90,11 @@ describe('testing user profile', () => {
     password: '123@Pass',
   };
 
+  const images = {
+    avatar: './test-images/avatar.jpg',
+    cover: './test-images/cover.jpeg',
+  };
+
   it('should return a JWT token when given valid credentials', (done) => {
     chai
       .request(app)
@@ -161,12 +167,116 @@ describe('testing user profile', () => {
       .set({ authorization: `bearer ${token}` })
       .send({
         gender: 'female',
-        email: 'lucy@gmail.com',
+        email: 'jean@gmail.com',
       })
       .end((error, res) => {
         chai.expect(res).to.have.status(400);
         done();
       });
+  });
+
+  describe('testing avatar image', () => {
+    it('should return 401 code for no token', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/avatar')
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image', path.join(__dirname, images.avatar))
+        .end((error, res) => {
+          chai.expect(res).to.have.status(401);
+          done();
+        });
+    });
+
+    it('should return 200 code for changing profile avatar', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/avatar')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image', path.join(__dirname, images.avatar))
+        .end((error, res) => {
+          chai.expect(res).to.have.status(200);
+          done();
+        });
+    });
+
+    it('should return 500 code for no profile avatar pic', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/avatar')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image')
+        .end((error, res) => {
+          chai.expect(res).to.have.status(500);
+          done();
+        });
+    });
+
+    it('should return 500 code for no profile avatar file field', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/avatar')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .end((error, res) => {
+          chai.expect(res).to.have.status(500);
+          done();
+        });
+    });
+  });
+
+  describe('testing user cover image', () => {
+    it('should return 401 code for no token', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/cover-image')
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image', path.join(__dirname, images.cover))
+        .end((error, res) => {
+          chai.expect(res).to.have.status(401);
+          done();
+        });
+    });
+
+    it('should return 200 code for changing cover image', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/cover-image')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image', path.join(__dirname, images.cover))
+        .end((error, res) => {
+          chai.expect(res).to.have.status(200);
+          done();
+        });
+    });
+
+    it('should return 500 code for no cover image pic', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/cover-image')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .attach('image')
+        .end((error, res) => {
+          chai.expect(res).to.have.status(500);
+          done();
+        });
+    });
+
+    it('should return 500 code for no cover image file field', (done) => {
+      chai
+        .request(app)
+        .patch('/users/profile/cover-image')
+        .set({ authorization: `bearer ${token}` })
+        .set('Content-Type', 'multipart/form-data')
+        .end((error, res) => {
+          chai.expect(res).to.have.status(500);
+          done();
+        });
+    });
   });
 });
 
@@ -233,13 +343,13 @@ describe(' testing changePassword', () => {
   });
 });
 
-const email = 'ange@gmail.com';
+const email = 'mary@gmail.com';
 describe('testing creation of admin', () => {
   it('should return change the role of user to admin', async () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
     // eslint-disable-next-line no-shadow
     const { token } = res.body;
     expect(res).to.have.status(200);
@@ -259,7 +369,7 @@ it('should return 404 if a user is not found', async () => {
   const res = await chai
     .request(app)
     .post('/users/login')
-    .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+    .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
   // eslint-disable-next-line no-shadow
   const { token } = res.body;
   expect(res).to.have.status(200);
@@ -272,13 +382,13 @@ it('should return 404 if a user is not found', async () => {
   chai.expect(verifyRes).to.have.status(404);
 });
 
-const Email = 'ange@gmail.com';
+const Email = 'mary@gmail.com';
 describe('testing setting role/permission to a given user', () => {
   it('should return change the role of user to a seted role', async () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
     // eslint-disable-next-line no-shadow
     const { token } = res.body;
     expect(res).to.have.status(200);
@@ -301,7 +411,7 @@ it('should return 401 if a user is not found', async () => {
   const res = await chai
     .request(app)
     .post('/users/login')
-    .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+    .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
   expect(res).to.have.status(200);
   expect(res.body).to.have.property('token');
 

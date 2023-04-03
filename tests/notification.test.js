@@ -66,7 +66,7 @@ describe('notifcations', () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'inezapatience2@gmail.com', password: '123@Pass' });
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
     // eslint-disable-next-line no-shadow
     const { token } = res.body;
     expect(res).to.have.status(200);

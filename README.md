@@ -97,6 +97,8 @@ With correct token you get the following:
 - Example Response: 
 ```
 { 
+  "avatar": "https://loremflickr.com/640/480",
+  "cover_image": "https://loremflickr.com/640/480",
   username: 'luca'
   email: 'luca@gmail.com',  
   gender: 'none',
@@ -106,7 +108,7 @@ With correct token you get the following:
 
 ### change profile
 
-`GET /users/profile`
+`PATCH /users/profile`
 
 Example of request body:
 ```
@@ -121,6 +123,8 @@ With correct token you get the following:
 ```
 { 
   "token": "<string>"
+  "avatar": "https://loremflickr.com/640/480",
+  "cover_image": "https://loremflickr.com/640/480",
   "username: "new luca",
   "email": "newluca@gmail.com",
   "gender": "none",
@@ -129,6 +133,52 @@ With correct token you get the following:
 ```
 
 `change the token because some data in it was changed too`
+
+### change profile picture
+
+`PATCH /users/profile/avatar`
+used to update the profile picture
+
+Example of request body (form data):
+```
+{
+  "image: "<file>"
+}
+```
+- Example Response: 
+```
+{
+  "avatar": "https://loremflickr.com/640/480",
+  "cover_image": "https://loremflickr.com/640/480",
+  "username: "new luca",
+  "email": "newluca@gmail.com",
+  "gender": "none",
+  "role": "buyer"
+}
+```
+
+### change profile cover picture
+used to update the profile cover picture
+
+`PATCH /users/profile/cover-image`
+
+Example of request body (form data):
+```
+{
+  "image: "<file>"
+}
+```
+- Example Response: 
+```
+{
+  "avatar": "https://loremflickr.com/640/480",
+  "cover_image": "https://loremflickr.com/640/480",
+  "username: "new luca",
+  "email": "newluca@gmail.com",
+  "gender": "none",
+  "role": "buyer"
+}
+```
 
 ## Making user an admin
 - please if you are admin be sure to be logged in
@@ -142,8 +192,10 @@ With correct token you get the following:
 {
   "user": {
     "id": "e1a1d30b-d441-4123-aadd-a682dc2a3fa1",
+    "avatar": "https://loremflickr.com/640/480",
+    "cover_image": "https://loremflickr.com/640/480",
     "username": "Ange She",
-    "email": "ange@gmail.com",
+    "email": "mary@gmail.com",
     "password": "$2b$10$9h3SncimWZLoC0a2yYogZ.tkLD.sH5Yl1XBQEAy8mKP33rKWmdeM.",
     "role": "admin",
     "verified": null,
@@ -164,7 +216,7 @@ Example of request body:
 
 ```
 {
-    "email":"ange@gmail.com",
+    "email":"mary@gmail.com",
     "oldPassword":"123@Password",
     "newPassword":"123@Pass"
 }
