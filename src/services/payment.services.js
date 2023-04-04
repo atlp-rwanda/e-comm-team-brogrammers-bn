@@ -105,15 +105,19 @@ export default class Payments {
 
     const exp = new Date();
     exp.setHours(exp.getHours + 2);
-    const session = await stripe.checkout.sessions.create({
-      customer_email: req.user.email,
-      line_items: items,
-      mode: 'payment',
-      payment_method_types: ['card'],
-      success_url: `${serverURL}/payment/success?info=${successInfo}&session={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${serverURL}/payment/fail?info=${failInfo}`,
-    });
-
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        customer_email: req.user.email,
+        line_items: items,
+        mode: 'payment',
+        payment_method_types: ['card'],
+        success_url: `${serverURL}/payment/success?info=${successInfo}&session={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${serverURL}/payment/fail?info=${failInfo}`,
+      });
+    } catch (e) {
+      return { error: e };
+    }
     return { items: ordered.products, redirect: session.url };
   }
 }

@@ -7,6 +7,7 @@ import express from 'express';
 import passport from 'passport';
 import Users from '../controllers/users.controllers';
 import checkUserExist,{ checkUserByEmail } from '../middlewares/checkUserExist';
+import Status from '../controllers/status.controller';
 import loginValidate from '../middlewares/loginValidate';
 import profileVatidate from '../middlewares/profileValidate';
 import mfaValidate from '../middlewares/mfaValidate';
@@ -107,6 +108,18 @@ routes.get('/redirect', (req, res) => {
 routes.get(
   '/auth/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+routes.get(
+  '/stats',
+  isAuthenticated,
+  checkRole(['seller', 'admin']),
+  Status.getProductsStatus
+);
+routes.get(
+  '/stats/graph/:range',
+  isAuthenticated,
+  checkRole(['seller', 'admin']),
+  Status.getProductsStatusGraph
 );
 
 routes.get(

@@ -29,7 +29,7 @@ describe('testing the products', () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'john@gmail.com', password: '123@Pass' });
+      .send({ email: 'jean@gmail.com', password: '123@Pass' });
     sellerToken = res.body.token;
   });
 
@@ -566,7 +566,7 @@ describe('testing the admin to delete any seller products', () => {
     const res = await chai
       .request(app)
       .post('/users/login')
-      .send({ email: 'john@gmail.com', password: '123@Pass' });
+      .send({ email: 'jean@gmail.com', password: '123@Pass' });
     sellerToken = res.body.token;
 
     const adminRes = await chai
