@@ -1,0 +1,106 @@
+/database/backups:
+  get:
+    tags:
+      - backup
+    security:
+      - {}
+      - bearerAuth: []
+    summary: get all backup files
+    description: the admin can get all database backup files
+    responses:
+      '201':
+        description: backups sent
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: here is your backups
+            files:
+              type: array
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+/database/restore:
+  get:
+    tags:
+      - backup
+    security:
+      - {}
+      - bearerAuth: []
+    summary: restore recent backup files
+    description: the admin can restore the recent backup files
+    responses:
+      '201':
+        description: database backuped
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: here is your backups
+            files:
+              type: array
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+/database/restore/{filename}:
+  get:
+    tags:
+      - backup
+    security:
+      - {}
+      - bearerAuth: []
+    summary: restore recent backup files
+    description: the admin can restore the recent backup files
+    parameters:
+      - name: filename
+        in: path
+        description: backup files file to buckup database
+    responses:
+      '201':
+        description: database backuped
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: here is your backups
+            files:
+              type: array
+      '400':
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      '500':
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            message:
+              type: string

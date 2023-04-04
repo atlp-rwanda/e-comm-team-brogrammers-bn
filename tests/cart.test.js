@@ -51,7 +51,7 @@ describe('cart', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(500);
+        chai.expect(res.status).to.equal(500);
         done();
       });
   });
@@ -204,7 +204,7 @@ describe('cart', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(500);
+        chai.expect(res.status).to.equal(500);
         done();
       });
   });

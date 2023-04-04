@@ -125,7 +125,8 @@ export const createOrder = async (req, res) => {
 export const viewOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
-    const orders = await order.findOne({
+    let orders;
+    orders = await order.findOne({
       where: { id: order_id, buyerId: req.user.id },
       include: {
         model: products,
@@ -133,6 +134,16 @@ export const viewOrder = async (req, res) => {
         attributes: ['id', 'images', 'name', 'available', 'price'],
       },
     });
+    if (!orders && req.user.role === 'admin') {
+      orders = await order.findOne({
+        where: { id: order_id },
+        include: {
+          model: products,
+          as: 'products',
+          attributes: ['id', 'images', 'name', 'available', 'price'],
+        },
+      });
+    }
 
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
@@ -155,7 +166,7 @@ export const updateOrder = async (req, res) => {
       return res.status(404).json({ error: 'Order not found.' });
     }
     // Ensure that the buyer is authenticated and authorized to update the order
-    if (orders.buyerId !== req.user.id) {
+    if (orders.buyerId !== req.user.id && req.user.role !== 'admin') {
       return res
         .status(403)
         .json({ error: 'You are not authorized to update this order.' });
@@ -179,7 +190,7 @@ export const deleteOrder = async (req, res) => {
       return res.status(404).json({ error: 'Order not found.' });
     }
     // Ensure that the buyer is authenticated and authorized to update the order
-    if (orders.buyerId !== req.user.id) {
+    if (orders.buyerId !== req.user.id && req.user.role !== 'admin') {
       return res
         .status(403)
         .json({ error: 'You are not authorized to delete this order.' });

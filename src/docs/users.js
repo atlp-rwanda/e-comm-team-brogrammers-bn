@@ -366,46 +366,6 @@
  *                 Error:
  *                   type: string
  *                   description: The error message.
- * /users/change-password:
- *   patch:
- *     summary: change user's password
- *     tags:
- *       - Users
- *     parameters:
- *       - in: body
- *         name: Update Password
- *         description: Object containing user's current password and new password
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             email:
- *               type: string
- *               description: User email
- *               example: mary@gmail.com.com
- *             oldPassword:
- *               type: string
- *               description: User's current password
- *               example: Password@123
- *             newPassword:
- *               type: string
- *               description: User's new password
- *               example: newPassword@123
- *     responses:
- *       200:
- *         description: Password changed successfully
- *         schema:
- *           type: object
- *           properties:
- *             message:
- *               type: string
- *               example: Password changed successfully
- *       400:
- *         description: Invalid request body
- *       500:
- *         description: Internal server error
- *       default:
- *         description: Unexpected error
  *
  * @swagger
  * /users/role/{email}:
@@ -476,22 +436,21 @@
  *       - Users
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: body
- *         name: Update Password
- *         description: Object containing user's current password and new password
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             oldPassword:
- *               type: string
- *               description: User's current password
- *               example: Password@123
- *             newPassword:
- *               type: string
- *               description: User's new password
- *               example: newPassword@123
+ *     requestBody:
+ *       description: Object containing user's current password and new password
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *                 description: User's current password
+ *                 example: Password@123
+ *               newPassword:
+ *                 type: string
+ *                 description: User's new password
+ *                 example: newPassword@123
  *     responses:
  *       200:
  *         description: Password changed successfully

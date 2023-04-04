@@ -25,8 +25,8 @@ router.post(
 
 router.get('/orders', isAuthenticated, checkRole(['admin']), catchError(getAllOrders));
 
-router.get('/:order_id', isAuthenticated, viewOrder, checkRole(['buyer', 'admin']));
-router.patch('/:order_id', isAuthenticated, requestValidator(orderValidation), catchError(updateOrder), checkRole(['buyer', 'admin']));
-router.delete('/:order_id', isAuthenticated, catchError(deleteOrder), checkRole(['buyer', 'admin']));
+router.get('/:order_id', isAuthenticated, checkRole(['buyer', 'admin']), viewOrder);
+router.patch('/:order_id', isAuthenticated, checkRole(['buyer', 'admin']), requestValidator(orderValidation), catchError(updateOrder));
+router.delete('/:order_id', isAuthenticated, checkRole(['buyer', 'admin']), catchError(deleteOrder));
 
 export default router;
