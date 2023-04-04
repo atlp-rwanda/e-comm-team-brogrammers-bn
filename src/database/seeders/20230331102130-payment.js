@@ -20,6 +20,7 @@ export default {
     for (const order of allOrders) {
       const strIndex = i % stripeIds.length;
       i += 1;
+      const date = faker.date.between((new Date()).setDate(new Date().getDate() - 4), new Date());
 
       const payment = {
         id: faker.datatype.uuid(),
@@ -28,8 +29,8 @@ export default {
         method: order.paymentMethod,
         discount: 0,
         stripeId: stripeIds[strIndex],
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: date,
+        updatedAt: date,
       };
 
       allPayments.push(payment);

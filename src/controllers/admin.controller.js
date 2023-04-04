@@ -12,6 +12,7 @@ import {
   verifyEmailTemplate,
 } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
+import paginatedResults from '../middlewares/paginating';
 
 const saltRounds = Number(process.env.SALTROUNDS) || 10;
 
@@ -91,10 +92,9 @@ export default class Admin {
 
   static async getAllUsers(req, res) {
     try {
-      const allUsers = await User.getAllUsers();
-      return res.json({ data: allUsers });
+      paginatedResults(users)(req, res, () => res.status(200).json(res.paginatedResults));
     } catch (error) {
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: error.message });
     }
   }
 }

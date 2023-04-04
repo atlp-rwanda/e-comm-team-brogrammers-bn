@@ -119,7 +119,6 @@ export const createOrder = async (req, res) => {
     })
   );
   await notifications.create(newN);
-
   res.json({ message: 'Order was created successfully', order: userOrder });
 };
 
@@ -164,7 +163,6 @@ export const updateOrder = async (req, res) => {
 
     // Update the order with the new data
     await orders.update(updatedOrder);
-
     return res.status(200).json(orders);
   } catch (error) {
     return res.status(500).json({ error: 'Server error.' });
@@ -189,7 +187,6 @@ export const deleteOrder = async (req, res) => {
 
     // Delete the order from the database
     await orders.destroy();
-
     return res.status(201).json({ message: 'Order deleted successfully!' });
   } catch (error) {
     return res.status(500).json({ error: 'Server error.' });
@@ -198,7 +195,28 @@ export const deleteOrder = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await order.findAll({
+    const totalCount = await order.count();
+    // eslint-disable-next-line radix
+    const page = parseInt(req.query.page) || 1;
+    // eslint-disable-next-line radix
+    const limit = parseInt(req.query.limit) || totalCount;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const results = {};
+    if (endIndex < totalCount) {
+      results.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+    if (startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+    results.results = await order.findAll({
+      limit,
       include: [
         {
           model: users,
@@ -211,9 +229,9 @@ export const getAllOrders = async (req, res) => {
           attributes: ['id', 'images', 'name', 'available', 'price'],
         },
       ],
-      order: [['createdAt', 'DESC']],
+      offset: startIndex,
     });
-
+    const orders = results;
     res
       .status(200)
       .json({ message: 'All orders retrieved successfully', orders });

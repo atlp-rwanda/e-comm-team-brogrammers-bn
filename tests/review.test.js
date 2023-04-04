@@ -109,12 +109,12 @@ describe('Reviews API', () => {
     it('should return an array of reviews', async () => {
       const res = await chai.request(app).get('/reviews').send();
       expect(res.status).to.equal(200);
-      expect(res.body).to.be.an('array');
-      expect(res.body[0]).to.have.property('id');
-      expect(res.body[0]).to.have.property('productId');
-      expect(res.body[0]).to.have.property('userId');
-      expect(res.body[0]).to.have.property('feedback');
-      expect(res.body[0]).to.have.property('rating');
+      expect(res.body).to.be.an('object');
+      expect(res.body.results[0]).to.have.property('id');
+      expect(res.body.results[0]).to.have.property('productId');
+      expect(res.body.results[0]).to.have.property('userId');
+      expect(res.body.results[0]).to.have.property('feedback');
+      expect(res.body.results[0]).to.have.property('rating');
     });
   });
 
