@@ -22,7 +22,7 @@
  * @swagger
  * /checkout/{order_id}:
  *   get:
- *     summary: view one order by ID
+ *     summary: view one order by ID (admin and buyer)
  *     tags: [checkout]
  *     security:
  *        - {}
@@ -39,7 +39,7 @@
  *       500:
  *         description: Server error
  *   patch:
- *     summary: Update an order by ID
+ *     summary: Update an order by ID (admin and buyer)
  *     tags: [checkout]
  *     security:
  *        - {}
@@ -78,7 +78,7 @@
  * @swagger
  * /checkout/{order_id}:
  *   delete:
- *     summary: Delete an order by ID
+ *     summary: Delete an order by ID (admin and buyer)
  *     tags: [checkout]
  *     security:
  *        - {}
@@ -98,11 +98,11 @@
  *       500:
  *         description: Server error
  */
- /**
+/**
  * @swagger
  * /checkout/orders:
  *   get:
- *     summary: Get all orders from all buyers and sellers
+ *     summary: Get all orders from all buyers and sellers (admin)
  *     tags: [checkout]
  *     security:
  *        - {}
