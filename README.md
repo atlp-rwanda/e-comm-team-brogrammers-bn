@@ -865,3 +865,121 @@ the response will be like
 }
 ```
 you'll put the link to the browser in order to pay
+
+## SELLER STATISTICS 
+
+`get /users/stats`
+
+get the preview on the link under here
+### [get preview](https://test-dashhbord-oocymqrqi-blackd44.vercel.app/)
+
+- login as user or admin  and put token in bearer auth 
+- note: `Admin or Seller Token is required`
+- set `start` and `end` date to get statistics between that time
+- then excute
+
+you will get:
+
+1. total revenue
+2. number of orders
+3. products sold
+4. money made in a time frame
+5. and top-selling products will be displayed as the first according money made for single product
+
+and you will get it as the following response:
+
+```
+{
+  "products": [
+    {
+      "id": "a30e1ccb-399f-4960-888f-2831da81bd29",
+      "images": [
+        "https://loremflickr.com/640/480",
+        "https://loremflickr.com/640/480",
+        "https://loremflickr.com/640/480"
+      ],
+      "name": "Unbranded Steel Shoes",
+      "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+      "quantity": 16673,
+      "exp_date": "2024-03-05T20:39:19.004Z",
+      "price": 290,
+      "createdAt": "2023-04-03T14:42:33.566Z",
+      "soldQuantity": 233177,
+      "soldAmount": 67621330
+    },
+    {
+      "id": "7fbed603-ef41-49a4-8a2d-1f9effa92f7c",
+      "images": [
+        "https://loremflickr.com/640/480",
+        "https://loremflickr.com/640/480",
+        "https://loremflickr.com/640/480"
+      ],
+      "name": "Intelligent Plastic Keyboard",
+      "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+      "quantity": 25382,
+      "exp_date": "2023-06-09T17:20:20.082Z",
+      "price": 600,
+      "createdAt": "2023-04-03T14:42:33.567Z",
+      "soldQuantity": 4164,
+      "soldAmount": 2498400
+    }
+  ],
+  "revenue": {
+    "total": 70119730,
+    "items": 237341
+  }
+}
+```
+
+`get /users/stats/graph/{range}`
+
+here range must be `year/month/week/day` and it returns statistics of seller in that range on graph!
+
+and you will get it as the following response:
+
+```
+[
+  null,
+  null,
+  null,
+  {
+    "name": "Apr",
+    "values": [
+      {
+        "id": "a30e1ccb-399f-4960-888f-2831da81bd29",
+        "images": [
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480"
+        ],
+        "name": "Unbranded Steel Shoes",
+        "description": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+        "quantity": 16673,
+        "exp_date": "2024-03-05T20:39:19.004Z",
+        "price": 290,
+        "createdAt": "2023-04-03T14:42:33.566Z",
+        "soldQuantity": 233177,
+        "soldAmount": 67621330
+      },
+      {
+        "id": "7fbed603-ef41-49a4-8a2d-1f9effa92f7c",
+        "images": [
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480"
+        ],
+        "name": "Intelligent Plastic Keyboard",
+        "description": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+        "quantity": 25382,
+        "exp_date": "2023-06-09T17:20:20.082Z",
+        "price": 600,
+        "createdAt": "2023-04-03T14:42:33.567Z",
+        "soldQuantity": 4164,
+        "soldAmount": 2498400
+      }
+    ],
+    "totalAmount": 70119730,
+    "items": 237341
+  }
+]
+```

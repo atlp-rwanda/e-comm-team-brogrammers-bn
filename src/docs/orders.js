@@ -12,6 +12,17 @@
  *     security:
  *        - {}
  *        - bearerAuth: []
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *         description: The maximum number of users to retrieve per page.
+ *       - name: page
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *         description: The page number to retrieve. Default value is 1
  *     responses:
  *       200:
  *         description: Success

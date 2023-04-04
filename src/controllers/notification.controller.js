@@ -1,13 +1,48 @@
 /* eslint-disable require-jsdoc */
 import NotificationServices from '../services/notification.services';
+// eslint-disable-next-line import/named
+import { users, notifications } from '../database/models';
 
 export default class NotificationController {
   static async getAllNotifications(req, res) {
     try {
-      const notifications = await NotificationServices.getAllNotifications(
-        req.user.id
-      );
-      return res.status(200).json({ status: 200, notifications });
+      const totalCount = await notifications.count();
+      // eslint-disable-next-line radix
+      const page = parseInt(req.query.page) || 1;
+      // eslint-disable-next-line radix
+      const limit = parseInt(req.query.limit) || totalCount;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = {};
+      if (endIndex < totalCount) {
+        results.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      results.results = await notifications.findAll({
+        where: { receiverId: req.user.id },
+        limit,
+        attributes: { exclude: ['reciverId'] },
+        include: [
+          {
+            model: users,
+            as: 'receiver',
+            attributes: ['username', 'email'],
+          }
+        ],
+        offset: startIndex,
+      });
+      const allNotifications = results;
+      res
+        .status(200)
+        .json({ message: 'All notifications retrieved successfully', allNotifications });
     } catch (error) {
       return res.status(500).json({ status: 500, error: error.message });
     }
