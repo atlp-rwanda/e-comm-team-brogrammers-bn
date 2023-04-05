@@ -983,3 +983,77 @@ and you will get it as the following response:
   }
 ]
 ```
+## Pagination
+
+`/products?page=3&limit=3`
+sample endpoint to get paginated results 
+here is sample output
+```
+{
+  "message": "All products retrieved successfully",
+  "allproducts": {
+    "next": {
+      "page": 4,
+      "limit": 3
+    },
+    "previous": {
+      "page": 2,
+      "limit": 3
+    },
+    "results": [
+      {
+        "id": "578be15d-2a74-4811-bd20-43bb4ca3c56f",
+        "images": [
+          "http://res.cloudinary.com/du0vsc2pt/image/upload/v1680687540/sidqmawc0ioqqy0xctuj.png",
+          "http://res.cloudinary.com/du0vsc2pt/image/upload/v1680687543/xod2ygzvq2dckyhjvdjc.png"
+        ],
+        "name": "shoes",
+        "description": "new shoes on the market",
+        "quantity": 30,
+        "exp_date": "2030-03-19T22:00:00.000Z",
+        "available": true,
+        "price": 100,
+        "category": 1,
+        "createdAt": "2023-04-05T09:39:03.693Z",
+        "updatedAt": "2023-04-05T09:39:03.693Z",
+        "seller": null
+      },
+      {
+        "id": "82af4a14-e5fa-47f0-a353-3921e117d063",
+        "images": [
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480",
+          "https://loremflickr.com/640/480"
+        ],
+        "name": "Incredible Fresh Sausages",
+        "description": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+        "quantity": 59048,
+        "exp_date": "2023-12-31T15:14:54.545Z",
+        "available": true,
+        "price": 545,
+        "category": 1,
+        "createdAt": "2023-04-05T09:39:16.625Z",
+        "updatedAt": "2023-04-05T09:39:16.625Z",
+        "seller": null
+      },
+      {
+        "id": "54348447-2ade-406f-a2c4-37f3bd8e26aa",
+        "images": [
+          "http://res.cloudinary.com/du0vsc2pt/image/upload/v1680687606/om87i1sdbgqaojp2jqhz.png",
+          "http://res.cloudinary.com/du0vsc2pt/image/upload/v1680687609/rnnumvlhhpfaljwvet1w.png"
+        ],
+        "name": "shoes",
+        "description": "new shoes on the market",
+        "quantity": 30,
+        "exp_date": "2030-03-19T22:00:00.000Z",
+        "available": true,
+        "price": 100,
+        "category": 1,
+        "createdAt": "2023-04-05T09:40:09.819Z",
+        "updatedAt": "2023-04-05T09:40:09.819Z",
+        "seller": null
+      }
+    ]
+  }
+}
+```

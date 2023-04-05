@@ -1,6 +1,9 @@
+/* eslint-disable import/named */
 // eslint-disable-next-line max-len
 // eslint-disable-next-line import/named, import/no-named-as-default, import/no-named-as-default-member
 import cartService from '../services/carts.services';
+import { carts } from '../database/models';
+import paginatedResults from '../middlewares/paginating';
 
 /**
  * the cart controller class
@@ -76,11 +79,7 @@ export default class Cartcontroller {
  */
   static async viewAllCartOfUsers(req, res) {
     try {
-      const result = await cartService.viewAllCarts();
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      return res.status(200).json({ value: result.value });
+      paginatedResults(carts)(req, res, () => res.status(200).json(res.paginatedResults));
     } catch (error) {
       res.status(500).json({ status: 500, message: error });
     }

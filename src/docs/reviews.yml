@@ -4,6 +4,17 @@
       - reviews
     summary: Get all reviews
     description: Returns a list of all reviews
+    parameters:
+      - name: limit
+        in: query
+        type: integer
+        format: int32
+        description: The maximum number of results to retrieve per page.
+      - name: page
+        in: query
+        type: integer
+        format: int32
+        description: The page number to retrieve. Default value is 1.    
     produces:
       - application/json
     responses:

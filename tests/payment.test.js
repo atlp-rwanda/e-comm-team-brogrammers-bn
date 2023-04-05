@@ -23,11 +23,10 @@ describe('testing the payments', () => {
       .post('/users/login')
       .send({ email: 'jean@gmail.com', password: '123@Pass' });
     sellerToken = login_res.body.token;
-
     const product_res = await chai
       .request(app)
       .get('/products');
-    products = product_res.body.products;
+    products = product_res.body.allproducts.results;
     products = products.filter((val, index) => index < 3);
 
     // eslint-disable-next-line no-restricted-syntax

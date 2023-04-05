@@ -32,7 +32,7 @@ describe('testing the seller statistics', () => {
       .request(app)
       .get('/products/collection')
       .set('Authorization', `Bearer ${sellerToken}`);
-    products = product_res.body.products;
+    products = product_res.body.allProducts.results;
     products = products.filter((val, index) => index < 3);
     // eslint-disable-next-line no-restricted-syntax
     for (const product of products) {
