@@ -1,15 +1,23 @@
+/* eslint-disable import/named */
 /* eslint-disable max-len */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
+import dotenv from 'dotenv';
 import Product from '../services/product.services';
 // eslint-disable-next-line import/named
-import { users, notifications, wishlists } from '../database/models';
+import {
+  // eslint-disable-next-line import/named
+  users,
+  notifications,
+  wishlists,
+  products,
+} from '../database/models';
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate } from '../helpers/mailTemplate';
-import dotenv from 'dotenv'
-dotenv.config()
+
+dotenv.config();
 
 const validUUID = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[4][a-fA-F0-9]{3}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
 
@@ -34,7 +42,7 @@ export default class Products {
 
       const newNotification = {
         message: `new product created by ${req.user.username}`,
-        type: 'New product'
+        type: 'New product',
       };
       const allNotifications = admins.map((admin) => {
         const newN = { ...newNotification };
@@ -62,7 +70,6 @@ export default class Products {
         );
         await notifications.create(newN);
       });
-
       return res
         .status(201)
         .json({ message: 'product created', product: value });
@@ -104,7 +111,7 @@ export default class Products {
       const emails = await users.findAll({ where: { id: NewWishers } });
       const newNotification = {
         message: ' Product  you previously wished for  have been updated ',
-        type: 'product updated'
+        type: 'product updated',
       };
       const allNotifications = emails.map((email) => {
         const newN = { ...newNotification };
@@ -132,7 +139,6 @@ export default class Products {
         );
         await notifications.create(newN);
       });
-
       return res
         .status(200)
         .json({ message: 'product edited', product: value });
@@ -148,8 +154,46 @@ export default class Products {
    */
   static async getProducts(req, res) {
     try {
-      const products = await Product.getProducts();
-      return res.status(200).json({ products });
+      // const allproducts = await Product.getProducts();
+      // eslint-disable-next-line no-use-before-define
+      const totalCount = await products.count();
+      // eslint-disable-next-line radix
+      const page = parseInt(req.query.page) || 1;
+      // eslint-disable-next-line radix
+      const limit = parseInt(req.query.limit) || totalCount;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = {};
+      if (endIndex < totalCount) {
+        results.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      // eslint-disable-next-line no-use-before-define
+      results.results = await products.findAll({
+        limit,
+        attributes: { exclude: ['sellerId'] },
+        include: [
+          {
+            model: users,
+            as: 'seller',
+            attributes: ['username', 'email'],
+          },
+        ],
+        offset: startIndex,
+      });
+      const allproducts = results;
+      res
+        .status(200)
+        .json({ message: 'All products retrieved successfully', allproducts });
+      // eslint-disable-next-line no-shadow
     } catch (err) {
       return res
         .status(500)
@@ -157,16 +201,24 @@ export default class Products {
     }
   }
 
+  /**
+   * @param {Object} req
+   * @param {Object} res
+   * @returns {res} response
+   */
   static async deleteProduct(req, res) {
     try {
       const product = req.product;
-      const wishers = await wishlists.findAll({ where: { productId: product.id } });
+      const wishers = await wishlists.findAll({
+        where: { productId: product.id },
+      });
       const NewWishers = wishers.map((wish) => wish.userId);
       await wishlists.destroy({ where: { productId: product.id } });
       const emails = await users.findAll({ where: { id: NewWishers } });
       const newNotification = {
-        message: ' Product  you previously wished for  have permanently deleted',
-        type: 'product deleted'
+        message:
+          ' Product  you previously wished for  have permanently deleted',
+        type: 'product deleted',
       };
       const allNotifications = emails.map((email) => {
         const newN = { ...newNotification };
@@ -237,8 +289,47 @@ export default class Products {
    */
   static async sellergetProduct(req, res) {
     try {
-      const products = await Product.sellergetProduct(req.user);
-      return res.status(200).json({ products });
+      // eslint-disable-next-line no-shadow
+      const totalCount = await products.count();
+      // eslint-disable-next-line radix
+      const page = parseInt(req.query.page) || 1;
+      // eslint-disable-next-line radix
+      const limit = parseInt(req.query.limit) || totalCount;
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = {};
+      if (endIndex < totalCount) {
+        results.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      results.results = await products.findAll({
+        where: { sellerId: req.user.id },
+        limit,
+        attributes: { exclude: ['sellerId'] },
+        include: [
+          {
+            model: users,
+            as: 'seller',
+            attributes: ['username', 'email'],
+          },
+        ],
+        offset: startIndex,
+      });
+      const allProducts = results;
+      res
+        .status(200)
+        .json({
+          message: 'All products retrieved successfully',
+          allProducts,
+        });
     } catch (err) {
       return res
         .status(500)
@@ -301,7 +392,7 @@ export default class Products {
       const emails = await users.findAll({ where: { id: NewWishers } });
       const newNotification = {
         message: ' Product  you wished for is currently unavailable',
-        type: 'product updated'
+        type: 'product updated',
       };
       const allNotifications = emails.map((email) => {
         const newN = { ...newNotification };
@@ -329,7 +420,6 @@ export default class Products {
         );
         await notifications.create(newN);
       });
-
       return res
         .status(201)
         .json({ message: 'availablility changed', product });
@@ -342,6 +432,7 @@ export default class Products {
 
   static async searchProduct(req, res) {
     try {
+      // eslint-disable-next-line no-shadow
       const products = await Product.searchProducts(
         req.query.q,
         req.query.min,

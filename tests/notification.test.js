@@ -77,7 +77,7 @@ describe('notifcations', () => {
       .get('/notification/')
       .set('Authorization', `Bearer ${token}`);
     userToken = token;
-    notid = verifyRes.body.notifications[0].id;
+    notid = verifyRes.body.allNotifications.results[0].id;
     chai.expect(verifyRes).to.have.status(200);
   });
   it('should return 202 for deleting a notification', (done) => {

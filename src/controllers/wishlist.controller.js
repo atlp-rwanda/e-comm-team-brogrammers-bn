@@ -1,6 +1,7 @@
 import Wishlist from '../services/wishlist.services';
 // eslint-disable-next-line import/named, import/no-duplicates
 import { wishlists } from '../database/models';
+import paginatedResults from '../middlewares/paginating';
 // eslint-disable-next-line import/named, import/no-duplicates
 import { products } from '../database/models';
 /**
@@ -51,7 +52,6 @@ export default class wishlist {
           id: productIds,
         },
       });
-
       return res.status(200).json({
         message: `${req.user.username} here is product in your wishlist`,
         data: Products,
@@ -80,7 +80,6 @@ export default class wishlist {
           message: 'deleted from wishlist '
         });
       }
-
       return res.status(400).json({
         message: 'you dont have this product in your wishlist'
       });
@@ -99,17 +98,7 @@ export default class wishlist {
    */
   static async getallawishlists(req, res) {
     try {
-      const userwishes = await wishlists.findAll();
-      if (userwishes) {
-        return res.status(200).json({
-          message: ' all wishlists',
-          data: userwishes
-        });
-      }
-
-      return res.status(400).json({
-        message: 'no user has wishlist yet'
-      });
+      paginatedResults(wishlists)(req, res, () => res.status(200).json(res.paginatedResults));
     } catch (error) {
       return res.status(500).json({
         error: error.message,
