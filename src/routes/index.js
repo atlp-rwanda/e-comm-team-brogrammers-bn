@@ -9,6 +9,7 @@ import checkoutRoutes from './checkout';
 import chat from './chat';
 import notification from './notification';
 import payment from './payment';
+import subscriber from './subcriber';
 
 const routes = express();
 
@@ -22,4 +23,5 @@ routes.use('/checkout', checkoutRoutes);
 routes.use('/chat', chat);
 routes.use('/notification', notification);
 routes.use('/payment', payment);
+routes.use('/', subscriber)
 export default routes;
