@@ -2,6 +2,7 @@ import { Op } from 'sequelize';
 import moment from 'moment';
 // eslint-disable-next-line import/named
 import { products, order, payments } from '../database/models';
+import { ItemError, viewAllStatsGraph, viewAllStats } from '../loggers/status.logger';
 
 /**
  * status
@@ -68,8 +69,10 @@ export default class Status {
         total: out.total + current.soldAmount,
         items: out.items + current.soldQuantity
       }), { total: 0, items: 0 });
+      viewAllStats(req);
       return res.status(200).json({ products: output, revenue });
     } catch (error) {
+      ItemError(req, error);
       return res.status(500).json({ error: 'Server error.' });
     }
   }
@@ -263,9 +266,11 @@ export default class Status {
           month.items = revenue.items;
         }
       });
+      viewAllStatsGraph(req);
       return res.json(group);
     } catch (error) {
-      return res.status(500).json({ error: 'Server error.' });
+      ItemError(req, error);
+      return res.status(500).json({ error: error.message });
     }
   }
 }

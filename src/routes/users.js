@@ -21,6 +21,7 @@ import Admin from '../controllers/admin.controller';
 import { Jwt } from '../helpers/jwt';
 import { googlePass } from '../controllers/oauth.controller';
 import upload from '../configs/multer';
+import { getAllLogs } from '../controllers/logs.controller';
 
 googlePass();
 const routes = express.Router();
@@ -94,15 +95,25 @@ routes.get(
   checkRole(['admin']),
   Admin.getAllUsers
 );
+routes.get(
+  '/logs/all',
+  isAuthenticated,
+  checkRole(['admin']),
+  getAllLogs
+);
 // Google routes
 routes.get('/redirect', (req, res) => {
-  if (req.query.key) {
-    const user = Jwt.verifyToken(req.query.key);
-    return res
-      .status(200)
-      .json({ message: 'Thanks for logging in', user: user,token: req.query.key });
-  } else {
-    return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    if (req.query.key) {
+      const user = Jwt.verifyToken(req.query.key);
+      return res
+        .status(200)
+        .json({ message: 'Thanks for logging in', user: user,token: req.query.key });
+    } else {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 routes.get(

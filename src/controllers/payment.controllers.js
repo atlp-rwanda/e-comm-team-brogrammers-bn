@@ -5,6 +5,7 @@ import { emailConfig } from '../helpers/emailConfig';
 import {
   paymentComplete, paymentEmail
 } from '../helpers/mailTemplate';
+import { logPaymentError, logPaymentFail, logPaymentSuccess } from '../loggers/payment.logger';
 
 /**
  * payment controllers class
@@ -28,8 +29,10 @@ export default class PaymentControllers {
         })
       );
       if (redirect) return res.redirect(301, redirect);
+      logPaymentSuccess(user, products);
       return res.status(200).json({ message: 'payment successfully', url: redirect });
     } catch (err) {
+      logPaymentError(req, err);
       return res.status(500).json({ message: 'server error' });
     }
   }
@@ -45,6 +48,7 @@ export default class PaymentControllers {
     const { redirect } = value;
 
     if (redirect) return res.redirect(301, redirect);
+    logPaymentFail(req);
     res.status(400).json({ message: 'payment failed' });
   }
 
@@ -69,6 +73,7 @@ export default class PaymentControllers {
       );
       return res.status(200).json({ items, url: redirect });
     } catch (error) {
+      logPaymentError(req, error);
       return res.status(500).json({ message: 'server error', error });
     }
   }

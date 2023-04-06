@@ -21,7 +21,7 @@ const options = {
           type: 'oauth2',
           flows: {
             authorizationCode: {
-              authorizationUrl:process.env.GOOGLE_SERVER,
+              authorizationUrl: process.env.GOOGLE_SERVER,
             },
           },
         },

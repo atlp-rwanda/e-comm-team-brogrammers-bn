@@ -534,4 +534,80 @@
  *                 Error:
  *                   type: string
  *                   description: error message.
+ * @swagger
+ * /logs/all:
+ *   get:
+ *     summary: Get user logs
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *         description: The maximum number of results to retrieve per page.
+ *       - name: page
+ *         in: query
+ *         type: integer
+ *         format: int32
+ *         description: The page number to retrieve. Default value is 1
+ *     responses:
+ *       200:
+ *         description: Retrieved logs successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Retrieved logs successfully
+ *       '401':
+ *         description: Unauthorized
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Error:
+ *                   type: string
+ *                   description: error message.
+ * @swagger
+ * /logs/{id}:
+ *   get:
+ *     summary: Get user logs by its id
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: id of the log
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Retrieved logs successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *               example: Retrieved logs successfully
+ *       '401':
+ *         description: Unauthorized
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Error:
+ *                   type: string
+ *                   description: error message.
  */
