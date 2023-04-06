@@ -11,6 +11,7 @@ import notification from './notification';
 import payment from './payment';
 import orderRoutes from './order';
 import logsroutes from './logs';
+import subroutes from './subscribe';
 
 const routes = express();
 
@@ -26,4 +27,5 @@ routes.use('/notification', notification);
 routes.use('/payment', payment);
 routes.use('/order', orderRoutes);
 routes.use('/logs', logsroutes);
+routes.use('/subscriber', subroutes);
 export default routes;

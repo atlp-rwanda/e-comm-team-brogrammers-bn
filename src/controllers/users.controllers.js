@@ -16,7 +16,6 @@ import eventEmitter from '../helpers/eventEmitter';
 
 // eslint-disable-next-line import/named, import/no-duplicates
 import { users, notifications } from '../database/models';
-import { redirectGoogle } from '../loggers/signup.logger';
 /* eslint-disable require-jsdoc */
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
@@ -29,9 +28,7 @@ import {
 } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
-const {
-  logSignup, logError, logSetRole, logEmailSent, logLogout, logVerifyEmail, logLogin, viewProfile, editProfiles, enableMfaLog, disableMfaLog, verifiedMfaLog, createAdminLog, resetPasswordLog, verifyPasswordLog, changePasswordLog, disableAccountLog
-} = require('../loggers/signup.logger');
+import { logSignup, redirectGoogle, updateAvatarLog, logError, logSetRole, logEmailSent, updateImageLog, logLogout, logVerifyEmail, logLogin, viewProfile, editProfiles, enableMfaLog, disableMfaLog, verifiedMfaLog, createAdminLog, resetPasswordLog, verifyPasswordLog, changePasswordLog, disableAccountLog } from '../loggers/signup.logger';
 
 // eslint-disable-next-line operator-linebreak
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
@@ -554,6 +551,7 @@ export default class Users {
       const { error, value } = await User.updateAvatar(req.user, req.file);
       if (error) return res.status(400).json(error);
       const { avatar, cover_image, email, username, role, gender } = value;
+      updateAvatarLog(req, value);
       res.status(200).json({
         avatar, cover_image, email, username, role, gender,
       });
@@ -568,6 +566,7 @@ export default class Users {
       const { error, value } = await User.updateCoverImage(req.user, req.file);
       if (error) return res.status(400).json(error);
       const { avatar, cover_image, email, username, role, gender } = value;
+      updateImageLog(req, value);
       res.status(200).json({
         avatar, cover_image, email, username, role, gender,
       });

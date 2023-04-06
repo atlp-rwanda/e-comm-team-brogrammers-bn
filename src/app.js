@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/no-extraneous-dependencies */
 import express from 'express';
@@ -14,6 +15,7 @@ import checkPasswordExpirationCronJob from './middlewares/passwordExpiration';
 import beforeCheckExpiredProduct from './middlewares/productExpAll';
 import dbRoutes from './pgbackup/route';
 import './pgbackup/backup';
+import { SubscriberController } from './controllers/subscriber.controller';
 
 env.config();
 // eslint-disable-next-line prefer-const
@@ -29,6 +31,7 @@ let options = {
 const app = express();
 checkPasswordExpirationCronJob.start();
 beforeCheckExpiredProduct();
+SubscriberController.sendNewsletter();
 app.use('/chat', express.static(path.join(__dirname, '../public/chat')));
 app.use(express.json());
 app.use(morgan('dev'));

@@ -32,6 +32,26 @@ export const deleteUser = async (req, user) => {
   await Log.create(logData);
   logger.info(`User ${req.user.email} deleted user ${req.params.id}`);
 };
+export const deleteSubscriberLog = async (req, user) => {
+  const logData = {
+    level: 'info',
+    message: `User ${req.user.email} deleted a subscriber ${req.params.id}`,
+    userId: req.user.id,
+    metadata: { deletedSubscriber: user },
+  };
+  await Log.create(logData);
+  logger.info(`User ${req.user.email} deleted a subscriber ${req.params.id}`);
+};
+export const getAllSubscribersLog = async (req, user) => {
+  const logData = {
+    level: 'info',
+    message: `User ${req.user.email} retrieved all subscribers of newsletter`,
+    userId: req.user.id,
+    metadata: { deletedSubscriber: user },
+  };
+  await Log.create(logData);
+  logger.info(`User ${req.user.email} retrieved all subscribers of newsletter`);
+};
 export const deleteUserError = async (req, error) => {
   const logData = {
     level: 'error',
