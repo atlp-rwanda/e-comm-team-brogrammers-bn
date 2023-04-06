@@ -119,4 +119,34 @@ describe('testing all getAll end points', () => {
       });
     chai.expect(verifyRes).to.have.status(200);
   });
+  it('getting all logs of a user', async () => {
+    const res = await chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'mary@gmail.com', password: '123@Pass' });
+    expect(res).to.have.status(200);
+    const { token } = res.body;
+    expect(res.body).to.have.property('token');
+
+    const verifyRes = await chai
+      .request(app)
+      .get('/logs/all?page=1&limit=2')
+      .set('Authorization', `Bearer ${token}`);
+    chai.expect(verifyRes).to.have.status(200);
+  });
+  it('getting all logs by an admin', async () => {
+    const res = await chai
+      .request(app)
+      .post('/users/login')
+      .send({ email: 'brogrammer@gmail.com', password: '123@Pass' });
+    expect(res).to.have.status(200);
+    const { token } = res.body;
+    expect(res.body).to.have.property('token');
+
+    const verifyRes = await chai
+      .request(app)
+      .get('/users/logs/all?page=1&limit=2')
+      .set('Authorization', `Bearer ${token}`);
+    chai.expect(verifyRes).to.have.status(200);
+  });
 });

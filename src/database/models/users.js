@@ -23,6 +23,11 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'userId',
         as: 'chats',
       });
+      users.hasMany(models.Log, {
+        foreignKey: 'userId',
+        as: 'Log',
+        onDelete: 'CASCADE',
+      });
     }
   }
   users.init(

@@ -9,6 +9,8 @@ import checkoutRoutes from './checkout';
 import chat from './chat';
 import notification from './notification';
 import payment from './payment';
+import orderRoutes from './order';
+import logsroutes from './logs';
 
 const routes = express();
 
@@ -22,4 +24,6 @@ routes.use('/checkout', checkoutRoutes);
 routes.use('/chat', chat);
 routes.use('/notification', notification);
 routes.use('/payment', payment);
+routes.use('/order', orderRoutes);
+routes.use('/logs', logsroutes);
 export default routes;

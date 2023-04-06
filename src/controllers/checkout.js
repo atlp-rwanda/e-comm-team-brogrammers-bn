@@ -11,6 +11,15 @@ import {
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate2 } from '../helpers/mailTemplate';
+import {
+  createOrders,
+  viewOrderss,
+  OrderError,
+  viewOrders,
+  updatedOrders,
+  deletedOrders,
+  adminGetOrders,
+} from '../loggers/checkout.logger';
 
 export const getCurrentUserOrders = async (req, res) => {
   const user = await users.findOne({
@@ -25,6 +34,7 @@ export const getCurrentUserOrders = async (req, res) => {
       },
     },
   });
+  viewOrderss(req, user.orders);
   res.json(user.orders);
 };
 
@@ -42,9 +52,9 @@ export const createOrder = async (req, res) => {
 
   const cartProducts = userCart.products;
 
-  const {
-    deliveryCountry, deliveryCity, deliveryStreet, paymentMethod
-  } = req.body;
+  // eslint-disable-next-line object-curly-newline
+  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } =
+    req.body;
 
   const userOrder = await order.create({
     deliveryCountry,
@@ -119,6 +129,7 @@ export const createOrder = async (req, res) => {
     })
   );
   await notifications.create(newN);
+  createOrders(req, products);
   res.json({ message: 'Order was created successfully', order: userOrder });
 };
 
@@ -148,8 +159,10 @@ export const viewOrder = async (req, res) => {
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
     }
+    viewOrders(req, order_id);
     return res.status(200).json(orders);
   } catch (error) {
+    OrderError(req, error);
     return res.status(500).json({ error: 'Server error.' });
   }
 };
@@ -174,8 +187,10 @@ export const updateOrder = async (req, res) => {
 
     // Update the order with the new data
     await orders.update(updatedOrder);
+    updatedOrders(req, order_id);
     return res.status(200).json(orders);
   } catch (error) {
+    OrderError(req, error);
     return res.status(500).json({ error: 'Server error.' });
   }
 };
@@ -198,8 +213,10 @@ export const deleteOrder = async (req, res) => {
 
     // Delete the order from the database
     await orders.destroy();
+    deletedOrders(req, order_id);
     return res.status(201).json({ message: 'Order deleted successfully!' });
   } catch (error) {
+    OrderError(req, error);
     return res.status(500).json({ error: 'Server error.' });
   }
 };
@@ -243,10 +260,12 @@ export const getAllOrders = async (req, res) => {
       offset: startIndex,
     });
     const orders = results;
+    adminGetOrders(req, orders);
     res
       .status(200)
       .json({ message: 'All orders retrieved successfully', orders });
   } catch (error) {
-    res.status(500).json({ error: 'Server error.' });
+    OrderError(req, error);
+    res.status(500).json({ error: error.message });
   }
 };

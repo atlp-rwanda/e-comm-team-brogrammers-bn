@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 800px; /* Set a max-width to prevent the table from expanding too much */
+        margin: 0 auto; /* Center the table horizontally */
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      .spinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.8
+        ); /* semi-transparent white background */
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .spinner:before {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        margin-top: -25px;
+        margin-left: -25px;
+        border-radius: 50%;
+        border: 5px solid #333; /* thicker border */
+        border-top-color: #eee; /* lighter color for top border */
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      function fetchData() {
+        const sse = new EventSource(`/order/sse`);
+
+        sse.addEventListener('update', (e) => {
+          console.log(e, 'message event');
+          const orders = JSON.parse(e.data);
+          const orderData = orders.orders.reduce((prev, curr, i) => {
+            return prev + `<tr><td>${curr.id}</td><td>${curr.status}</td></tr>`;
+          }, '');
+          document.body.innerHTML = `
+                  <table>
+                    <thead><th>Order Id</th><th>Status</th></thead>
+                    <tbody>
+                      <tbody>
+                        ${orderData}
+                      </tbody>
+                    </tbody>
+                  </table>
+                  `;
+        });
+        sse.onmessage = (e) => {
+          console.log(e, 'message event');
+          document.write(JSON.stringify(e));
+          const orders = JSON.parse(e.data);
+          const orderData = orders.orders.reduce((prev, curr, i) => {
+            return prev + `<tr><td>${curr.id}</td><td>${curr.status}</td></tr>`;
+          }, '');
+          document.body.innerHTML = `
+                  <table>
+                    <thead><th>Order Id</th><th>Status</th></thead>
+                    <tbody>
+                      <tbody>
+                        ${orderData}
+                      </tbody>
+                    </tbody>
+                  </table>
+                  `;
+        };
+        sse.onerror = (e) => {
+          console.log(e, 'error event');
+        };
+      }
+
+      fetchData();
+    </script>
+  </body>
+</html>

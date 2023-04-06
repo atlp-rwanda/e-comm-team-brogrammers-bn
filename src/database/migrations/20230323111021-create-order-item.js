@@ -11,6 +11,14 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
       },
+      statusUpdated: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      expectedDeliveryDate: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
       orderId: {
         type: Sequelize.UUID,
         allowNull: false,

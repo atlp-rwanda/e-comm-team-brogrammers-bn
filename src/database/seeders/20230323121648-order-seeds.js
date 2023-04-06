@@ -26,6 +26,7 @@ export default {
         deliveryCountry: faker.address.country(),
         deliveryCity: faker.address.city(),
         deliveryStreet: faker.address.streetAddress(),
+        expectedDeliveryDate: new Date(),
         buyerId: allUsers[userIndex].dataValues.id,
         status: allStatus[statusIndex],
         isPaid: paid,
@@ -33,6 +34,7 @@ export default {
         totalAmount: faker.datatype.float(0.01),
         createdAt: new Date(),
         updatedAt: new Date(),
+        statusUpdated: false,
       };
 
       orders.push(order);
