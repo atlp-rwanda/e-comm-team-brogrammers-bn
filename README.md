@@ -1057,3 +1057,83 @@ here is sample output
   }
 }
 ```
+
+
+
+
+# Database
+
+there are two ways to run the database backup in the project
+
+1. ## use of terminal
+
+- ### backup
+by using npm scripts you can start the backup of the project, it will use clone jobs as it is in the environment variables of the project.
+
+run: `npm run pgback-up` this will start the backup in within each time set in the environment variable file
+
+- ### restore
+by using npm scripts you can restore the project database, it uses environment variables to get the database to restore and get the backup file to use in restoring.
+
+run `npm run pgrestore <filename>` this will restore the database by the file in the terminal
+
+⚠️always make sure that the file is in the backup folder or otherwise it won't work
+
+2. ## use of routes
+
+the second way is by the use of routes where the admin put the endpath and send a request for getting and restoring the database, but the backup start when the project is started
+
+⚠️always make sure you are an admin
+
+- ### Getting all backups
+
+`GET /database/backups`
+
+by using routes the admin can send the request to get all backups the project have
+
+here is the example of response:
+
+```
+{
+  "message": "here is your backups",
+  "files": [
+    "backup-20230405-171330.sql",
+    "backup-20230405-171230.sql"
+  ]
+}
+```
+
+- ### Restoring the recent backup
+
+`GET /database/restore`
+
+by using routes the admin can send the request to restore the recent backups the project have, this will change the database in real time so the project will continue running.
+
+here is the example of response:
+
+```
+{
+  "message": "backups restored",
+  "backup": "backup-20230405-190600.sql"
+}
+```
+where `backup-20230405-190600.sql` is the recent backup file
+
+- ### Restoring backup file
+
+`GET /database/restore/:filename`
+
+by using routes the admin can send the request to restore the backup file the project have by it's name, this will change the database in real time so the project will continue running.
+
+here is the example of response:
+```
+path: /database/restore/backup-20230405-190600.sql
+```
+
+```
+{
+  "message": "backups restored",
+  "backup": "backup-20230405-190600.sql"
+}
+```
+where `backup-20230405-190600.sql` is the recent backup file

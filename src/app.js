@@ -12,6 +12,8 @@ import allroutes from './routes/index';
 import swagger from './configs/swagger';
 import checkPasswordExpirationCronJob from './middlewares/passwordExpiration';
 import beforeCheckExpiredProduct from './middlewares/productExpAll';
+import dbRoutes from './pgbackup/route';
+import './pgbackup/backup';
 
 env.config();
 // eslint-disable-next-line prefer-const
@@ -44,6 +46,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swagger, false, options));
 
+app.use('/database', dbRoutes);
 app.use(allroutes);
 app.use((req, res) => {
   res.status(404).json({ message: 'Page not found' });

@@ -1,34 +1,30 @@
 /** @type {import('sequelize-cli').Migration} */
-export default {
+module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('payments', {
+    await queryInterface.createTable('Log', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
-      amount: {
-        type: Sequelize.DOUBLE,
-        allowNull: false
+      level: {
+        type: Sequelize.STRING
       },
-      orderId: {
+      message: {
+        type: Sequelize.STRING
+      },
+      userId: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: 'order',
+          model: 'users',
           key: 'id'
         },
+        onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      method: {
-        type: Sequelize.STRING
-      },
-      discount: {
-        type: Sequelize.DOUBLE,
-        defaultValue: 0
-      },
-      stripeId: {
-        type: Sequelize.STRING
-      },
+      metadata: Sequelize.JSON,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -39,7 +35,8 @@ export default {
       }
     });
   },
-  async down(queryInterface) {
-    await queryInterface.dropTable('payments');
+  // eslint-disable-next-line no-unused-vars
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Log');
   }
 };

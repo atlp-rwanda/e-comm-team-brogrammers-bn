@@ -70,7 +70,6 @@ export default class Status {
       }), { total: 0, items: 0 });
       return res.status(200).json({ products: output, revenue });
     } catch (error) {
-      console.log({ error });
       return res.status(500).json({ error: 'Server error.' });
     }
   }
@@ -266,7 +265,6 @@ export default class Status {
       });
       return res.json(group);
     } catch (error) {
-      console.log({ error });
       return res.status(500).json({ error: 'Server error.' });
     }
   }

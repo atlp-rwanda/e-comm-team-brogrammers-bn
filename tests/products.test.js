@@ -49,7 +49,7 @@ describe('testing the products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(500);
+        chai.expect(res.status).to.equal(500);
         done();
       });
   });
@@ -391,7 +391,7 @@ describe('testing the admin to CRUD products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(500);
+        chai.expect(res.status).to.equal(500);
         done();
       });
   });
@@ -592,7 +592,7 @@ describe('testing the admin to delete any seller products', () => {
       })
       .attach('images', path.join(__dirname, images[0]))
       .end((error, res) => {
-        chai.expect(res).to.have.status(500);
+        chai.expect(res.status).to.equal(500);
         done();
       });
   });
