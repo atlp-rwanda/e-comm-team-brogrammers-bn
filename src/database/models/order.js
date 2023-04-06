@@ -9,9 +9,13 @@ export default (sequelize, DataTypes) => {
         as: 'products',
         through: 'orderitem',
         foreignKey: 'orderId',
-        onDelete: 'cascade'
+        onDelete: 'cascade',
       });
-      order.belongsTo(models.users, { as: 'buyer', foreignKey: 'buyerId', onDelete: 'cascade' });
+      order.belongsTo(models.users, {
+        as: 'buyer',
+        foreignKey: 'buyerId',
+        onDelete: 'cascade',
+      });
       order.hasOne(models.payments, { as: 'payment', foreignKey: 'orderId' });
     }
   }
@@ -41,6 +45,14 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
         defaultValue: 'Pending',
+      },
+      statusUpdated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      expectedDeliveryDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       totalAmount: {
         type: DataTypes.DOUBLE,

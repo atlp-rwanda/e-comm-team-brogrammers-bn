@@ -23,13 +23,21 @@ export default {
       isPaid: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: Sequelize.STRING,
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered'],
         defaultValue: 'Pending',
-        allowNull: false
+        allowNull: false,
+      },
+      statusUpdated: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      expectedDeliveryDate: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       totalAmount: {
         type: Sequelize.DECIMAL,

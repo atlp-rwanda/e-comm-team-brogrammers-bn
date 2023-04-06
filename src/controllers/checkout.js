@@ -12,7 +12,13 @@ import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate2 } from '../helpers/mailTemplate';
 import {
-  createOrders, viewOrderss, OrderError, viewOrders, updatedOrders, deletedOrders, adminGetOrders
+  createOrders,
+  viewOrderss,
+  OrderError,
+  viewOrders,
+  updatedOrders,
+  deletedOrders,
+  adminGetOrders,
 } from '../loggers/checkout.logger';
 
 export const getCurrentUserOrders = async (req, res) => {
@@ -46,9 +52,9 @@ export const createOrder = async (req, res) => {
 
   const cartProducts = userCart.products;
 
-  const {
-    deliveryCountry, deliveryCity, deliveryStreet, paymentMethod
-  } = req.body;
+  // eslint-disable-next-line object-curly-newline
+  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } =
+    req.body;
 
   const userOrder = await order.create({
     deliveryCountry,
@@ -260,6 +266,6 @@ export const getAllOrders = async (req, res) => {
       .json({ message: 'All orders retrieved successfully', orders });
   } catch (error) {
     OrderError(req, error);
-    res.status(500).json({ error: 'Server error.' });
+    res.status(500).json({ error: error.message });
   }
 };

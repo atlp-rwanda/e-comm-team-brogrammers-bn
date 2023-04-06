@@ -25,6 +25,7 @@ export default {
         productId: allProducts[productIndex].dataValues.id,
         quantity: faker.datatype.number({ min: 0 }),
         price: faker.datatype.float(0.01),
+        statusUpdated: false,
       };
 
       orderItems.push(orderItem);

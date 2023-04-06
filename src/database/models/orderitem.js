@@ -37,6 +37,15 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      statusUpdated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      expectedDeliveryDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+
       price: {
         type: DataTypes.DOUBLE,
         allowNull: false,
