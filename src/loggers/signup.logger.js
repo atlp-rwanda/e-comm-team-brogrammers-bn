@@ -190,3 +190,21 @@ export const redirectGoogleError = async (error) => {
 export const resetPasswordLog = async (req) => {
   logger.error(`User ${req.body.email} resetted password `);
 };
+export const updateAvatarLog = async (req, user) => {
+  const logData = {
+    level: 'info',
+    message: `User ${req.user.email} updated his account avatar successful`,
+    userId: req.user.id,
+    metadata: { data: user },
+  };
+  await Log.create(logData);
+};
+export const updateImageLog = async (req, user) => {
+  const logData = {
+    level: 'info',
+    message: `User ${req.user.email} updated his account cover image successfully`,
+    userId: req.user.id,
+    metadata: { data: user },
+  };
+  await Log.create(logData);
+};

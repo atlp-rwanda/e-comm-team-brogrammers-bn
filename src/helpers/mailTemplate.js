@@ -14,6 +14,25 @@ export const verifyEmailTemplate = (userToken) => {
     </div>
     `;
 };
+export const verifyEmailSubscriberTemplate = (userToken) => {
+  return `
+  <div style="background-color: #f2f2f2; padding: 20px;">
+    <h1 style="color: #004d99; text-align: center;">Thank you for subscribing to Brogrammers e-commerce newsletter!</h1>
+    <p style="color: #000; font-size: 16px;">Please click below to confirm your subscription:</p>
+   <a href="${process.env.SUBSCRIBER_URL}/${userToken}" style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Confirm Subscription</a>
+   <p style="color: #000; font-size: 14px;">You will now receive our latest updates and promotions.</p>
+  </div>
+    `;
+};
+export const thankYouSubscriberTemplate = (username, subscriberId) => {
+  return `
+    <div style="background-color: #f2f2f2; padding: 20px;">
+      <h1 style="color: #004d99; text-align: center;">Thank you ${username} for subscribing to Brogrammers e-commerce newsletter!</h1>
+      <p style="color: #000; font-size: 16px;">You will now receive our latest updates and promotions.</p>
+      <p style="color: #000; font-size: 14px;">If you would like to unsubscribe from our newsletter, please click <a href="${process.env.UNSUBSCRIBE_URL}/${subscriberId}" style="color: #004d99; text-decoration: underline;">here</a>.</p>
+    </div>
+  `;
+};
 export const changePasswordTemplate = (user, passwordExpirationTime) => {
   return `
     <div style="background-color: #f2f2f2; padding: 20px;">
@@ -249,4 +268,18 @@ export const notificationTemplate2 = (username, message, type)=>{
     <p>Best regards, from <b>Brogrammers </b></p>
     </div>
   </div><div>`;
+};
+export const newsletterTemplate = (username, newsletter, subscriberId, header, content) => {
+  return `
+  <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; box-shadow: 0px 0px 20px rgba(0,0,0,0.1);">
+    <h1 style="color: #004d99; font-size: 28px; margin-top: 20px;">${header}</h1>
+    <div style="color: #000; font-size: 16px; line-height: 1.5; margin-top: 20px;">Hello ${username},<br><br>${content}</div>
+    <h2 style="color: #004d99; font-size: 24px; margin-top: 20px;">${newsletter.name}</h2>
+    <img src="${newsletter.images[0]}" alt="${newsletter.name}" style="max-width: 100%; height: auto; margin-top: 20px;">
+    <div style="color: #000; font-size: 16px; line-height: 1.5; margin-top: 20px;">${newsletter.description}</div>
+    <div style="color: #000; font-size: 16px; line-height: 1.5; margin-top: 20px;">Price: ${newsletter.price}</div>
+    <a href="${newsletter.images[0]}" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">View newsletter</a>
+    <div style="color: #000; font-size: 16px; line-height: 1.5; margin-top: 20px;">Thank you ${username} for being a loyal subscriber to our newsletter! Stay tuned for more updates.</div>
+    <div style="color: #000; font-size: 14px; margin-top: 20px;">If you would like to unsubscribe from our newsletter, please click <a href="${process.env.UNSUBSCRIBE_URL}/${subscriberId}" style="color: #004d99; text-decoration: underline;">here</a>.</div>
+ </div>`;
 };
