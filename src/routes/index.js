@@ -28,4 +28,5 @@ routes.use('/payment', payment);
 routes.use('/order', orderRoutes);
 routes.use('/logs', logsroutes);
 routes.use('/subscriber', subroutes);
+routes.get('auth/auth/google/callback', (req, res) => res.redirect('/users/redirect'));
 export default routes;

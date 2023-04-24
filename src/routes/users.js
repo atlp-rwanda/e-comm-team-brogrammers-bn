@@ -6,7 +6,9 @@ import express from 'express';
 // eslint-disable-next-line import/no-named-as-default, import/no-named-as-default-member
 import passport from 'passport';
 import Users from '../controllers/users.controllers';
-import checkUserExist,{ checkUserByEmail } from '../middlewares/checkUserExist';
+import checkUserExist, {
+  checkUserByEmail,
+} from '../middlewares/checkUserExist';
 import Status from '../controllers/status.controller';
 import loginValidate from '../middlewares/loginValidate';
 import profileVatidate from '../middlewares/profileValidate';
@@ -51,11 +53,26 @@ routes.post('/disable-mfa', isAuthenticated, Users.disableMfa);
 routes.post('/login', loginValidate, Users.login);
 routes.get('/profile', isAuthenticated, Users.getProfile);
 routes.patch('/profile', isAuthenticated, profileVatidate, Users.editProfile);
-routes.patch('/role/:email', isAuthenticated, checkRole(['admin']), Users.setRole);
+routes.patch(
+  '/role/:email',
+  isAuthenticated,
+  checkRole(['admin']),
+  Users.setRole
+);
 
 // images
-routes.patch('/profile/avatar', isAuthenticated, upload.single('image'), Users.updateAvatar);
-routes.patch('/profile/cover-image', isAuthenticated, upload.single('image'), Users.updateCoverImage);
+routes.patch(
+  '/profile/avatar',
+  isAuthenticated,
+  upload.single('image'),
+  Users.updateAvatar
+);
+routes.patch(
+  '/profile/cover-image',
+  isAuthenticated,
+  upload.single('image'),
+  Users.updateCoverImage
+);
 
 // Disable account
 routes.patch(
@@ -65,50 +82,24 @@ routes.patch(
   requestValidator(disableUser),
   Users.disableUser
 );
-routes.get(
-  '/logout',
-  isAuthenticated,
-  Users.logout
-);
+routes.get('/logout', isAuthenticated, Users.logout);
 // Admin Routes
-routes.post(
-  '/createUser',
-  isAuthenticated,
-  checkRole(['admin']),
-  Admin.signup
-);
-routes.patch(
-  '/:id',
-  isAuthenticated,
-  checkRole(['admin']),
-  Admin.updateUser
-);
-routes.delete(
-  '/:id',
-  isAuthenticated,
-  checkRole(['admin']),
-  Admin.deleteUser
-);
-routes.get(
-  '/all',
-  isAuthenticated,
-  checkRole(['admin']),
-  Admin.getAllUsers
-);
-routes.get(
-  '/logs/all',
-  isAuthenticated,
-  checkRole(['admin']),
-  getAllLogs
-);
+routes.post('/createUser', isAuthenticated, checkRole(['admin']), Admin.signup);
+routes.patch('/:id', isAuthenticated, checkRole(['admin']), Admin.updateUser);
+routes.delete('/:id', isAuthenticated, checkRole(['admin']), Admin.deleteUser);
+routes.get('/all', isAuthenticated, checkRole(['admin']), Admin.getAllUsers);
+routes.get('/logs/all', isAuthenticated, checkRole(['admin']), getAllLogs);
+
 // Google routes
 routes.get('/redirect', (req, res) => {
   try {
     if (req.query.key) {
       const user = Jwt.verifyToken(req.query.key);
-      return res
-        .status(200)
-        .json({ message: 'Thanks for logging in', user: user,token: req.query.key });
+      return res.status(200).json({
+        message: 'Thanks for logging in',
+        user: user,
+        token: req.query.key,
+      });
     } else {
       return res.status(401).json({ error: 'Unauthorized' });
     }

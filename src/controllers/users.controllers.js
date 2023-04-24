@@ -24,14 +24,35 @@ import {
   mfaEmailTemplate,
   passwordResetEmailTemplate,
   disableEmailTemplate,
-  notificationTemplate2
+  notificationTemplate2,
 } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 
-import { logSignup, redirectGoogle, updateAvatarLog, logError, logSetRole, logEmailSent, updateImageLog, logLogout, logVerifyEmail, logLogin, viewProfile, editProfiles, enableMfaLog, disableMfaLog, verifiedMfaLog, createAdminLog, resetPasswordLog, verifyPasswordLog, changePasswordLog, disableAccountLog } from '../loggers/signup.logger';
+import {
+  logSignup,
+  redirectGoogle,
+  updateAvatarLog,
+  logError,
+  logSetRole,
+  logEmailSent,
+  updateImageLog,
+  logLogout,
+  logVerifyEmail,
+  logLogin,
+  viewProfile,
+  editProfiles,
+  enableMfaLog,
+  disableMfaLog,
+  verifiedMfaLog,
+  createAdminLog,
+  resetPasswordLog,
+  verifyPasswordLog,
+  changePasswordLog,
+  disableAccountLog,
+} from '../loggers/signup.logger';
 
 // eslint-disable-next-line operator-linebreak
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+export const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const saltRounds = Number(process.env.SALTROUNDS) || 10;
 
 dotenv.config();
@@ -123,7 +144,7 @@ export default class Users {
       newN.receiverId = user.id;
       const receiver = {
         username: user.username,
-        email: user.email
+        email: user.email,
       };
       const notifyEmail = notificationTemplate2(
         receiver.username,
@@ -223,7 +244,12 @@ export default class Users {
       const { avatar, cover_image, email, username, role, gender } = req.user;
       viewProfile(req, req.user);
       res.status(200).json({
-        avatar, cover_image, email, username, role, gender,
+        avatar,
+        cover_image,
+        email,
+        username,
+        role,
+        gender,
       });
     } catch (error) {
       logError(req, error);
@@ -247,7 +273,14 @@ export default class Users {
       await db.users.update({ email_token: token }, { where: { email } });
       editProfiles(req, value);
       res.status(200).json({
-        avatar, cover_image, email, username, role, gender, token, email_token: token,
+        avatar,
+        cover_image,
+        email,
+        username,
+        role,
+        gender,
+        token,
+        email_token: token,
       });
     } catch (error) {
       logError(req, error);
@@ -336,12 +369,12 @@ export default class Users {
       newN.receiverId = Nwuser.id;
       const receiver = {
         username: Nwuser.username,
-        email: Nwuser.email
+        email: Nwuser.email,
       };
       const notifyEmail = notificationTemplate2(
         receiver.username,
         newN.message,
-        newN.type,
+        newN.type
       );
       sendEmail(
         emailConfig({
@@ -428,9 +461,9 @@ export default class Users {
       logError(req, error);
       res.status(500).json({
         message:
-          error.message
-          || error.toString()
-          || 'Failed to verify password reset link',
+          error.message ||
+          error.toString() ||
+          'Failed to verify password reset link',
       });
     }
   }
@@ -511,11 +544,11 @@ export default class Users {
   }
 
   /**
- * Logout a user by invalidating the JWT token.
- * @param {Object} req valiable
- * @param {Object} res valiable
- * @return {Object} res
- */
+   * Logout a user by invalidating the JWT token.
+   * @param {Object} req valiable
+   * @param {Object} res valiable
+   * @return {Object} res
+   */
   static async logout(req, res) {
     try {
       await User.logout(req.headers.authorization);
@@ -535,15 +568,14 @@ export default class Users {
       email: value,
       avatar: req.user.photos[0].value,
       verified: true,
-      password: '12345'
+      password: '12345',
     };
     const { id, email } = await User.registerGoogle(newUser);
-    const userToken = Jwt.generateToken({
-      id: id,
-      email: email,
-    }, '1h');
+    const userToken = jwt.sign({ email: email, id: id }, JWT_SECRET);
     redirectGoogle(email);
-    return res.redirect(`/users/redirect?key=${userToken}`);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/login?key=${userToken}&email=${email}`
+    );
   }
 
   static async updateAvatar(req, res) {
@@ -553,7 +585,12 @@ export default class Users {
       const { avatar, cover_image, email, username, role, gender } = value;
       updateAvatarLog(req, value);
       res.status(200).json({
-        avatar, cover_image, email, username, role, gender,
+        avatar,
+        cover_image,
+        email,
+        username,
+        role,
+        gender,
       });
     } catch (error) {
       logError(req, error);
@@ -568,7 +605,12 @@ export default class Users {
       const { avatar, cover_image, email, username, role, gender } = value;
       updateImageLog(req, value);
       res.status(200).json({
-        avatar, cover_image, email, username, role, gender,
+        avatar,
+        cover_image,
+        email,
+        username,
+        role,
+        gender,
       });
     } catch (error) {
       logError(req, error);
