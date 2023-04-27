@@ -13,7 +13,8 @@ export default {
         references: {
           model: 'users',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       products: {
         type: Sequelize.ARRAY(Sequelize.JSONB),
