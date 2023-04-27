@@ -72,14 +72,7 @@ export const logSetRole = async (req, role) => {
   logger.info(`User ${req.user.email} set a new role ${role} to ${req.params.email}`);
 };
 export const logError = async (req, error) => {
-  const logData = {
-    level: 'info',
-    message: error.message,
-    userId: req.user.id,
-    metadata: { error: error.message },
-  };
-  await Log.create(logData);
-  logger.info(`User ${req.user.email} encountered an issue :${error.message}`);
+  logger.info(`User ${req.body.email} encountered an issue :${error.message}`);
 };
 export const viewProfile = async (req, profile) => {
   const logData = {

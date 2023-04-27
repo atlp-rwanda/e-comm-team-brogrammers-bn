@@ -1,26 +1,35 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable import/no-extraneous-dependencies */
 // eslint-disable-next-line import/no-unresolved
 import { CronJob } from 'cron';
-// eslint-disable-next-line no-unused-vars
-import { Op } from 'sequelize';
-import sgMail from '@sendgrid/mail';
 import moment from 'moment';
 import eventEmitter from '../helpers/eventEmitter';
 import db from '../database/models';
-import { changePasswordTemplate } from '../helpers/mailTemplate';
+import { changePasswordTemplate, expiredPasswordTemplate } from '../helpers/mailTemplate';
+import { emailConfig } from '../helpers/emailConfig';
+import { sendEmail } from '../helpers/mail';
 
 const passwordExpirationTime = process.env.PASSWORD_EXPIRATION_TIME || 60 * 24;
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// Function to send password update email
 const sendPasswordUpdateEmail = (user) => {
   const emailContent = changePasswordTemplate(user, passwordExpirationTime);
-  sgMail.send({
-    to: user.email,
-    from: process.env.SEND_EMAIL,
-    subject: 'Password update required',
-    html: emailContent,
-  });
+  sendEmail(
+    emailConfig({
+      email: user.email,
+      subject: 'Password update required',
+      content: emailContent,
+    })
+  );
+};
+const sendPasswordExpredEmail = (user) => {
+  const emailContents = expiredPasswordTemplate(user);
+  sendEmail(
+    emailConfig({
+      email: user.email,
+      subject: 'Your Password has Expired',
+      content: emailContents,
+    })
+  );
 };
 const hasPasswordExpired = (user) => {
   if (!user.lastTimePasswordUpdated) {
@@ -39,6 +48,11 @@ const updateUserMustUpdatePasswordField = (user, mustUpdatePassword) => {
 
 const promptPasswordUpdate = (user) => {
   updateUserMustUpdatePasswordField(user, true);
+  if (hasPasswordExpired(user)) {
+    sendPasswordExpredEmail(user);
+  } else {
+    sendPasswordUpdateEmail(user);
+  }
 };
 
 // eslint-disable-next-line arrow-body-style
@@ -52,8 +66,6 @@ const checkPasswordExpirationCronJob = new CronJob(process.env.CRON, async (req,
 
     usersk.forEach(async (user) => {
       if (hasPasswordExpired(user)) {
-        sendPasswordUpdateEmail(user);
-
         promptPasswordUpdate(user);
       } else if (hasUserIgnoredPasswordUpdatePrompt(user)) {
         updateUserMustUpdatePasswordField(user, false);
@@ -66,9 +78,6 @@ const checkPasswordExpirationCronJob = new CronJob(process.env.CRON, async (req,
     });
   }
 });
-
-// Start the cron job
-checkPasswordExpirationCronJob.start();
 
 eventEmitter.on('passwordUpdated', (user) => {
   updateUserMustUpdatePasswordField(user, false);

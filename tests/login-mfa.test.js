@@ -51,7 +51,7 @@ describe('POST /users/login - without MFA', () => {
       .post('/users/login')
       .send({ email: testUserData.email, password: testUserData.password })
       .end((err, res) => {
-        expect(res).to.have.status(403);
+        expect(res).to.have.status(401);
         expect(res.body).to.have.property('message');
         expect(res.body.message).to.equal('Email is not verified');
         done();

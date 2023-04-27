@@ -197,19 +197,18 @@ export default class Users {
       }
 
       if (user.verified === false) {
-        return res.status(403).json({ message: 'Email is not verified' });
+        return res.status(401).json({ message: 'Email is not verified' });
       }
       if (user.disabledUser === true) {
-        return res.status(403).json({ message: 'Your account is disabled!' });
+        return res.status(401).json({ message: 'Your account is disabled!' });
       }
-
       if (user.mfa_enabled === false) {
         const token = jwt.sign(
-          { email: req.body.email, id: user.id },
+          { email: req.body.email, id: user.id, mustUpdatePassword: user.mustUpdatePassword },
           JWT_SECRET
         );
         logLogin(user.email, user);
-        return res.status(200).json({ email: req.body.email, token });
+        return res.status(200).json({ email: req.body.email, token, message: 'Login Successfully' });
       }
 
       // eslint-disable-next-line camelcase
@@ -461,9 +460,9 @@ export default class Users {
       logError(req, error);
       res.status(500).json({
         message:
-          error.message ||
-          error.toString() ||
-          'Failed to verify password reset link',
+          error.message
+          || error.toString()
+          || 'Failed to verify password reset link',
       });
     }
   }
@@ -486,7 +485,7 @@ export default class Users {
       const passwordRegex =
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
       if (!passwordRegex.test(newPassword)) {
-        return res.status(400).json({
+        return res.status(401).json({
           message:
             'New password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.',
         });

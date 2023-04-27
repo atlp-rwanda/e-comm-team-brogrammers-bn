@@ -319,7 +319,7 @@ describe(' testing changePassword', () => {
       .set('Authorization', `Bearer ${token}`)
       .send({ oldPassword: user.password, newPassword: 'weakpassword' })
       .end((error, res) => {
-        chai.expect(res).to.have.status(400);
+        chai.expect(res).to.have.status(401);
         chai
           .expect(res.body.message)
           .to.equal(
