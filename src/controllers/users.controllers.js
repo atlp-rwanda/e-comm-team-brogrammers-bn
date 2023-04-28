@@ -435,9 +435,9 @@ export default class Users {
           process.env.RESET_PASSWORD_SECRET,
           async (err, decodedToken) => {
             if (err) {
-              return res
-                .status(403)
-                .json({ message: 'Invalid password reset token' });
+              return res.redirect(
+                `${process.env.FRONTEND_URL}/reset-password/failed?message=Invalid+token`
+              );
             }
 
             const { email, newPassword } = decodedToken;
@@ -448,11 +448,11 @@ export default class Users {
 
             user.verified = true;
             user.password = bcrypt.hashSync(newPassword, saltRounds);
-            user.save();
+            await user.save();
             verifyPasswordLog(req, user);
-            return res
-              .status(200)
-              .json({ message: 'Password reset successful' });
+            return res.redirect(
+              `${process.env.FRONTEND_URL}/reset-password/success`
+            );
           }
         );
       }
