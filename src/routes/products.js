@@ -11,6 +11,7 @@ import catchError from '../middlewares/catchError';
 
 const routes = express.Router();
 
+routes.get('/categories', Products.getCategories);
 routes.post(
   '/',
   isAuthenticated,

@@ -747,3 +747,15 @@ describe('testing the admin to delete any seller products', () => {
       });
   });
 });
+
+describe('test categories', () => {
+  it('should return 200 code', (done) => {
+    chai
+      .request(app)
+      .get('/products/categories')
+      .end((error, res) => {
+        chai.expect(res).to.have.status(200);
+        done();
+      });
+  });
+});

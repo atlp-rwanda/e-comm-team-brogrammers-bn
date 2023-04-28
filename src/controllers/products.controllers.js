@@ -12,6 +12,7 @@ import {
   notifications,
   wishlists,
   products,
+  category
 } from '../database/models';
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
@@ -448,6 +449,16 @@ export default class Products {
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
+    }
+  }
+
+  static async getCategories(req, res) {
+    try {
+      const allCategories = await category.findAll();
+      res.status(200).json(allCategories);
+    } catch (error) {
+      productError(req, error);
+      res.status(500).json({ message: error.message });
     }
   }
 
