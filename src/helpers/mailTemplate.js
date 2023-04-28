@@ -47,8 +47,7 @@ export const passwordResetEmailTemplate = (resetToken) => {
     <div style="background-color: #f2f2f2; padding: 20px;">
       <h1 style="color: #004d99; text-align: center;">Brogrammers e-commerce!</h1>
       <p style="color: #000; font-size: 16px;">Please click below to reset you password</p>
-      <form action="${process.env.PASSWORD_RESET_URL}/${resetToken}" method="POST">
-      <button href="" style="display: block; text-align: center; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Reset Your Password</button>
+      <a target="_blank" href="${process.env.PASSWORD_RESET_URL}/${resetToken}" style="display: block; text-align: center; font-size:18px; padding: 10px 20px; background-color: #004d99; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;"> Click to reset your password</a>
       <p style="color: #000; font-size: 14px;">Thank you for choosing Brogrammers e-commerce.</p>
     </div>
     `;

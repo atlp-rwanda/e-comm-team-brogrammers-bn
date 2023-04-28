@@ -35,7 +35,7 @@ routes.post(
   requestValidator(resetPassword),
   Users.sendResetPasswordCode
 );
-routes.post(
+routes.get(
   '/verify-reset-password/:resetToken',
   Users.verifyResetPasswordCode
 );
