@@ -279,7 +279,7 @@ export default class Products {
    */
   static async getProduct(req, res) {
     try {
-      if (req.product) return res.status(200).json(req.product);
+      // if (req.product) return res.status(200).json(req.product);
 
       const product = await Product.getProduct(req.params.id);
       if (!product || product === null) {
@@ -288,7 +288,7 @@ export default class Products {
       retrieveOneProduct(req, product);
       return res.status(200).json(product);
     } catch (err) {
-      productError(req, err);
+      // productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'server product' });
@@ -323,6 +323,8 @@ export default class Products {
           limit,
         };
       }
+      results.totalCount = totalCount - 3;
+      results.totalPages = Math.ceil(totalCount / limit);
       results.results = await products.findAll({
         where: { sellerId: req.user.id },
         limit,

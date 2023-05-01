@@ -18,7 +18,6 @@ export default async function isOwner(req, res, next) {
     if (product.sellerId !== req.user.id && req.user.role !== 'admin') {
       return res.status(401).json({ message: "you're not authorized" });
     }
-
     req.product = product;
     next();
   } catch (error) {

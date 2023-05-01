@@ -52,15 +52,8 @@ export const viewProductReview = async () => {
 export const retrieveAllProduct = async () => {
   logger.info('User retrieved all products');
 };
-export const retrieveOneProduct = async (req, res, product) => {
-  const logData = {
-    level: 'info',
-    message: `User ${req.user.email} retrieved a product ${req.params.id}`,
-    userId: req.user.id,
-    metadata: { Product: product },
-  };
-  await Log.create(logData);
-  logger.info(`User ${req.user.email} retrieved a product ${req.params.id}`);
+export const retrieveOneProduct = async (req) => {
+  logger.info(`User retrieved a product ${req.params.id}`);
 };
 export const sellerProduct = async (req, res, product) => {
   const logData = {

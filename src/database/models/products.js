@@ -24,6 +24,10 @@ export default (sequelize, DataTypes) => {
         as: 'seller',
         foreignKey: 'sellerId',
       });
+      products.hasMany(models.reviews, {
+        as: 'reviews',
+        foreignKey: 'productId',
+      });
     }
   }
   products.init(

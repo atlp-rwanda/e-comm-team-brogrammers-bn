@@ -113,11 +113,15 @@ export default class Product {
     const product = await products.findOne({
       where: { id },
       attributes: { exclude: ['sellerId'] },
-      include: {
+      include: [{
         model: users,
         as: 'seller',
         attributes: ['username', 'email']
-      }
+      },
+      {
+        model: reviews,
+        as: 'reviews',
+      }],
     });
     return product;
   }
@@ -144,6 +148,12 @@ export default class Product {
         id,
         sellerId,
       },
+      attributes: { exclude: ['sellerId'] },
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email']
+      }
     });
     return product;
   }
