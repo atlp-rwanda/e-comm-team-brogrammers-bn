@@ -85,6 +85,34 @@
  *                  error:
  *                    type: object
  *                    description: created product
+ * /products/categories:
+ *    get:
+ *       tags:
+ *         - Products
+ *       summary: get all categories
+ *       description: each person can see the product's categories
+ *       responses:
+ *        '200':
+ *          description: get categories successfully
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                description: all categories
+ *                example: [{...: ...}, {...: ...}]
+ *        '500':
+ *          description: server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *                    description: A success message.
+ *                  error:
+ *                    type: object
+ *                    description: created product
  * /products/{id}:
  *    get:
  *       tags:
