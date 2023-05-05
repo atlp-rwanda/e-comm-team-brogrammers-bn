@@ -25,7 +25,8 @@ export default function paginatedResults(model) {
           limit,
         };
       }
-
+      results.totalCount = totalCount - 3;
+      results.totalPages = Math.ceil(totalCount / limit);
       results.results = await model.findAll({
         limit,
         offset: startIndex

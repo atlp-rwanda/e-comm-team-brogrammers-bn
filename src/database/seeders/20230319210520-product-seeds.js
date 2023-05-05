@@ -28,6 +28,7 @@ export default {
           faker.image.imageUrl(),
           faker.image.imageUrl(),
           faker.image.imageUrl(),
+          faker.image.imageUrl(),
         ],
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),

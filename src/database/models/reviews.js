@@ -18,11 +18,14 @@ export default (sequelize, DataTypes) => {
   class reviews extends Model {
     /**
      * Helper method for defining associations.
-     * @param {*} _models
+     * @param {*} models
      * @returns {void}
      */
-    static associate() {
-      // define association here
+    static associate(models) {
+      reviews.belongsTo(models.products, {
+        as: 'reviews',
+        foreignKey: 'productId',
+      });
     }
   }
   reviews.init(
