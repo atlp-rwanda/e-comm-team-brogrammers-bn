@@ -186,19 +186,12 @@ export default class Product {
     return product;
   }
 
-  static async searchProducts(query, min, max, categry) {
+  static async searchProducts(query, min, max, categry, pageNumber, limitNumber) {
     let where = {};
-    if (!min) {
-      min = 0;
-    }
-    if (!max || max < min) {
-      max = Infinity;
-    }
-    if (!query) {
-      query = '';
-    }
+    if (!min) min = 0;
+    if (!max || max < min) max = Infinity;
+    if (!query) query = '';
     where = {
-      // eslint-disable-next-line no-undef
       price: { [Op.between]: [min, max] },
       [Op.or]: [
         { name: { [Op.iLike]: `%${query}%` } },
@@ -214,10 +207,41 @@ export default class Product {
         where.category = { [Op.in]: ids || [] };
       }
     }
+
+    let totalCount = await products.count({ where });
+    const page = Number(pageNumber) || 1;
+    const limit = Number(limitNumber) || totalCount;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const out = {
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit)
+    };
+    if (endIndex < totalCount) {
+      out.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+    if (startIndex > 0) {
+      out.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+
     const product = await products.findAll({
       where,
+      limit,
+      offset: startIndex,
+      attributes: { exclude: ['sellerId'] },
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email']
+      }
     });
 
-    return product;
+    return { ...out, results: product };
   }
 }
