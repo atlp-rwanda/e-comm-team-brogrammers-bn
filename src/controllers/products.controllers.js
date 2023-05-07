@@ -183,7 +183,8 @@ export default class Products {
           limit,
         };
       }
-      // eslint-disable-next-line no-use-before-define
+      results.totalCount = totalCount;
+      results.totalPages = Math.ceil(totalCount / limit);
       results.results = await products.findAll({
         limit,
         attributes: { exclude: ['sellerId'] },
