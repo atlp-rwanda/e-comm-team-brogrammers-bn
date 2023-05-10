@@ -162,13 +162,9 @@ export default class Products {
    */
   static async getProducts(req, res) {
     try {
-      // const allproducts = await Product.getProducts();
-      // eslint-disable-next-line no-use-before-define
       const totalCount = await products.count();
-      // eslint-disable-next-line radix
-      const page = parseInt(req.query.page) || 1;
-      // eslint-disable-next-line radix
-      const limit = parseInt(req.query.limit) || totalCount;
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || totalCount;
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       const results = {};
@@ -472,10 +468,12 @@ export default class Products {
         req.query.q,
         req.query.min,
         req.query.max,
-        req.query.category
+        req.query.category,
+        req.query.page,
+        req.query.limit
       );
       searchPro(products);
-      res.status(200).json(products);
+      res.status(200).json({ allproducts: products });
     } catch (error) {
       productError(req, error);
       res.status(500).json({ message: error.message });

@@ -328,7 +328,7 @@ describe('Product search', () => {
       .get('/products/search/query?q=shoes')
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.be.an('array');
+        res.body.allproducts.results.should.be.an('array');
         done();
       });
   });
@@ -339,7 +339,7 @@ describe('Product search', () => {
       .get('/products/search/query?min=100&max=500')
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.forEach((product) => {
+        res.body.allproducts.results.forEach((product) => {
           product.price.should.be.within(100, 500);
         });
         done();
@@ -351,7 +351,7 @@ describe('Product search', () => {
       .get('/products/search/query?category=Consumer')
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.forEach((product) => {
+        res.body.allproducts.results.forEach((product) => {
           product.category.should.equal(1);
         });
         done();

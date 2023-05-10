@@ -515,6 +515,16 @@
  *         description: Product category
  *         schema:
  *           type: string
+ *       - name: page
+ *         in: query
+ *         description: page for pagination
+ *         schema:
+ *           type: number
+ *       - name: limit
+ *         in: query
+ *         description: limit of items for pagination
+ *         schema:
+ *           type: number
  *     responses:
  *       "200":
  *         description: OK
