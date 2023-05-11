@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 // eslint-disable-next-line import/named, import/no-duplicates
 const { carts, products } = require('../database/models');
 // eslint-disable-next-line import/no-duplicates, import/named
@@ -75,31 +76,8 @@ export default class cartService {
     }
   }
 
-  /**
-   * adding product to cart
-   * @param {Object} req the data for product
-   * @returns {data} for the created user
-   */
-  static async deleteItem(req) {
-    const { id } = req.params;
-    const cart1 = req.cart;
-    const itemExists = cart1.products.findIndex(
-      (cartitem) => cartitem.id === id
-    );
-    if (itemExists !== -1) {
-      cart1.products.splice(itemExists, 1);
-    }
-    // eslint-disable-next-line eqeqeq
-    if (cart1.products.length == 0) {
-      await cart1.destroy();
-      return { value: { message: 'removed product from cart  successfully' } };
-    }
-    const subtotal = cart1.products
-      .map((prod1) => JSON.parse(prod1.Ptotal))
-      .reduce((sum, next) => sum + next);
-    cart1.total = subtotal;
-    await cart1.save();
-    return { value: { message: 'removed product from cart  successfully' } };
+  static async updateCart(fields, cartId) {
+    return carts.update({ ...fields }, { where: { id: cartId } });
   }
 
   /**
@@ -124,11 +102,18 @@ export default class cartService {
   static async viewCart(req) {
     const userid = req.user.id;
     const cart = await carts.findOne({ where: { userId: userid } });
+    if (!cart) {
+      return {
+        value: {
+          message: 'Your cart is empty.',
+          data: { products: [] },
+        }
+      };
+    }
     return {
       value: {
         message: 'Hey Here is your cart!',
         data: cart,
-        // eslint-disable-next-line object-curly-newline
       }
     };
   }
