@@ -204,11 +204,19 @@ export default class Users {
       }
       if (user.mfa_enabled === false) {
         const token = jwt.sign(
-          { email: req.body.email, id: user.id, mustUpdatePassword: user.mustUpdatePassword },
+          {
+            email: req.body.email,
+            id: user.id,
+            mustUpdatePassword: user.mustUpdatePassword,
+          },
           JWT_SECRET
         );
         logLogin(user.email, user);
-        return res.status(200).json({ email: req.body.email, token, message: 'Login Successfully' });
+        return res.status(200).json({
+          email: req.body.email,
+          token,
+          message: 'Login Successfully',
+        });
       }
 
       // eslint-disable-next-line camelcase
@@ -219,7 +227,7 @@ export default class Users {
         subject: 'Brogrammers authentication code',
         content: mfaEmailContent,
       });
-      logLogin(user.email);
+      logLogin(user.email, user);
       return res
         .status(200)
         .json({ message: 'Please check your email for authentication code' });
@@ -240,11 +248,20 @@ export default class Users {
    */
   static async getProfile(req, res) {
     try {
-      const { avatar, cover_image, email, username, role, gender } = req.user;
+      const {
+        avatar,
+        mfa_enabled = false,
+        cover_image,
+        email,
+        username,
+        role,
+        gender,
+      } = req.user;
       viewProfile(req, req.user);
       res.status(200).json({
         avatar,
         cover_image,
+        mfa_enabled,
         email,
         username,
         role,
@@ -334,6 +351,7 @@ export default class Users {
 
       if (isValid) {
         const token = jwt.sign({ email: req.body.email }, JWT_SECRET);
+        req.user = await users.findOne({ where: { email: req.body.email } });
         verifiedMfaLog(req, token);
         return res.status(200).json({ email: req.body.email, token });
       }
@@ -460,9 +478,9 @@ export default class Users {
       logError(req, error);
       res.status(500).json({
         message:
-          error.message
-          || error.toString()
-          || 'Failed to verify password reset link',
+          error.message ||
+          error.toString() ||
+          'Failed to verify password reset link',
       });
     }
   }
