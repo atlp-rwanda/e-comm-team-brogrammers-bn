@@ -6,7 +6,7 @@ import { users, notifications } from '../database/models';
 export default class NotificationController {
   static async getAllNotifications(req, res) {
     try {
-      const totalCount = await notifications.count();
+      const totalCount = await notifications.count({ where: { receiverId: req.user.id } });
       // eslint-disable-next-line radix
       const page = parseInt(req.query.page) || 1;
       // eslint-disable-next-line radix

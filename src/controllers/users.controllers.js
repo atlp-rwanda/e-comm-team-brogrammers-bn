@@ -478,9 +478,9 @@ export default class Users {
       logError(req, error);
       res.status(500).json({
         message:
-          error.message ||
-          error.toString() ||
-          'Failed to verify password reset link',
+          error.message
+          || error.toString()
+          || 'Failed to verify password reset link',
       });
     }
   }

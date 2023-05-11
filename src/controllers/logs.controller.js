@@ -57,7 +57,7 @@ export const getAllLogs = async (req, res) => {
 };
 export const getUserLogs = async (req, res) => {
   try {
-    const totalCount = await Log.count();
+    const totalCount = await Log.count({ where: { userId: req.user.id } });
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || totalCount;
     const startIndex = (page - 1) * limit;
