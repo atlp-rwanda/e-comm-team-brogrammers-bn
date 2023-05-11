@@ -8,13 +8,15 @@ import User from '../services/user.services';
 import { users } from '../database/models';
 import { Jwt } from '../helpers/jwt';
 import { emailConfig } from '../helpers/emailConfig';
-import {
-  verifyEmailTemplate,
-} from '../helpers/mailTemplate';
+import { verifyEmailTemplate } from '../helpers/mailTemplate';
 import { sendEmail } from '../helpers/mail';
 import paginatedResults from '../middlewares/paginating';
 import {
-  updateUser, deleteUser, createUser, UserError, viewAllUsers
+  updateUser,
+  deleteUser,
+  createUser,
+  UserError,
+  viewAllUsers,
 } from '../loggers/Admin.logger';
 
 const saltRounds = Number(process.env.SALTROUNDS) || 10;
@@ -87,7 +89,7 @@ export default class Admin {
       createUser(req, data);
       return res.status(201).json({
         message: 'Check your email to verify your account',
-        user: data
+        user: data,
       });
     } catch (e) {
       UserError(req, e);
