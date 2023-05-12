@@ -53,8 +53,7 @@ export const createOrder = async (req, res) => {
   const cartProducts = userCart.products;
 
   // eslint-disable-next-line object-curly-newline
-  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } =
-    req.body;
+  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } = req.body;
 
   const userOrder = await order.create({
     deliveryCountry,

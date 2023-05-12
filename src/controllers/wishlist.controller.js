@@ -5,7 +5,12 @@ import paginatedResults from '../middlewares/paginating';
 // eslint-disable-next-line import/named, import/no-duplicates
 import { products } from '../database/models';
 import {
-  deleteWishlists, clearWishlists, AdmingetWishlists, getWishlists, wishlistError, createWishlist
+  deleteWishlists,
+  clearWishlists,
+  AdmingetWishlists,
+  getWishlists,
+  wishlistError,
+  createWishlist,
 } from '../loggers/wishlist.logger';
 /**
  * the wishlist controller class
@@ -85,11 +90,11 @@ export default class wishlist {
         await userwish.save();
         deleteWishlists(req, userwish);
         return res.status(200).json({
-          message: 'deleted from wishlist '
+          message: 'deleted from wishlist ',
         });
       }
       return res.status(400).json({
-        message: 'you dont have this product in your wishlist'
+        message: 'you dont have this product in your wishlist',
       });
     } catch (error) {
       wishlistError(req, error);
@@ -131,12 +136,12 @@ export default class wishlist {
         await wishlists.destroy({ where: { userId } });
         clearWishlists(req, userwishes);
         return res.status(200).json({
-          message: ' wishlists have been cleared'
+          message: ' wishlists have been cleared',
         });
       }
 
       return res.status(400).json({
-        message: 'no wishlist to clear'
+        message: 'no wishlist to clear',
       });
     } catch (error) {
       wishlistError(req, error);

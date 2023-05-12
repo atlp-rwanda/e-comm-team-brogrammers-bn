@@ -162,7 +162,7 @@ export default class Products {
    */
   static async getProducts(req, res) {
     try {
-      const totalCount = await products.count();
+      const totalCount = await products.count({ where: { available: true } });
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || totalCount;
       const startIndex = (page - 1) * limit;
@@ -183,6 +183,7 @@ export default class Products {
       results.totalCount = totalCount;
       results.totalPages = Math.ceil(totalCount / limit);
       results.results = await products.findAll({
+        where: { available: true },
         limit,
         attributes: { exclude: ['sellerId'] },
         include: [
@@ -301,7 +302,7 @@ export default class Products {
   static async sellergetProduct(req, res) {
     try {
       // eslint-disable-next-line no-shadow
-      const totalCount = await products.count();
+      const totalCount = await products.count({ where: { sellerId: req.user.id } });
       // eslint-disable-next-line radix
       const page = parseInt(req.query.page) || 1;
       // eslint-disable-next-line radix
@@ -321,7 +322,7 @@ export default class Products {
           limit,
         };
       }
-      results.totalCount = totalCount - 3;
+      results.totalCount = totalCount;
       results.totalPages = Math.ceil(totalCount / limit);
       results.results = await products.findAll({
         where: { sellerId: req.user.id },
