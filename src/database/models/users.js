@@ -28,6 +28,10 @@ export default (sequelize, DataTypes) => {
         as: 'Log',
         onDelete: 'CASCADE',
       });
+      users.hasMany(models.reviews, {
+        as: 'reviews',
+        foreignKey: 'productId',
+      });
     }
   }
   users.init(

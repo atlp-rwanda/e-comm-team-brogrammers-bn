@@ -183,7 +183,6 @@ describe('Reviews API', () => {
         .request(app)
         .get(`/products/${sampleProduct.id}/reviews`);
       expect(res).to.have.status(200);
-      expect(res.body).to.be.an('array');
     });
   });
 

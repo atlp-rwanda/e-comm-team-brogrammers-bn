@@ -9,16 +9,26 @@ import Product from '../services/product.services';
 import {
   // eslint-disable-next-line import/named
   users,
+  reviews,
   notifications,
   wishlists,
   products,
-  category
+  category,
 } from '../database/models';
 import { sendEmail } from '../helpers/mail';
 import { emailConfig } from '../helpers/emailConfig';
 import { notificationTemplate } from '../helpers/mailTemplate';
 import {
-  deleteProducts, sellerProduct, createProduct, retrieveAllProduct, productError, updateProduct, searchPro, toggleAvailablePro, retrieveOneProduct, viewProductReview
+  deleteProducts,
+  sellerProduct,
+  createProduct,
+  retrieveAllProduct,
+  productError,
+  updateProduct,
+  searchPro,
+  toggleAvailablePro,
+  retrieveOneProduct,
+
 } from '../loggers/product.logger';
 
 dotenv.config();
@@ -89,13 +99,68 @@ export default class Products {
    * @returns {res} response
    */
   static async getProductReviews(req, res) {
-    const product = await Product.getProduct(req.params.id);
-    if (!product || product === null) {
-      return res.status(404).json({ message: 'product not found' });
+    try {
+      const productId = req.params.id;
+      const totalCount = await reviews.count({ where: { productId } });
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || totalCount;
+
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = {};
+      if (endIndex < totalCount) {
+        results.next = {
+          page: page + 1,
+          limit,
+        };
+      }
+      if (startIndex > 0) {
+        results.previous = {
+          page: page - 1,
+          limit,
+        };
+      }
+      results.totalCount = totalCount;
+      results.totalPages = Math.ceil(totalCount / limit);
+      results.results = await reviews.findAll({
+        where: { productId },
+        limit,
+        include: [{
+          model: users,
+          as: 'reviewer',
+          attributes: ['username', 'email', 'avatar'],
+        }],
+        offset: startIndex,
+      });
+      const productReviews = await reviews.findAll({ where: { productId } });
+      const AvRate = productReviews.reduce((sum, review) => sum + review.rating, 0)
+      / productReviews.length;
+      const ratingCounts = productReviews.reduce((counts, review) => {
+        const { rating } = review;
+        counts[rating] = (counts[rating] || 0) + 1;
+        return counts;
+      }, {});
+      const totalRates = {
+        1: ratingCounts[1] || 0,
+        2: ratingCounts[2] || 0,
+        3: ratingCounts[3] || 0,
+        4: ratingCounts[4] || 0,
+        5: ratingCounts[5] || 0,
+        AvRate,
+      };
+
+      const allReviews = results;
+      retrieveAllProduct();
+      res
+        .status(200)
+        .json({ allReviews, totalRates });
+      // eslint-disable-next-line no-shadow
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: err.message, message: 'Failed to retrieve products' });
     }
-    const productReviews = await Product.getProductReviews(req.params.id);
-    viewProductReview();
-    return res.status(200).json(productReviews);
   }
 
   /**
@@ -302,7 +367,9 @@ export default class Products {
   static async sellergetProduct(req, res) {
     try {
       // eslint-disable-next-line no-shadow
-      const totalCount = await products.count({ where: { sellerId: req.user.id } });
+      const totalCount = await products.count({
+        where: { sellerId: req.user.id },
+      });
       // eslint-disable-next-line radix
       const page = parseInt(req.query.page) || 1;
       // eslint-disable-next-line radix
@@ -339,12 +406,10 @@ export default class Products {
       });
       const allProducts = results;
       sellerProduct(req, allProducts);
-      res
-        .status(200)
-        .json({
-          message: 'All products retrieved successfully',
-          allProducts,
-        });
+      res.status(200).json({
+        message: 'All products retrieved successfully',
+        allProducts,
+      });
     } catch (err) {
       productError(req, err);
       return res

@@ -171,9 +171,35 @@ export default class Product {
   static async getProductReviews(reviewsProductId) {
     const productReviews = await reviews.findAll({
       where: { productId: reviewsProductId },
+      include: {
+        model: users,
+        as: 'reviewer',
+        attributes: ['username', 'email', 'avatar']
+      }
     });
+    const AvRate = productReviews
+      .reduce((sum, review) => sum + review.rating, 0) / productReviews.length;
+    const ratingCounts = productReviews.reduce((counts, review) => {
+      const { rating } = review;
+      counts[rating] = (counts[rating] || 0) + 1;
+      return counts;
+    }, {});
+    const totalRates = {
 
-    return productReviews;
+      1: ratingCounts[1] || 0,
+      2: ratingCounts[2] || 0,
+      3: ratingCounts[3] || 0,
+      4: ratingCounts[4] || 0,
+      5: ratingCounts[5] || 0,
+      AvRate
+    };
+    console.log(totalRates);
+    const results = {
+      productReviews,
+      totalRates,
+    };
+
+    return results;
   }
 
   /**
