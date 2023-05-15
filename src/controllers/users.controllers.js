@@ -1,3 +1,5 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable indent */
 /* eslint-disable max-len */
 /* eslint-disable object-shorthand */
 /* eslint-disable camelcase */
@@ -531,29 +533,32 @@ export default class Users {
   static async disableUser(req, res) {
     try {
       const user = await users.findOne({ where: { id: req.params.userId } });
-
+  
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
+  
+      user.disabledUser = !user.disabledUser;
+  
       if (user.disabledUser) {
-        return res.status(400).json({ message: 'user is already disabled' });
+        user.disabledReason = req.body.reason;
+ 
+        sendEmail(
+          emailConfig({
+            email: user.email,
+            subject: 'Your account has been disabled',
+            // eslint-disable-next-line no-undef
+            content: disableEmailTemplate(user.username, user.disabledReason),
+          })
+        );
+        disableAccountLog(req, user);
+      } else {
+        user.disabledReason = null;
       }
-      user.disabledUser = true;
-      user.disabledReason = req.body.reason;
+        await user.save();
 
-      await user.save();
-
-      sendEmail(
-        emailConfig({
-          email: user.email,
-          subject: 'Your account has been disabled',
-          // eslint-disable-next-line no-undef
-          content: disableEmailTemplate(user.username, user.disabledReason),
-        })
-      );
-
-      res.status(200).json({ message: 'User account disabled successfully' });
-      disableAccountLog(req, user);
+      const message = user.disabledUser ? 'User account disabled successfully' : 'User account enabled successfully';
+      res.status(200).json({ message });
     } catch (error) {
       logError(req, error);
       res.status(500).json({ message: error.message });
