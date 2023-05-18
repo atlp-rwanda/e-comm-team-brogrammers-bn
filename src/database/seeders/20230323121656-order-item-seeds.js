@@ -21,10 +21,10 @@ export default {
 
       const orderItem = {
         id: faker.datatype.uuid(),
-        orderId: allOrders[orderIndex].dataValues.id,
-        productId: allProducts[productIndex].dataValues.id,
-        quantity: faker.datatype.number({ min: 0 }),
-        price: faker.datatype.float(0.01),
+        orderId: allOrders[orderIndex].id,
+        productId: allProducts[productIndex].id,
+        quantity: faker.datatype.number({ min: 0, max: allProducts[productIndex].quantity }),
+        price: allProducts[productIndex].price,
         statusUpdated: false,
       };
 

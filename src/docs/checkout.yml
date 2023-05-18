@@ -23,9 +23,6 @@
               deliveryStreet:
                 type: string
                 example: KG 603 ST
-              paymentMethod:
-                type: string
-                example: Momopay,
     responses:
       '201':
         description: Created
@@ -49,9 +46,6 @@
             deliveryStreet:
               type: string
               example: KG 603 ST
-            paymentMethod:
-              type: string
-              example: Momopay,
       '400':
         description: Bad Request
         schema:

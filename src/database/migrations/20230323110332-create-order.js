@@ -17,6 +17,10 @@ export default {
         primaryKey: true,
         type: Sequelize.UUID,
       },
+      orderNo: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
       paymentMethod: {
         type: Sequelize.STRING,
       },

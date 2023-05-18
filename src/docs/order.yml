@@ -23,9 +23,6 @@
               deliveryStreet:
                 type: string
                 example: KG 603 ST
-              paymentMethod:
-                type: string
-                example: Momopay,
       404:
         description: Order not found
 

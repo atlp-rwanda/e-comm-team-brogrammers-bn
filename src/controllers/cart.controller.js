@@ -73,7 +73,6 @@ export default class Cartcontroller {
   static async viewCartOfUser(req, res) {
     try {
       const result = await cartService.viewCart(req);
-      console.log(result);
       if (result.error) {
         return res.status(400).json({ error: result.error });
       }

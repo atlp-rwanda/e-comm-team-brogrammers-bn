@@ -39,9 +39,10 @@ export default class Payments {
       discount: session.total_details.amount_discount,
       stripeId: session.id
     };
-    await payments.create(pay);
+    const delivery = (new Date()).setDate((new Date()).getDate() + 14);
+    const payment = await payments.create(pay);
     await order.update(
-      { status: 'Processing', isPaid: true },
+      { status: 'Processing', isPaid: true, expectedDeliveryDate: delivery },
       { where: { id: ordered.id } }
     );
     // eslint-disable-next-line no-restricted-syntax
@@ -53,7 +54,11 @@ export default class Payments {
       product.save();
     }
 
-    return { redirect, user, products: ordered.products };
+    const red = new URL(redirect);
+    const par = new URLSearchParams(red.search);
+    par.set('paymentID', payment.id);
+
+    return { redirect: `${red.origin}${red.pathname}?${par}`, user, products: ordered.products };
   }
 
   /**
@@ -97,8 +102,8 @@ export default class Payments {
           name: item.name,
           images: item.images
         },
-        unit_amount: item.price * 100,
-        currency: 'usd',
+        unit_amount: item.price,
+        currency: 'rwf',
       },
       quantity: item.orderitem.quantity
     })).filter((item) => (item && item !== null));

@@ -62,7 +62,6 @@ describe('testing buyer should checkout', () => {
           deliveryCountry: 'Rwanda',
           deliveryCity: 'Kigali',
           deliveryStreet: '607 st',
-          paymentMethod: 'Momo',
         });
 
       expect(res).to.have.status(400);
@@ -103,7 +102,6 @@ describe('testing buyer should checkout', () => {
           deliveryCountry: 'Rwanda',
           deliveryCity: 'Kigali',
           deliveryStreet: '607 st',
-          paymentMethod: 'Momo',
         });
       expect(res).to.have.status(200);
       expect(res.body).to.have.property('message');
@@ -134,7 +132,6 @@ describe('Orders API', () => {
           deliveryCountry: 'Rwanda',
           deliveryCity: 'Rwamagana',
           deliveryStreet: '607 st',
-          paymentMethod: 'Momo',
         })
         .end((err, res) => {
           res.should.have.status(200);

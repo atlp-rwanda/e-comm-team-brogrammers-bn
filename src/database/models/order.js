@@ -33,6 +33,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      orderNo: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+      },
       paymentMethod: {
         type: DataTypes.STRING,
         allowNull: false,
