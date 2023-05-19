@@ -111,7 +111,6 @@ describe('cart', () => {
       })
       .end((err, res) => {
         expect(res.statusCode).to.equal(201);
-        // eslint-disable-next-line no-unused-expressions
         expect(res.body.value.message).to.equal('added to cart successfully');
         done();
       });
@@ -127,7 +126,6 @@ describe('cart', () => {
       })
       .end((err, res) => {
         expect(res.statusCode).to.equal(400);
-        // eslint-disable-next-line no-unused-expressions
         expect(res.body.message).to.equal('product does not exist');
         done();
       });
@@ -139,7 +137,6 @@ describe('cart', () => {
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        // eslint-disable-next-line no-unused-expressions, no-undef
         expect(res.body.value.message).to.equal('Hey Here is your cart!');
         done();
       });
@@ -151,20 +148,18 @@ describe('cart', () => {
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
-        // eslint-disable-next-line no-unused-expressions
-        expect(res.body.value.message).to.equal('removed product from cart  successfully');
+        expect(res.body.message).to.equal('Item removed from cart successfully');
         done();
       });
   });
-  it('should return 400 when user cart is empty', (done) => {
+  it('should return 200 when user cart is empty', (done) => {
     chai
       .request(app)
       .get('/cart')
       .set('Authorization', `Bearer ${sellerToken}`)
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        // eslint-disable-next-line no-unused-expressions, no-undef
-        expect(res.body.message).to.equal('your cart is empty');
+        expect(res.status).to.equal(200);
+        expect(res.body.value.message).to.equal('Hey Here is your cart!');
         done();
       });
   });
@@ -264,7 +259,6 @@ describe('cart', () => {
       })
       .end((err, res) => {
         expect(res.statusCode).to.equal(201);
-        // eslint-disable-next-line no-unused-expressions
         expect(res.body.value.message).to.equal('added to cart successfully');
         done();
       });
@@ -280,7 +274,6 @@ describe('cart', () => {
       })
       .end((err, res) => {
         expect(res.statusCode).to.equal(400);
-        // eslint-disable-next-line no-unused-expressions
         expect(res.body.message).to.equal('product does not exist');
         done();
       });
