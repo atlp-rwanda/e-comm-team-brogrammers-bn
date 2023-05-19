@@ -48,7 +48,6 @@ app.use('/public', express.static('public'));
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swagger, false, options));
-
 app.use('/database', dbRoutes);
 app.use(allroutes);
 app.use((req, res) => {
