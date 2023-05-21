@@ -145,7 +145,7 @@ export default class Products {
         );
         await notifications.create(newN);
       });
-      updateProduct(req, value);
+      updateProduct(req, res, value);
       return res
         .status(200)
         .json({ message: 'product edited', product: value });
