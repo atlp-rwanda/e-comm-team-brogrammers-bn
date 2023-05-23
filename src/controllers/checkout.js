@@ -20,22 +20,27 @@ import {
   deletedOrders,
   adminGetOrders,
 } from '../loggers/checkout.logger';
+import GenerateOrdersNo from '../helpers/getRandom';
 
 export const getCurrentUserOrders = async (req, res) => {
-  const user = await users.findOne({
-    where: { email: req.user.email },
+  const orders = await order.findAll({
+    where: { buyerId: req.user.id },
+    order: [
+      ['createdAt', 'DESC'],
+    ],
     include: {
-      model: order,
-      as: 'orders',
+      model: products,
+      as: 'products',
+      attributes: ['id', 'images', 'name', 'available', 'price'],
       include: {
-        model: products,
-        as: 'products',
-        attributes: ['id', 'images', 'name', 'available', 'price'],
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email', 'avatar'],
       },
     },
   });
-  viewOrderss(req, user.orders);
-  res.json(user.orders);
+  viewOrderss(req, orders);
+  res.json(orders);
 };
 
 export const createOrder = async (req, res) => {
@@ -53,26 +58,47 @@ export const createOrder = async (req, res) => {
   const cartProducts = userCart.products;
 
   // eslint-disable-next-line object-curly-newline
-  const { deliveryCountry, deliveryCity, deliveryStreet, paymentMethod } = req.body;
+  const { deliveryCountry, deliveryCity, deliveryStreet } = req.body;
 
   const userOrder = await order.create({
     deliveryCountry,
     deliveryCity,
     deliveryStreet,
-    paymentMethod,
+    orderNo: Number(GenerateOrdersNo()),
+    paymentMethod: 'card',
     totalAmount: userCart.total,
     buyerId: req.user.id,
+  }, {
+    include: {
+      model: products,
+      as: 'products',
+      attributes: ['id', 'images', 'name', 'available', 'price'],
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email', 'avatar'],
+      },
+    },
   });
 
-  cartProducts.forEach(async (pro) => {
-    const product = await products.findOne({ where: { id: pro.id } });
+  const orderitems = await Promise.all(cartProducts.map(async (pro) => {
+    const product = await products.findOne({
+      where: { id: pro.id },
+      attributes: ['id', 'images', 'name', 'available', 'price', 'sellerId'],
+      include: {
+        model: users,
+        as: 'seller',
+        attributes: ['username', 'email', 'avatar'],
+      }
+    });
 
-    await orderitem.create({
+    const ordered = await orderitem.create({
       quantity: pro.quantity,
       productId: product.id,
       orderId: userOrder.id,
       price: pro.price,
     });
+
     const useremail = await users.findOne({ where: { id: product.sellerId } });
     const newNotification = {
       message: 'your product have been ordered ',
@@ -99,7 +125,14 @@ export const createOrder = async (req, res) => {
     await notifications.create(newN);
 
     await product.save();
-  });
+    const {
+      id, images, name, available, price, seller
+    } = product;
+
+    return {
+      id, images, name, available, price, seller, orderitem: ordered
+    };
+  }));
 
   await userOrder.save();
   user.cart.products = [];
@@ -129,31 +162,64 @@ export const createOrder = async (req, res) => {
   );
   await notifications.create(newN);
   createOrders(req, products);
-  res.json({ message: 'Order was created successfully', order: userOrder });
+  console.log({
+    ordered: { ...userOrder, orderitems }
+  });
+  res.json({ message: 'Order was created successfully', order: { ...userOrder.dataValues, products: orderitems } });
+};
+
+const getOrderWithAccess = async (id, user) => {
+  let orders;
+  if (user.role === 'admin') {
+    orders = await order.findOne({
+      where: { id },
+      include: [
+        {
+          model: users,
+          as: 'buyer',
+          attributes: ['avatar', 'username', 'email'],
+        },
+        {
+          model: products,
+          as: 'products',
+          attributes: ['id', 'images', 'name', 'available', 'price'],
+          include: {
+            model: users,
+            as: 'seller',
+            attributes: ['username', 'email', 'avatar'],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ['buyerId']
+      }
+    });
+  } else {
+    orders = await order.findOne({
+      where: { id, buyerId: user.id },
+      include: {
+        model: products,
+        as: 'products',
+        attributes: ['id', 'images', 'name', 'available', 'price'],
+        include: {
+          model: users,
+          as: 'seller',
+          attributes: ['username', 'email', 'avatar'],
+        },
+      },
+      attributes: {
+        exclude: ['buyerId']
+      }
+    });
+  }
+
+  return orders;
 };
 
 export const viewOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
-    let orders;
-    orders = await order.findOne({
-      where: { id: order_id, buyerId: req.user.id },
-      include: {
-        model: products,
-        as: 'products',
-        attributes: ['id', 'images', 'name', 'available', 'price'],
-      },
-    });
-    if (!orders && req.user.role === 'admin') {
-      orders = await order.findOne({
-        where: { id: order_id },
-        include: {
-          model: products,
-          as: 'products',
-          attributes: ['id', 'images', 'name', 'available', 'price'],
-        },
-      });
-    }
+    const orders = await getOrderWithAccess(order_id, req.user);
 
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
@@ -169,19 +235,14 @@ export const viewOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
-    const updatedOrder = req.body;
-    const orders = await order.findOne({
-      where: { id: order_id },
-    });
+    const {
+      id, isPaid, totalAmount, createdAt, updatedAt, buyerId,
+      ...updatedOrder
+    } = req.body;
+    const orders = await getOrderWithAccess(order_id, req.user);
 
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
-    }
-    // Ensure that the buyer is authenticated and authorized to update the order
-    if (orders.buyerId !== req.user.id && req.user.role !== 'admin') {
-      return res
-        .status(403)
-        .json({ error: 'You are not authorized to update this order.' });
     }
 
     // Update the order with the new data
@@ -197,17 +258,10 @@ export const updateOrder = async (req, res) => {
 export const deleteOrder = async (req, res) => {
   try {
     const { order_id } = req.params;
-    const orders = await order.findOne({
-      where: { id: order_id },
-    });
+    const orders = await getOrderWithAccess(order_id, req.user);
+
     if (!orders) {
       return res.status(404).json({ error: 'Order not found.' });
-    }
-    // Ensure that the buyer is authenticated and authorized to update the order
-    if (orders.buyerId !== req.user.id && req.user.role !== 'admin') {
-      return res
-        .status(403)
-        .json({ error: 'You are not authorized to delete this order.' });
     }
 
     // Delete the order from the database
@@ -223,10 +277,8 @@ export const deleteOrder = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     const totalCount = await order.count();
-    // eslint-disable-next-line radix
-    const page = parseInt(req.query.page) || 1;
-    // eslint-disable-next-line radix
-    const limit = parseInt(req.query.limit) || totalCount;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || totalCount;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const results = {};
@@ -248,7 +300,7 @@ export const getAllOrders = async (req, res) => {
         {
           model: users,
           as: 'buyer',
-          attributes: ['username', 'email'],
+          attributes: ['username', 'email', 'avatar'],
         },
         {
           model: products,

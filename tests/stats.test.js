@@ -54,7 +54,6 @@ describe('testing the seller statistics', () => {
         deliveryCountry: 'Rwanda',
         deliveryCity: 'Kigali',
         deliveryStreet: '607 st',
-        paymentMethod: 'card',
       });
     order = checkoutRes.body.order;
 

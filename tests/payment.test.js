@@ -49,7 +49,6 @@ describe('testing the payments', () => {
         deliveryCountry: 'Rwanda',
         deliveryCity: 'Kigali',
         deliveryStreet: '607 st',
-        paymentMethod: 'card',
       });
     order = res.body.order;
   });

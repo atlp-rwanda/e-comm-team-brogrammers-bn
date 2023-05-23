@@ -64,8 +64,6 @@
  *                 type: string
  *               deliveryStreet:
  *                 type: string
- *               paymentMethod:
- *                 type: string
  *     responses:
  *       200:
  *         description: Success

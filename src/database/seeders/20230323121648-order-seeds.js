@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
 // eslint-disable-next-line import/named
 import { users } from '../models';
+import GenerateOrdersNo from '../../helpers/getRandom';
 
 export default {
   async up(queryInterface) {
-    const allUsers = await users.findAll({ where: { role: 'buyer' } });
+    const allUsers = await users.findAll();
     const allStatus = ['Pending', 'Processing', 'Shipped', 'Delivered'];
 
     const orders = [];
@@ -26,6 +27,7 @@ export default {
         deliveryCountry: faker.address.country(),
         deliveryCity: faker.address.city(),
         deliveryStreet: faker.address.streetAddress(),
+        orderNo: Number(GenerateOrdersNo()),
         expectedDeliveryDate: new Date(),
         buyerId: allUsers[userIndex].dataValues.id,
         status: allStatus[statusIndex],

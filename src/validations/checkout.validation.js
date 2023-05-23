@@ -5,12 +5,15 @@ import Joi from 'joi';
  * @param {*} data data
  * @returns {Object} result
  */
-export default function orderValidation(data) {
+export default async function orderValidation(data) {
   const schema = Joi.object({
-    deliveryCountry: Joi.string().required().min(2),
-    deliveryCity: Joi.string().required().min(1),
-    deliveryStreet: Joi.string().required().min(2),
-    paymentMethod: Joi.string().min(2).required(),
+    deliveryCountry: Joi.string().min(2).required().label('country'),
+    deliveryCity: Joi.string().min(1).required().label('city'),
+    deliveryStreet: Joi.string().min(2).required().label('street'),
+    paymentMethod: Joi.string().min(2),
   });
-  return schema.validate(data, { abortEarly: false });
+  const out = schema.validate(data, {
+    abortEarly: false
+  });
+  return out;
 }

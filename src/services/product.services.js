@@ -193,6 +193,7 @@ export default class Product {
     if (!query) query = '';
     where = {
       price: { [Op.between]: [min, max] },
+      available: true,
       [Op.or]: [
         { name: { [Op.iLike]: `%${query}%` } },
         { description: { [Op.iLike]: `%${query}%` } },
