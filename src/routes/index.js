@@ -12,6 +12,7 @@ import payment from './payment';
 import orderRoutes from './order';
 import logsroutes from './logs';
 import subroutes from './subscribe';
+import contactRoutes from './contactRoutes';
 
 const routes = express();
 
@@ -27,6 +28,9 @@ routes.use('/notification', notification);
 routes.use('/payment', payment);
 routes.use('/order', orderRoutes);
 routes.use('/logs', logsroutes);
+routes.use('/contact', contactRoutes);
 routes.use('/subscriber', subroutes);
-routes.get('auth/auth/google/callback', (req, res) => res.redirect('/users/redirect'));
+routes.get('auth/auth/google/callback', (req, res) =>
+  res.redirect('/users/redirect')
+);
 export default routes;

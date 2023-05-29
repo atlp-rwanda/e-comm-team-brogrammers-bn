@@ -27,13 +27,11 @@ const getOrderStatuses = async (req, res) => {
 };
 
 const getOrderStatusEvents = async (req, res) => {
-  res.statusCode = 200;
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('connection', 'keep-alive');
   res.setHeader('Content-Type', 'text/event-stream');
-
-  res.write('event: ping\n');
+  res.flushHeaders();
 
   // Set up interval to send update events to the client
   const intervalId = setInterval(async () => {
@@ -41,25 +39,19 @@ const getOrderStatusEvents = async (req, res) => {
       where: {
         statusUpdated: true,
       },
-      include: [
-        {
-          model: users,
-          attributes: ['id', 'username', 'role'],
-          as: 'buyer',
-        },
-      ],
     });
     if (!orders.length > 0) {
       return;
     }
     const data = { orders };
-    res.write('event: update\n');
+    console.log(data);
+    res.write('event: message\n');
     res.write(`data: ${JSON.stringify(data)}\n\n`);
     await orders.forEach(async (item) => {
       item.statusUpdated = false;
       await item.save();
     });
-  }, 3000);
+  }, 500);
 
   // Handle client disconnect by clearing interval
   req.on('close', () => {
@@ -107,7 +99,6 @@ const updateOrderStatus = async (req, res) => {
     newOrder.status = req.body.status;
     newOrder.statusUpdated = true;
     await newOrder.save();
-
     return res.status(200).json({
       message: 'Updated success',
       data: newOrder,
