@@ -107,7 +107,6 @@ const updateOrderStatus = async (req, res) => {
     newOrder.status = req.body.status;
     newOrder.statusUpdated = true;
     await newOrder.save();
-
     return res.status(200).json({
       message: 'Updated success',
       data: newOrder,
