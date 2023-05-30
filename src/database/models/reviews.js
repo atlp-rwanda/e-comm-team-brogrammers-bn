@@ -25,7 +25,10 @@ export default (sequelize, DataTypes) => {
       reviews.belongsTo(models.products, {
         as: 'reviews',
         foreignKey: 'productId',
-      });
+      }, reviews.belongsTo(models.users, {
+        as: 'reviewer',
+        foreignKey: 'userId',
+      }));
     }
   }
   reviews.init(
