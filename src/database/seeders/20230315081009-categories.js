@@ -1,4 +1,5 @@
 /** @type {import('sequelize-cli').Migration} */
+
 export default {
   async up(queryInterface) {
     await queryInterface.bulkInsert('categories', [

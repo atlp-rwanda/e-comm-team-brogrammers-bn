@@ -8,7 +8,7 @@ import { checkSubscriberExist } from '../middlewares/checkUserExist';
 
 const subroutes = express.Router();
 
-subroutes.post('/', checkSubscriberExist, subscribeValidate, SubscriberController.subscribe);
+subroutes.post('/', subscribeValidate, checkSubscriberExist, SubscriberController.subscribe);
 subroutes.get('/unsubscribe/:id', SubscriberController.unsubscribe);
 subroutes.get('/verify/:token', SubscriberController.verify);
 subroutes.get('/all', isAuthenticated, checkRole(['admin']), SubscriberController.getAllSubscribers);
