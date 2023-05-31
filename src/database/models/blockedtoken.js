@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Blockedtoken.init({
-    token: DataTypes.STRING
+    token: DataTypes.STRING(10000)
   }, {
     sequelize,
     modelName: 'Blockedtoken',
