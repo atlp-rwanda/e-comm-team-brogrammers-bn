@@ -1,10 +1,5 @@
-/* eslint-disable import/named */
-/* eslint-disable object-shorthand */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
 /* eslint-disable import/prefer-default-export */
-// eslint-disable-next-line import/named
 import cron from 'node-cron';
 import dotenv from 'dotenv';
 import { emailConfig } from '../helpers/emailConfig';
@@ -16,6 +11,7 @@ import {
 import { sendEmail } from '../helpers/mail';
 import Subscribers from '../services/subscriber.services';
 import { deleteSubscriberLog, getAllSubscribersLog, UserError } from '../loggers/Admin.logger';
+import { Jwt } from '../helpers/jwt';
 
 dotenv.config();
 
@@ -25,9 +21,9 @@ export class SubscriberController {
   static async subscribe(req, res) {
     try {
       const { data } = await Subscribers.register(req.body);
-      const SubscriberTemplate = verifyEmailSubscriberTemplate(
-        data.verificationToken
-      );
+      console.log({ redirect: req.headers.success });
+      const redirect = await Jwt.generateToken({ redirect: req.headers.success });
+      const SubscriberTemplate = verifyEmailSubscriberTemplate(data.verificationToken, redirect);
       sendEmail(
         emailConfig({
           email: data.email,
@@ -47,6 +43,9 @@ export class SubscriberController {
   static async verify(req, res) {
     try {
       const { token } = req.params;
+      const { r } = req.query;
+      const { value } = Jwt.verifyToken(r);
+      const { redirect } = value;
       const subscribers = await Subscribers.findByVerificationToken(token);
       if (!subscribers) {
         return res.status(404).json({ error: 'Invalid verification token' });
@@ -66,7 +65,8 @@ export class SubscriberController {
           content: SubscriberTemplate,
         })
       );
-      res.status(200).send({
+      if (redirect) return res.status(301).redirect(redirect);
+      return res.status(200).send({
         message: 'Email Subscribed successfully!',
         subscribed: true,
       });
@@ -148,10 +148,12 @@ export class SubscriberController {
 
   static async getAllSubscribers(req, res) {
     try {
-      const subscribers = await Subscribers.getAllSubscribers();
-      if (subscribers.length === 0) {
-        res.status(404).json({
+      const { limit, page } = req.query;
+      const subscribers = await Subscribers.getAllSubscribers(page, limit);
+      if (subscribers.totalCount === 0) {
+        res.status(200).json({
           message: 'There are no subscribers',
+          subscribers
         });
       } else {
         getAllSubscribersLog(req, subscribers);

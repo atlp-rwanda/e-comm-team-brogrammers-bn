@@ -104,17 +104,17 @@ describe('SubscriberController', () => {
       const res = await chai.request(app)
         .get('/subscriber/all')
         .set('Authorization', `Bearer ${adminToken}`);
-      expect(res.body.subscribers).to.be.an('array');
-      expect(res.body.subscribers.length).to.equal(2);
-      expect(res.body.subscribers[0].email).to.equal('test1@example.com');
-      expect(res.body.subscribers[1].email).to.equal('test2@example.com');
+      expect(res.body.subscribers.results).to.be.an('array');
+      expect(res.body.subscribers.results.length).to.equal(2);
+      expect(res.body.subscribers.results[0].email).to.equal('test1@example.com');
+      expect(res.body.subscribers.results[1].email).to.equal('test2@example.com');
     });
 
     it('should return a message if there are no subscribers', async () => {
       const res = await chai.request(app)
         .get('/subscriber/all')
         .set('Authorization', `Bearer ${adminToken}`);
-      expect(res).to.have.status(404);
+      expect(res).to.have.status(200);
       expect(res.body.message).to.equal('There are no subscribers');
     });
   });

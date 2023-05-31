@@ -49,9 +49,34 @@ export default class Subscribers {
     return subscriber;
   }
 
-  static async getAllSubscribers() {
-    const allSubscribers = await Subscriber.findAll();
-    return allSubscribers;
+  static async getAllSubscribers(pageNumber, limitNumber) {
+    const totalCount = await Subscriber.count();
+    const page = Number(pageNumber) || 1;
+    const limit = Number(limitNumber) || totalCount;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const out = {
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit)
+    };
+    if (endIndex < totalCount) {
+      out.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+    if (startIndex > 0) {
+      out.previous = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    const allSubscribers = await Subscriber.findAll({
+      limit,
+      offset: startIndex,
+    });
+    return { ...out, results: allSubscribers };
   }
 
   static async getAllSubscribersTrue() {
