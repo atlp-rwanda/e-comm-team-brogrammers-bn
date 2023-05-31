@@ -147,13 +147,14 @@ export const PasswordLog = async (req, user) => {
 export const verifyPasswordLog = async (req, user) => {
   const logData = {
     level: 'info',
-    message: `User ${req.user.email} Password reset successful`,
-    userId: req.user.id,
+    message: `User ${user.email} Password reset successful`,
+    userId: user.id,
     metadata: { data: user },
   };
   await Log.create(logData);
-  logger.info(`User ${req.user.email} Password reset successful`);
+  logger.info(`User ${user.email} Password reset successful`);
 };
+
 export const changePasswordLog = async (req, user) => {
   const logData = {
     level: 'info',

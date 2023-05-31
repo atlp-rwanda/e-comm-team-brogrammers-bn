@@ -448,42 +448,33 @@ export default class Users {
   static async verifyResetPasswordCode(req, res) {
     try {
       const { resetToken } = req.params;
-
+  
       if (resetToken) {
         jwt.verify(
           resetToken,
           process.env.RESET_PASSWORD_SECRET,
           async (err, decodedToken) => {
             if (err) {
-              return res.redirect(
-                `${process.env.FRONTEND_URL}/reset-password/failed?message=Invalid+token`
-              );
+              return res.redirect(`${process.env.FRONTEND}/verifyfail`);
             }
-
+  
             const { email, newPassword } = decodedToken;
             const user = await users.findOne({ where: { email } });
             if (!user) {
-              return res.status(404).json('User not found');
+              return res.redirect(`${process.env.FRONTEND}/verifyfail`);
             }
-
+  
             user.verified = true;
             user.password = bcrypt.hashSync(newPassword, saltRounds);
             await user.save();
             verifyPasswordLog(req, user);
-            return res.redirect(
-              `${process.env.FRONTEND_URL}/reset-password/success`
-            );
+            return res.redirect(`${process.env.FRONTEND}/verifypass`);
           }
         );
       }
     } catch (error) {
       logError(req, error);
-      res.status(500).json({
-        message:
-          error.message
-          || error.toString()
-          || 'Failed to verify password reset link',
-      });
+      res.redirect(`${process.env.FRONTEND}/verifyfail`);
     }
   }
 
