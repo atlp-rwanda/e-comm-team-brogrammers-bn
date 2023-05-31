@@ -210,6 +210,7 @@ export default class Users {
             email: req.body.email,
             id: user.id,
             mustUpdatePassword: user.mustUpdatePassword,
+            username: user.username
           },
           JWT_SECRET
         );
@@ -258,6 +259,7 @@ export default class Users {
         username,
         role,
         gender,
+        id
       } = req.user;
       viewProfile(req, req.user);
       res.status(200).json({
@@ -268,6 +270,7 @@ export default class Users {
         username,
         role,
         gender,
+        id
       });
     } catch (error) {
       logError(req, error);

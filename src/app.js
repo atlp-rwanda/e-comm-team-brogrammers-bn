@@ -32,7 +32,6 @@ const app = express();
 checkPasswordExpirationCronJob.start();
 beforeCheckExpiredProduct();
 SubscriberController.sendNewsletter();
-app.use('/chat', express.static(path.join(__dirname, '../public/chat')));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(

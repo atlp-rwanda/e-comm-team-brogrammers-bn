@@ -267,7 +267,7 @@ export default class Products {
         .json({ message: 'All products retrieved successfully', allproducts });
       // eslint-disable-next-line no-shadow
     } catch (err) {
-      productError(req, err);
+      // productError(req, err);
       return res
         .status(500)
         .json({ error: err.message, message: 'Failed to retrieve products' });
@@ -522,7 +522,7 @@ export default class Products {
       const allCategories = await category.findAll();
       res.status(200).json(allCategories);
     } catch (error) {
-      productError(req, error);
+      // productError(req, error);
       res.status(500).json({ message: error.message });
     }
   }
