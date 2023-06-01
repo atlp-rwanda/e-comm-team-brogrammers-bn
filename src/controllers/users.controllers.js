@@ -126,10 +126,10 @@ export default class Users {
     user.verified = true;
     await user.save();
     logVerifyEmail(user.email);
-    res.status(200).send({
-      message: 'Your account has been verified successfully!',
-      verified: true,
-    });
+    
+    // Redirect to the frontend URL
+    const frontendURL = 'https://brogrammersmall.netlify.app/verifyEmail';
+    res.redirect(frontendURL);
   }
 
   static async setRole(req, res) {
