@@ -3,28 +3,43 @@
 /* eslint-disable require-jsdoc */
 import { Chat, users } from '../database/models';
 
-export const addMessage = async (data) => {
-  try {
-    return Chat.create({ ...data });
-  } catch (error) {
-    return { error };
+export class ChatService {
+  static async saveMessage(newMessage) {
+    const message = await Chat.create(newMessage);
+    return message;
   }
-};
 
-export const getMessages = async (room) => {
-  try {
-    return Chat.findAll({
-      where: { room },
+  static async getOneMessage(id) {
+    const newMessage = await Chat.findOne({
+      where: {
+        id,
+      },
       include: [
         {
           model: users,
           as: 'user',
-          attributes: ['username']
-        }
+          attributes: ['username'],
+        },
       ],
-      order: [['createdAt', 'DESC']]
     });
-  } catch (error) {
-    return { error };
+    return newMessage;
   }
-};
+
+  static async getMessages(room) {
+    try {
+      return Chat.findAll({
+        where: { room },
+        include: [
+          {
+            model: users,
+            as: 'user',
+            attributes: ['username'],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+    } catch (error) {
+      return { error };
+    }
+  }
+}

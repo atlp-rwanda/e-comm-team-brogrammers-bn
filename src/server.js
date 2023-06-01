@@ -4,12 +4,12 @@ import http from 'http';
 // eslint-disable-next-line import/named
 import { sequelize } from './database/models/index';
 import app from './app';
-import io from './helpers/socket';
+import { SocketUtil } from './helpers/socket';
 
 env.config();
 const port = process.env.PORT || 6000;
 const server = http.createServer(app);
-io.attach(server);
+SocketUtil.config(server);
 
 server.listen(port, () => {
   console.log('server started,', port);

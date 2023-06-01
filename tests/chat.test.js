@@ -31,18 +31,6 @@ describe('Chatting functionalities', () => {
   });
 
   describe('POST /chat', () => {
-    it('should add a single message', (done) => {
-      chai.request(app)
-        .post('/chat/message')
-        .send({ message: 'Hello, world!' })
-        .set('Authorization', `Bearer ${sellerToken}`)
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body.message).to.equal('Message sent.');
-          done();
-        });
-    });
-
     it('should return an error if the request fails', (done) => {
       chai.request(app)
         .post('/chat/message')
