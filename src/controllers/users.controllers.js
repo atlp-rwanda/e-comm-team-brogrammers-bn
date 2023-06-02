@@ -116,6 +116,7 @@ export default class Users {
   }
 
   static async verifyUser(emailToken, res) {
+    const frontendURL = 'https://brogrammersmall.netlify.app/verifyEmail';
     const user = await User.findByEmailToken(emailToken);
     if (!user) {
       return res.status(404).json({
@@ -126,10 +127,10 @@ export default class Users {
     user.verified = true;
     await user.save();
     logVerifyEmail(user.email);
-    res.status(200).send({
-      message: 'Your account has been verified successfully!',
-      verified: true,
-    });
+    
+    // Redirect to the frontend URL
+
+    res.redirect(frontendURL);
   }
 
   static async setRole(req, res) {
